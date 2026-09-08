@@ -6,23 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->enum('role', ['user', 'super_user', 'admin'])->default('user');
+            $table->string('domain_akses')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn(['role', 'domain_akses']);
         });
     }
 };
