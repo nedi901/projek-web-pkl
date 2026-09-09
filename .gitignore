@@ -1,4 +1,4 @@
-*.log
+git remote add origin https://github.com/username/projek-web-pkl.git*.log
 .DS_Store
 .env
 .env.backup
@@ -12,7 +12,7 @@
 /.phpunit.cache
 /.vscode
 /.zed
-/auth.json
+/auth.json--
 /node_modules
 /public/build
 /public/fonts-manifest.dev.json

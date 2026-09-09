@@ -8,7 +8,6 @@
 </head>
 <body class="bg-[#F5F5F5] text-gray-800">
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         <div class="w-56 bg-white border-r border-gray-200 flex flex-col shrink-0">
             <div class="flex flex-col items-center py-6 border-b border-gray-100">
                 <svg width="36" height="36" viewBox="0 0 56 56" class="mb-1">
@@ -20,44 +19,32 @@
                 <div class="text-[9px] font-semibold tracking-wide text-gray-600">KEMENTERIAN</div>
                 <div class="text-sm font-extrabold tracking-wide text-[#1a1a1a] -mt-0.5">ESDM</div>
             </div>
-
             <nav class="flex-1 py-3 px-3 space-y-1 text-sm">
                 <a href="{{ route('user.dashboard') }}"
                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.dashboard') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <span>🏠</span> Beranda
+                    Beranda
                 </a>
-
-                <a href="{{ route('user.mineral-logam.index') }}"
-                   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.mineral-logam.*') || request()->routeIs('user.mineral-bukan-logam.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <span>📋</span> Data Mineral
-                </a>
-                @if(request()->routeIs('user.mineral-logam.*') || request()->routeIs('user.mineral-bukan-logam.*'))
-                <div class="pl-9 space-y-1 pb-1">
-                    <a href="{{ route('user.mineral-logam.index') }}" class="block py-1.5 text-xs {{ request()->routeIs('user.mineral-logam.*') ? 'text-[#B8891A] font-semibold' : 'text-gray-500' }}">Mineral Logam</a>
-                    <a href="{{ route('user.mineral-bukan-logam.index') }}" class="block py-1.5 text-xs {{ request()->routeIs('user.mineral-bukan-logam.*') ? 'text-[#B8891A] font-semibold' : 'text-gray-500' }}">Bukan Logam & Batuan</a>
-                </div>
-                @endif
-
                 <a href="{{ route('user.batubara.index') }}"
                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.batubara.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <span>📋</span> Data Batubara
+                    Data Batubara
                 </a>
-
-                <a href="{{ route('user.panas-bumi.index') }}"
-                   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.panas-bumi.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <span>📋</span> Data Panas Bumi
-                </a>
-
-                <a href="#"
-                   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium text-gray-600 hover:bg-gray-50">
-                    <span>📊</span> Grafik dan Visualisasi
-                </a>
+                <a href="{{ route('user.mineral-logam.index') }}"
+   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.mineral-logam.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+    Mineral Logam
+</a>
+<a href="{{ route('user.mineral-bukan-logam.index') }}"
+   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.mineral-bukan-logam.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+    Bukan Logam & Batuan
+</a>
+<a href="{{ route('user.panas-bumi.index') }}"
+   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.panas-bumi.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+    Data Panas Bumi
+</a>
             </nav>
-
             <div class="border-t border-gray-100 p-3">
                 @auth
                 <div class="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-600">
-                    <span>👤</span> {{ auth()->user()->name }}
+                    {{ auth()->user()->name }}
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -65,13 +52,11 @@
                 </form>
                 @else
                 <a href="{{ route('login') }}" class="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <span>👤</span> Profil / Login
+                    Profil / Login
                 </a>
                 @endauth
             </div>
         </div>
-
-        <!-- Main content -->
         <div class="flex-1 p-8">
             {{ $slot }}
         </div>
