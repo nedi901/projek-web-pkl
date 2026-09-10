@@ -40,6 +40,10 @@
    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.panas-bumi.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
     Data Panas Bumi
 </a>
+<a href="{{ route('user.grafik.index') }}"
+   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('user.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+    Grafik dan Visualisasi
+</a>
             </nav>
             <div class="border-t border-gray-100 p-3">
                 @auth

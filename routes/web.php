@@ -7,6 +7,8 @@ use App\Http\Controllers\User\BatubaraController;
 use App\Http\Controllers\User\MineralLogamController;
 use App\Http\Controllers\User\MineralBukanLogamController;
 use App\Http\Controllers\User\PanasBumiController;
+use App\Http\Controllers\User\GrafikController;
+use App\Http\Controllers\SuperUser\BatubaraController as SuperUserBatubaraController;
 
 
 Route::get('/', function () {
@@ -37,3 +39,17 @@ Route::prefix('panas-bumi')->name('user.panas-bumi.')->group(function () {
     Route::get('/', [PanasBumiController::class, 'index'])->name('index');
     Route::get('/{panasBumi}', [PanasBumiController::class, 'show'])->name('show');
 });
+Route::get('/grafik', [GrafikController::class, 'index'])->name('user.grafik.index');
+
+Route::middleware(['auth', 'superuser.batubara'])->prefix('superuser/batubara')->name('superuser.batubara.')->group(function () {
+    Route::get('/', [SuperUserBatubaraController::class, 'index'])->name('index');
+    Route::get('/create', [SuperUserBatubaraController::class, 'create'])->name('create');
+    Route::post('/', [SuperUserBatubaraController::class, 'store'])->name('store');
+    Route::get('/{batubara}/edit', [SuperUserBatubaraController::class, 'edit'])->name('edit');
+    Route::put('/{batubara}', [SuperUserBatubaraController::class, 'update'])->name('update');
+    Route::delete('/{batubara}', [SuperUserBatubaraController::class, 'destroy'])->name('destroy');
+});
+
+Route::get('/superuser/batubara/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
+    return $provinsi->kabupatens;
+})->middleware(['auth', 'superuser.batubara']);
