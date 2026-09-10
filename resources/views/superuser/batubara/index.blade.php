@@ -1,13 +1,19 @@
 <x-layouts.superuser title="Data Batubara">
+    
     <div class="flex justify-between items-end mb-4">
-        <div>
-            <h1 class="text-xl font-bold">Data Batubara</h1>
-            <p class="text-xs text-gray-500">Kelola data neraca — Super User</p>
-        </div>
+    <div>
+        <h1 class="text-xl font-bold">Data Batubara</h1>
+        <p class="text-xs text-gray-500">Kelola data neraca — Super User</p>
+    </div>
+    <div class="flex gap-2">
+        <a href="{{ route('superuser.batubara.import.form') }}" class="border border-gray-300 text-sm font-semibold px-4 py-2 rounded-md">
+            Import Excel
+        </a>
         <a href="{{ route('superuser.batubara.create') }}" class="bg-[#F2C230] hover:bg-[#e0b526] text-black text-sm font-semibold px-4 py-2 rounded-md">
             + Tambah Data
         </a>
     </div>
+</div>
 
     <form method="GET" class="flex gap-3 mb-4">
         <input type="text" name="search" value="{{ request('search') }}"

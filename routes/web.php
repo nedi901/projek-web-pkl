@@ -48,6 +48,8 @@ Route::middleware(['auth', 'superuser.batubara'])->prefix('superuser/batubara')-
     Route::get('/{batubara}/edit', [SuperUserBatubaraController::class, 'edit'])->name('edit');
     Route::put('/{batubara}', [SuperUserBatubaraController::class, 'update'])->name('update');
     Route::delete('/{batubara}', [SuperUserBatubaraController::class, 'destroy'])->name('destroy');
+    Route::get('/import', [SuperUserBatubaraController::class, 'importForm'])->name('import.form');
+Route::post('/import', [SuperUserBatubaraController::class, 'import'])->name('import');
 });
 
 Route::get('/superuser/batubara/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {

@@ -10,6 +10,8 @@ use App\Models\KelasKalori;
 use App\Models\StatDikBb;
 use App\Models\IdInstansi;
 use Illuminate\Http\Request;
+use App\Imports\BatubaraImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BatubaraController extends Controller
 {
@@ -105,4 +107,19 @@ class BatubaraController extends Controller
 
         return redirect()->route('superuser.batubara.index')->with('success', 'Data berhasil dihapus.');
     }
+    public function importForm()
+{
+    return view('superuser.batubara.import');
+}
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv',
+    ]);
+
+    Excel::import(new BatubaraImport, $request->file('file'));
+
+    return redirect()->route('superuser.batubara.index')->with('success', 'Data berhasil diimport.');
+}
 }
