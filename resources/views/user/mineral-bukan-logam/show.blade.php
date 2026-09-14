@@ -18,6 +18,7 @@
             <div>
                 <h3 class="text-xs uppercase text-orange-700 font-mono mb-2">Sumber Daya (Ton/m³)</h3>
                 <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div><span class="text-gray-500 block text-xs">Hipotetik</span>{{ number_format($mineralBukanLogam->hipotetik, 3) }}</div>
                     <div><span class="text-gray-500 block text-xs">Tereka</span>{{ number_format($mineralBukanLogam->tereka, 3) }}</div>
                     <div><span class="text-gray-500 block text-xs">Tertunjuk</span>{{ number_format($mineralBukanLogam->tertunjuk, 3) }}</div>
                     <div><span class="text-gray-500 block text-xs">Terukur</span>{{ number_format($mineralBukanLogam->terukur, 3) }}</div>

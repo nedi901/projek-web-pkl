@@ -8,7 +8,9 @@
                 <div class="grid grid-cols-2 gap-3 text-sm">
                     <div><span class="text-gray-500 block text-xs">Provinsi</span>{{ $panasBumi->provinsi->nama_provinsi }}</div>
                     <div><span class="text-gray-500 block text-xs">Kabupaten</span>{{ $panasBumi->kabupaten->nama_kabupaten }}</div>
-                    <div><span class="text-gray-500 block text-xs">Status</span>{{ $panasBumi->statDikBb->label }}</div>
+                    <div><span class="text-gray-500 block text-xs">Status</span>{{ $panasBumi->statDikPb->label }}</div>
+                    <div><span class="text-gray-500 block text-xs">Klasifikasi Temperatur</span>{{ $panasBumi->klasifikasiTemperatur->label ?? '-' }}</div>
+                    <div><span class="text-gray-500 block text-xs">Temperatur Reservoir</span>{{ $panasBumi->temperatur_reservoir ? number_format($panasBumi->temperatur_reservoir, 1).'°C' : '-' }}</div>
                     <div><span class="text-gray-500 block text-xs">Kapasitas Terpasang</span>{{ number_format($panasBumi->kapasitas_terpasang, 2) }} MWe</div>
                     <div><span class="text-gray-500 block text-xs">Tahun Data</span>{{ $panasBumi->tahun_data }}</div>
                     <div><span class="text-gray-500 block text-xs">Tahun Neraca</span>{{ $panasBumi->tahun_neraca }}</div>
@@ -19,17 +21,18 @@
                 <h3 class="text-xs uppercase text-orange-700 font-mono mb-2">Sumber Daya (MWe)</h3>
                 <div class="grid grid-cols-2 gap-3 text-sm">
                     <div><span class="text-gray-500 block text-xs">Spekulatif</span>{{ number_format($panasBumi->spekulatif, 3) }}</div>
-                    <div><span class="text-gray-500 block text-xs">Hipotetis</span>{{ number_format($panasBumi->hipotetis, 3) }}</div>
-                    <div><span class="text-gray-500 block text-xs">Terduga</span>{{ number_format($panasBumi->terduga, 3) }}</div>
-                    <div><span class="text-gray-500 block text-xs">Total</span>{{ number_format($panasBumi->total_sd, 3) }}</div>
+                    <div><span class="text-gray-500 block text-xs">Hipotetik</span>{{ number_format($panasBumi->hipotetik, 3) }}</div>
+                    <div><span class="text-gray-500 block text-xs">Total Sumber Daya</span>{{ number_format($panasBumi->total_sd, 3) }}</div>
                 </div>
             </div>
 
             <div>
-                <h3 class="text-xs uppercase text-orange-700 font-mono mb-2">Cadangan & Kapasitas (MWe)</h3>
+                <h3 class="text-xs uppercase text-orange-700 font-mono mb-2">Cadangan (MWe)</h3>
                 <div class="grid grid-cols-2 gap-3 text-sm">
-                    <div><span class="text-gray-500 block text-xs">Cadangan Terbukti</span>{{ number_format($panasBumi->terbukti, 3) }}</div>
-                    <div><span class="text-gray-500 block text-xs">Kapasitas Terpasang</span>{{ number_format($panasBumi->kapasitas_terpasang, 3) }}</div>
+                    <div><span class="text-gray-500 block text-xs">Terduga</span>{{ number_format($panasBumi->terduga, 3) }}</div>
+                    <div><span class="text-gray-500 block text-xs">Mungkin</span>{{ number_format($panasBumi->mungkin, 3) }}</div>
+                    <div><span class="text-gray-500 block text-xs">Terbukti</span>{{ number_format($panasBumi->terbukti, 3) }}</div>
+                    <div><span class="text-gray-500 block text-xs">Total Cadangan</span>{{ number_format($panasBumi->total_cad, 3) }}</div>
                 </div>
             </div>
 

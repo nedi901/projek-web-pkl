@@ -14,13 +14,19 @@ return new class extends Migration
         $table->year('tahun_data');
         $table->year('tahun_neraca');
         $table->string('nama_objek');
-        $table->foreignId('stat_dik_bb_id')->constrained('stat_dik_bbs');
+        $table->foreignId('stat_dik_pb_id')->constrained('stat_dik_pbs');
         $table->foreignId('id_instansi_id')->nullable()->constrained('id_instansis');
+        $table->foreignId('klasifikasi_temperatur_id')->nullable()->constrained('klasifikasi_temperaturs');
+        $table->decimal('temperatur_reservoir', 8, 2)->nullable();
+        // Sumber Daya
         $table->decimal('spekulatif', 15, 3)->default(0);
-        $table->decimal('hipotetis', 15, 3)->default(0);
-        $table->decimal('terduga', 15, 3)->default(0);
+        $table->decimal('hipotetik', 15, 3)->default(0);
         $table->decimal('total_sd', 15, 3)->default(0);
+        // Cadangan
+        $table->decimal('terduga', 15, 3)->default(0);
+        $table->decimal('mungkin', 15, 3)->default(0);
         $table->decimal('terbukti', 15, 3)->default(0);
+        $table->decimal('total_cad', 15, 3)->default(0);
         $table->decimal('kapasitas_terpasang', 15, 3)->default(0);
         $table->text('remark')->nullable();
         $table->foreignId('provinsi_id')->constrained('provinsis');

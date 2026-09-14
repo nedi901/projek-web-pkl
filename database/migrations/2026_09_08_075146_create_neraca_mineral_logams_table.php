@@ -17,6 +17,8 @@ return new class extends Migration
         $table->foreignId('komoditas_logam_id')->constrained('komoditas_logams');
         $table->foreignId('stat_dik_bb_id')->constrained('stat_dik_bbs');
         $table->foreignId('id_instansi_id')->nullable()->constrained('id_instansis');
+        $table->decimal('hipotetik_bijih', 15, 3)->default(0);
+$table->decimal('hipotetik_logam', 15, 3)->default(0);
         $table->decimal('tereka_bijih', 15, 3)->default(0);
         $table->decimal('tereka_logam', 15, 3)->default(0);
         $table->decimal('tertunjuk_bijih', 15, 3)->default(0);

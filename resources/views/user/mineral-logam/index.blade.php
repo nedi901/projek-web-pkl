@@ -28,34 +28,36 @@
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-50 text-xs uppercase text-gray-500">
-                    <tr>
-                        <th class="px-3 py-2 text-left">Komoditas</th>
-                        <th class="px-3 py-2 text-left">Kelompok</th>
-                        <th class="px-3 py-2 text-left">Provinsi</th>
-                        <th class="px-3 py-2 text-right">Tereka (bijih)</th>
-                        <th class="px-3 py-2 text-right">Terukur (bijih)</th>
-                        <th class="px-3 py-2 text-right">Cad. Terbukti (logam)</th>
-                        <th class="px-3 py-2 text-left">Status</th>
-                    </tr>
-                </thead>
+    <tr>
+        <th class="px-3 py-2 text-left">Komoditas</th>
+        <th class="px-3 py-2 text-left">Kelompok</th>
+        <th class="px-3 py-2 text-left">Provinsi</th>
+        <th class="px-3 py-2 text-right">Hipotetik (bijih)</th>
+        <th class="px-3 py-2 text-right">Tereka (bijih)</th>
+        <th class="px-3 py-2 text-right">Terukur (bijih)</th>
+        <th class="px-3 py-2 text-right">Cad. Terbukti (logam)</th>
+        <th class="px-3 py-2 text-left">Status</th>
+    </tr>
+</thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($data as $row)
                     <tr class="hover:bg-gray-50 cursor-pointer"
                         onclick="window.location='{{ route('user.mineral-logam.show', $row) }}'">
                         <td class="px-3 py-2 font-medium">{{ $row->komoditasLogam->nama_komoditas }}</td>
-                        <td class="px-3 py-2">{{ $row->komoditasLogam->kelompokKomoditasLogam->nama_kelompok }}</td>
-                        <td class="px-3 py-2">{{ $row->provinsi->nama_provinsi }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->tereka_bijih, 2) }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->terukur_bijih, 2) }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->terbukti_logam, 2) }}</td>
-                        <td class="px-3 py-2">
+<td class="px-3 py-2">{{ $row->komoditasLogam->kelompokKomoditasLogam->nama_kelompok }}</td>
+<td class="px-3 py-2">{{ $row->provinsi->nama_provinsi }}</td>
+<td class="px-3 py-2 text-right">{{ number_format($row->hipotetik_bijih, 2) }}</td>
+<td class="px-3 py-2 text-right">{{ number_format($row->tereka_bijih, 2) }}</td>
+<td class="px-3 py-2 text-right">{{ number_format($row->terukur_bijih, 2) }}</td>
+<td class="px-3 py-2 text-right">{{ number_format($row->terbukti_logam, 2) }}</td>
+<td class="px-3 py-2">...status...</td>
                             <span class="px-2 py-1 rounded-full text-xs {{ $row->statDikBb->label == 'Operasi Produksi' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
                                 {{ $row->statDikBb->label }}
                             </span>
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="7" class="text-center py-6 text-gray-400">Data belum ada</td></tr>
+                    <tr><td colspan="8" class="text-center py-6 text-gray-400">Data belum ada</td></tr>
                     @endforelse
                 </tbody>
             </table>

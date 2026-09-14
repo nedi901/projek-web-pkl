@@ -25,10 +25,23 @@ class GrafikController extends Controller
         $totalTerukur = NeracaBatubara::sum('terukur');
         $totalKlasifikasi = max($totalTereka + $totalTertunjuk + $totalTerukur, 1);
 
+        // Trend per tahun_neraca — beneran dari database
+        $trendPerTahun = NeracaBatubara::selectRaw('tahun_data, SUM(total_sd) as total')
+    ->groupBy('tahun_data')
+    ->orderBy('tahun_data')
+    ->get();
+
+$trendMax = $trendPerTahun->max('total') ?: 1;
+
+$tahunMin = NeracaBatubara::min('tahun_data');
+$tahunMax = NeracaBatubara::max('tahun_data');
+
+
         $provinsis = Provinsi::orderBy('nama_provinsi')->get();
 
-        return view('user.grafik.index', compact(
-            'perProvinsi', 'totalTereka', 'totalTertunjuk', 'totalTerukur', 'totalKlasifikasi', 'provinsis', 'domain'
-        ));
+       return view('user.grafik.index', compact(
+    'perProvinsi', 'totalTereka', 'totalTertunjuk', 'totalTerukur', 'totalKlasifikasi',
+    'trendPerTahun', 'trendMax', 'tahunMin', 'tahunMax', 'provinsis', 'domain'
+));
     }
 }

@@ -2,16 +2,17 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\IdInstansi;
 use Illuminate\Database\Seeder;
 
 class IdInstansiSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        IdInstansi::insert([
+            ['label' => 'Pemerintah'],
+            ['label' => 'Pemerintah Joint Study'],
+            ['label' => 'Swasta'],
+        ]);
     }
 }

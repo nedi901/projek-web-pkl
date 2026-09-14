@@ -10,7 +10,7 @@ class PanasBumiController extends Controller
 {
     public function index(Request $request)
     {
-        $data = NeracaPanasBumi::with(['provinsi', 'kabupaten', 'statDikBb'])
+        $data = NeracaPanasBumi::with(['provinsi', 'kabupaten', 'statDikPb', 'klasifikasiTemperatur'])
             ->when($request->search, fn($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
             ->when($request->provinsi_id, fn($q) => $q->where('provinsi_id', $request->provinsi_id))
             ->paginate(15);
@@ -20,7 +20,7 @@ class PanasBumiController extends Controller
 
     public function show(NeracaPanasBumi $panasBumi)
     {
-        $panasBumi->load(['provinsi', 'kabupaten', 'statDikBb', 'idInstansi']);
+        $panasBumi->load(['provinsi', 'kabupaten', 'statDikPb', 'klasifikasiTemperatur', 'idInstansi']);
         return view('user.panas-bumi.show', compact('panasBumi'));
     }
 }

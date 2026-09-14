@@ -18,6 +18,7 @@
             <div>
                 <h3 class="text-xs uppercase text-orange-700 font-mono mb-2">Sumber Daya (bijih / logam, Ton)</h3>
                 <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div><span class="text-gray-500 block text-xs">Hipotetik</span>{{ number_format($mineralLogam->hipotetik_bijih, 3) }} / {{ number_format($mineralLogam->hipotetik_logam, 3) }}</div>
                     <div><span class="text-gray-500 block text-xs">Tereka</span>{{ number_format($mineralLogam->tereka_bijih, 3) }} / {{ number_format($mineralLogam->tereka_logam, 3) }}</div>
                     <div><span class="text-gray-500 block text-xs">Tertunjuk</span>{{ number_format($mineralLogam->tertunjuk_bijih, 3) }} / {{ number_format($mineralLogam->tertunjuk_logam, 3) }}</div>
                     <div><span class="text-gray-500 block text-xs">Terukur</span>{{ number_format($mineralLogam->terukur_bijih, 3) }} / {{ number_format($mineralLogam->terukur_logam, 3) }}</div>
