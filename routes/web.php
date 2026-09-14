@@ -9,6 +9,7 @@ use App\Http\Controllers\User\MineralBukanLogamController;
 use App\Http\Controllers\User\PanasBumiController;
 use App\Http\Controllers\User\GrafikController;
 use App\Http\Controllers\SuperUser\BatubaraController as SuperUserBatubaraController;
+use App\Http\Controllers\SuperUser\GrafikController as SuperUserGrafikController;
 
 
 Route::get('/', function () {
@@ -50,6 +51,11 @@ Route::middleware(['auth', 'superuser.batubara'])->prefix('superuser/batubara')-
     Route::delete('/{batubara}', [SuperUserBatubaraController::class, 'destroy'])->name('destroy');
     Route::get('/import', [SuperUserBatubaraController::class, 'importForm'])->name('import.form');
 Route::post('/import', [SuperUserBatubaraController::class, 'import'])->name('import');
+
+});
+
+Route::middleware(['auth', 'superuser.batubara'])->prefix('superuser')->name('superuser.')->group(function () {
+    Route::get('/grafik', [SuperUserGrafikController::class, 'index'])->name('grafik.index');
 });
 
 Route::get('/superuser/batubara/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {

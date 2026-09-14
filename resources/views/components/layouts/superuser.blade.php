@@ -21,11 +21,15 @@
             </div>
 
             <nav class="flex-1 py-3 px-3 space-y-1 text-sm">
-                <a href="{{ route('superuser.batubara.index') }}"
-                   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.batubara.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
-                    Data Batubara
-                </a>
-            </nav>
+    <a href="{{ route('superuser.batubara.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.batubara.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Data Batubara
+    </a>
+    <a href="{{ route('superuser.grafik.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Grafik dan Visualisasi
+    </a>
+</nav>
 
             <div class="border-t border-gray-100 px-3 py-3">
                 <div class="bg-gray-50 rounded-lg px-3 py-2 text-xs">
