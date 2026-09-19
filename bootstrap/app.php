@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
     $middleware->alias([
         'superuser.batubara' => \App\Http\Middleware\CheckSuperUserBatubara::class,
+        'superuser.minerallogam' => \App\Http\Middleware\CheckSuperUserMineralLogam::class,
+        'superuser.mineral-bukan-logam' => \App\Http\Middleware\CheckSuperUserMineralBukanLogam::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -21,3 +23,5 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
+
+    

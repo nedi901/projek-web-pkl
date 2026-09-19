@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
     IdInstansiSeeder::class,
     KlasifikasiTemperaturSeeder::class,
     StatDikPbSeeder::class,
+    KelompokKomoditasLogamSeeder::class,
+KomoditasLogamSeeder::class,
 ]);
     }
 }

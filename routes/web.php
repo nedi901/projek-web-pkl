@@ -10,7 +10,9 @@ use App\Http\Controllers\User\PanasBumiController;
 use App\Http\Controllers\User\GrafikController;
 use App\Http\Controllers\SuperUser\BatubaraController as SuperUserBatubaraController;
 use App\Http\Controllers\SuperUser\GrafikController as SuperUserGrafikController;
-
+use App\Http\Controllers\SuperUser\MineralLogamController as SuperUserMineralLogamController;
+use App\Http\Controllers\SuperUser\MineralBukanLogamController as SuperUserMineralBukanLogamController;
+use App\Http\Controllers\SuperUser\MineralBukanLogamGrafikController as SuperUserMineralBukanLogamGrafikController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -50,14 +52,48 @@ Route::middleware(['auth', 'superuser.batubara'])->prefix('superuser/batubara')-
     Route::put('/{batubara}', [SuperUserBatubaraController::class, 'update'])->name('update');
     Route::delete('/{batubara}', [SuperUserBatubaraController::class, 'destroy'])->name('destroy');
     Route::get('/import', [SuperUserBatubaraController::class, 'importForm'])->name('import.form');
-Route::post('/import', [SuperUserBatubaraController::class, 'import'])->name('import');
-
+    Route::post('/import', [SuperUserBatubaraController::class, 'import'])->name('import');
+    Route::get('/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
+        return $provinsi->kabupatens;
+    })->name('kabupaten');
+    Route::get('/grafik', [SuperUserGrafikController::class, 'index'])->name('grafik.index');  // ← ini harus ada
 });
 
-Route::middleware(['auth', 'superuser.batubara'])->prefix('superuser')->name('superuser.')->group(function () {
-    Route::get('/grafik', [SuperUserGrafikController::class, 'index'])->name('grafik.index');
-});
 
 Route::get('/superuser/batubara/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
     return $provinsi->kabupatens;
 })->middleware(['auth', 'superuser.batubara']);
+
+Route::middleware(['auth', 'superuser.minerallogam'])->prefix('superuser/mineral-logam')->name('superuser.mineral-logam.')->group(function () {
+    Route::get('/', [SuperUserMineralLogamController::class, 'index'])->name('index');
+    Route::get('/create', [SuperUserMineralLogamController::class, 'create'])->name('create');
+    Route::post('/', [SuperUserMineralLogamController::class, 'store'])->name('store');
+    Route::get('/{mineralLogam}/edit', [SuperUserMineralLogamController::class, 'edit'])->name('edit');
+    Route::put('/{mineralLogam}', [SuperUserMineralLogamController::class, 'update'])->name('update');
+    Route::delete('/{mineralLogam}', [SuperUserMineralLogamController::class, 'destroy'])->name('destroy');
+    Route::get('/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
+        return $provinsi->kabupatens;
+    })->name('kabupaten');
+    Route::get('/grafik', [\App\Http\Controllers\SuperUser\MineralLogamGrafikController::class, 'index'])->name('grafik.index');
+    Route::get('/import', [SuperUserMineralLogamController::class, 'importForm'])->name('import.form');
+Route::post('/import', [SuperUserMineralLogamController::class, 'import'])->name('import');
+});
+
+Route::middleware(['auth', 'superuser.mineral-bukan-logam'])
+    ->prefix('superuser/mineral-bukan-logam')
+    ->name('superuser.mineral-bukan-logam.')
+    ->group(function () {
+        Route::get('/', [SuperUserMineralBukanLogamController::class, 'index'])->name('index');
+        Route::get('/create', [SuperUserMineralBukanLogamController::class, 'create'])->name('create');
+        Route::post('/', [SuperUserMineralBukanLogamController::class, 'store'])->name('store');
+        Route::get('/{mineralBukanLogam}/edit', [SuperUserMineralBukanLogamController::class, 'edit'])->name('edit');
+        Route::put('/{mineralBukanLogam}', [SuperUserMineralBukanLogamController::class, 'update'])->name('update');
+        Route::delete('/{mineralBukanLogam}', [SuperUserMineralBukanLogamController::class, 'destroy'])->name('destroy');
+
+        Route::get('/import', [SuperUserMineralBukanLogamController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [SuperUserMineralBukanLogamController::class, 'import'])->name('import');
+
+        Route::get('/kabupaten/{provinsiId}', [SuperUserMineralBukanLogamController::class, 'kabupaten'])->name('kabupaten');
+
+        Route::get('/grafik', [SuperUserMineralBukanLogamGrafikController::class, 'index'])->name('grafik.index');
+    });

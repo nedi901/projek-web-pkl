@@ -21,20 +21,46 @@
             </div>
 
             <nav class="flex-1 py-3 px-3 space-y-1 text-sm">
-    <a href="{{ route('superuser.batubara.index') }}"
-       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.batubara.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
-        Data Batubara
-    </a>
-    <a href="{{ route('superuser.grafik.index') }}"
-       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
-        Grafik dan Visualisasi
-    </a>
+    @php $domain = auth()->user()->domain_akses; @endphp
+
+    @if($domain === 'batubara' || auth()->user()->role === 'admin')
+        <a href="{{ route('superuser.batubara.grafik.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.batubara.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Grafik dan Visualisasi
+        </a>
+        <a href="{{ route('superuser.batubara.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.batubara.*') && !request()->routeIs('superuser.batubara.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Data Batubara
+        </a>
+    @endif
+
+    @if($domain === 'mineral_logam' || auth()->user()->role === 'admin')
+        <a href="{{ route('superuser.mineral-logam.grafik.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.mineral-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Grafik dan Visualisasi
+        </a>
+        <a href="{{ route('superuser.mineral-logam.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.mineral-logam.*') && !request()->routeIs('superuser.mineral-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Data Mineral Logam
+        </a>
+    @endif
+
+    @if($domain === 'mineral_bukan_logam' || auth()->user()->role === 'admin')
+        <a href="{{ route('superuser.mineral-bukan-logam.grafik.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.mineral-bukan-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Grafik dan Visualisasi
+        </a>
+        <a href="{{ route('superuser.mineral-bukan-logam.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.mineral-bukan-logam.*') && !request()->routeIs('superuser.mineral-bukan-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Data Mineral Bukan Logam
+        </a>
+    @endif
 </nav>
 
             <div class="border-t border-gray-100 px-3 py-3">
                 <div class="bg-gray-50 rounded-lg px-3 py-2 text-xs">
                     <div class="font-medium text-gray-700">{{ auth()->user()->name }}</div>
-                    <div class="text-[10px] text-gray-400 font-mono">SUPER USER · BATUBARA</div>
+                    <div class="text-[10px] text-gray-400 font-mono">{{ auth()->user()->role === 'admin' ? 'ADMIN' : 'SUPER USER · ' . strtoupper(str_replace('_', ' ', auth()->user()->domain_akses)) }}</div>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="mt-2">
                     @csrf

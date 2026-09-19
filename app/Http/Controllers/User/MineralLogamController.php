@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\NeracaMineralLogam;
 use Illuminate\Http\Request;
+use App\Imports\MineralLogamImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MineralLogamController extends Controller
 {
@@ -24,4 +26,19 @@ class MineralLogamController extends Controller
         $mineralLogam->load(['provinsi', 'kabupaten', 'komoditasLogam.kelompokKomoditasLogam', 'statDikBb', 'idInstansi']);
         return view('user.mineral-logam.show', compact('mineralLogam'));
     }
+    public function importForm()
+{
+    return view('superuser.mineral-logam.import');
+}
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv',
+    ]);
+
+    Excel::import(new MineralLogamImport, $request->file('file'));
+
+    return redirect()->route('superuser.mineral-logam.index')->with('success', 'Data berhasil diimport.');
+}
 }
