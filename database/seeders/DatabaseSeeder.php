@@ -8,8 +8,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([
-    ProvinsiSeeder::class,
+          $this->call([
+       UserSeeder::class,
+       ProvinsiSeeder::class,
     KabupatenSeeder::class,
     KelasKaloriSeeder::class,
     StatDikBbSeeder::class,

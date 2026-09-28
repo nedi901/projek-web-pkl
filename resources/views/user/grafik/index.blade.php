@@ -5,7 +5,7 @@
     <form method="GET" class="flex flex-wrap gap-4 mb-6">
         <div>
             <label class="text-[10px] text-gray-400 block mb-1">Provinsi</label>
-            <select name="provinsi_id" class="border-gray-300 rounded-md text-sm px-2 py-1.5">
+            <select name="provinsi_id" onchange="this.form.submit()" class="border-gray-300 rounded-md text-sm px-2 py-1.5">
                 <option value="">Semua Provinsi</option>
                 @foreach($provinsis as $p)
                     <option value="{{ $p->id }}" @selected(request('provinsi_id')==$p->id)>{{ $p->nama_provinsi }}</option>
@@ -13,14 +13,8 @@
             </select>
         </div>
         <div>
-    <label class="text-[10px] text-gray-400 block mb-1">Tahun</label>
-    <select class="border-gray-300 rounded-md text-sm px-2 py-1.5">
-        <option>{{ $tahunMin }} – {{ $tahunMax }}</option>
-    </select>
-</div>
-        <div>
             <label class="text-[10px] text-gray-400 block mb-1">Domain</label>
-            <select name="domain" class="border-gray-300 rounded-md text-sm px-2 py-1.5">
+            <select name="domain" onchange="this.form.submit()" class="border-gray-300 rounded-md text-sm px-2 py-1.5">
                 <option value="batubara" @selected($domain=='batubara')>Batubara</option>
                 <option value="mineral-logam" @selected($domain=='mineral-logam')>Mineral Logam</option>
                 <option value="mineral-bukan-logam" @selected($domain=='mineral-bukan-logam')>Bukan Logam & Batuan</option>
@@ -35,7 +29,7 @@
             @php $max = $perProvinsi->max('total') ?: 1; @endphp
             <div class="flex items-end gap-4 h-44">
                 @foreach($perProvinsi as $row)
-                        <div class="w-full bg-[#F2C230] rounded-t" style="height: {{ ($row->total / $max) * 100 }}%"></div>
+                    <div class="flex-1 bg-[#F2C230] rounded-t" style="height: {{ ($row->total / $max) * 100 }}%"></div>
                 @endforeach
             </div>
             <div class="flex gap-4 mt-2 text-[10px] text-gray-400">
@@ -70,28 +64,28 @@
         </div>
 
         <div class="bg-white border border-gray-200 rounded-xl p-5">
-    <div class="text-sm font-semibold mb-4">Tren per Tahun Neraca</div>
-    @if($trendPerTahun->count())
-        @php $tahunTerakhir = $trendPerTahun->last()->tahun_data; @endphp
-<div class="flex items-end gap-3 h-32">
-    @foreach($trendPerTahun as $t)
-        <div class="flex-1 flex flex-col items-center justify-end h-full">
-            @if($t->tahun_data == $tahunTerakhir)
-                <span class="text-[9px] text-orange-600 font-semibold mb-1">Berjalan</span>
+            <div class="text-sm font-semibold mb-4">Tren per Tahun Neraca</div>
+            @if($trendPerTahun->count())
+                @php $tahunTerakhir = $trendPerTahun->last()->tahun_data; @endphp
+                <div class="flex items-end gap-3 h-32">
+                    @foreach($trendPerTahun as $t)
+                        <div class="flex-1 flex flex-col items-center justify-end h-full">
+                            @if($t->tahun_data == $tahunTerakhir)
+                                <span class="text-[9px] text-orange-600 font-semibold mb-1">Berjalan</span>
+                            @endif
+                            <div class="w-full {{ $t->tahun_data == $tahunTerakhir ? 'bg-[#4A6FE3]' : 'bg-[#F2C230]' }} rounded-t"
+                                 style="height: {{ ($t->total / $trendMax) * 100 }}%"></div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="flex gap-3 mt-2 text-[10px] text-gray-400">
+                    @foreach($trendPerTahun as $t)
+                        <div class="flex-1 text-center">{{ $t->tahun_data }}</div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center text-gray-400 text-sm py-10">Belum ada data</div>
             @endif
-            <div class="w-full {{ $t->tahun_data == $tahunTerakhir ? 'bg-[#4A6FE3]' : 'bg-[#F2C230]' }} rounded-t"
-                 style="height: {{ ($t->total / $trendMax) * 100 }}%"></div>
         </div>
-    @endforeach
-</div>
-<div class="flex gap-3 mt-2 text-[10px] text-gray-400">
-    @foreach($trendPerTahun as $t)
-        <div class="flex-1 text-center">{{ $t->tahun_data }}</div>
-    @endforeach
-</div>
-    @else
-        <div class="text-center text-gray-400 text-sm py-10">Belum ada data</div>
-    @endif
-</div>
     </div>
 </x-layouts.user>

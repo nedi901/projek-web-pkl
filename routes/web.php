@@ -13,6 +13,10 @@ use App\Http\Controllers\SuperUser\GrafikController as SuperUserGrafikController
 use App\Http\Controllers\SuperUser\MineralLogamController as SuperUserMineralLogamController;
 use App\Http\Controllers\SuperUser\MineralBukanLogamController as SuperUserMineralBukanLogamController;
 use App\Http\Controllers\SuperUser\MineralBukanLogamGrafikController as SuperUserMineralBukanLogamGrafikController;
+use App\Http\Controllers\SuperUser\PanasBumiController as SuperUserPanasBumiController;
+use App\Http\Controllers\SuperUser\PanasBumiGrafikController as SuperUserPanasBumiGrafikController;
+use App\Http\Controllers\SuperUser\GambutController as SuperUserGambutController;
+use App\Http\Controllers\SuperUser\GambutGrafikController as SuperUserGambutGrafikController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -97,3 +101,42 @@ Route::middleware(['auth', 'superuser.mineral-bukan-logam'])
 
         Route::get('/grafik', [SuperUserMineralBukanLogamGrafikController::class, 'index'])->name('grafik.index');
     });
+
+    Route::middleware(['auth', 'superuser.panas-bumi'])
+    ->prefix('superuser/panas-bumi')
+    ->name('superuser.panas-bumi.')
+    ->group(function () {
+        Route::get('/', [SuperUserPanasBumiController::class, 'index'])->name('index');
+        Route::get('/create', [SuperUserPanasBumiController::class, 'create'])->name('create');
+        Route::post('/', [SuperUserPanasBumiController::class, 'store'])->name('store');
+        Route::get('/{panasBumi}/edit', [SuperUserPanasBumiController::class, 'edit'])->name('edit');
+        Route::put('/{panasBumi}', [SuperUserPanasBumiController::class, 'update'])->name('update');
+        Route::delete('/{panasBumi}', [SuperUserPanasBumiController::class, 'destroy'])->name('destroy');
+
+        Route::get('/import', [SuperUserPanasBumiController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [SuperUserPanasBumiController::class, 'import'])->name('import');
+
+        Route::get('/kabupaten/{provinsiId}', [SuperUserPanasBumiController::class, 'kabupaten'])->name('kabupaten');
+
+        Route::get('/grafik', [SuperUserPanasBumiGrafikController::class, 'index'])->name('grafik.index');
+    });
+
+    Route::middleware(['auth', 'superuser.gambut'])
+    ->prefix('superuser/gambut')
+    ->name('superuser.gambut.')
+    ->group(function () {
+        Route::get('/', [SuperUserGambutController::class, 'index'])->name('index');
+        Route::get('/create', [SuperUserGambutController::class, 'create'])->name('create');
+        Route::post('/', [SuperUserGambutController::class, 'store'])->name('store');
+        Route::get('/{gambut}/edit', [SuperUserGambutController::class, 'edit'])->name('edit');
+        Route::put('/{gambut}', [SuperUserGambutController::class, 'update'])->name('update');
+        Route::delete('/{gambut}', [SuperUserGambutController::class, 'destroy'])->name('destroy');
+
+        Route::get('/import', [SuperUserGambutController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [SuperUserGambutController::class, 'import'])->name('import');
+
+        Route::get('/kabupaten/{provinsiId}', [SuperUserGambutController::class, 'kabupaten'])->name('kabupaten');
+
+        Route::get('/grafik', [SuperUserGambutGrafikController::class, 'index'])->name('grafik.index');
+    });
+

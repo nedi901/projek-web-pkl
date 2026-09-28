@@ -55,6 +55,30 @@
             Data Mineral Bukan Logam
         </a>
     @endif
+
+    @if($domain === 'panas_bumi' || auth()->user()->role === 'admin')
+    <a href="{{ route('superuser.panas-bumi.grafik.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.panas-bumi.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Grafik dan Visualisasi
+    </a>
+    <a href="{{ route('superuser.panas-bumi.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.panas-bumi.*') && !request()->routeIs('superuser.panas-bumi.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Data Panas Bumi
+    </a>
+@endif
+
+@if($domain === 'gambut' || auth()->user()->role === 'admin')
+    <a href="{{ route('superuser.gambut.grafik.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.gambut.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Grafik dan Visualisasi
+    </a>
+    <a href="{{ route('superuser.gambut.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('superuser.gambut.*') && !request()->routeIs('superuser.gambut.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Data Gambut
+    </a>
+@endif
+
+
 </nav>
 
             <div class="border-t border-gray-100 px-3 py-3">

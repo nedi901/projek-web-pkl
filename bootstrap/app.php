@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         'superuser.batubara' => \App\Http\Middleware\CheckSuperUserBatubara::class,
         'superuser.minerallogam' => \App\Http\Middleware\CheckSuperUserMineralLogam::class,
         'superuser.mineral-bukan-logam' => \App\Http\Middleware\CheckSuperUserMineralBukanLogam::class,
+        'superuser.panas-bumi' => \App\Http\Middleware\CheckSuperUserPanasBumi::class,
+        'superuser.gambut' => \App\Http\Middleware\CheckSuperUserGambut::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

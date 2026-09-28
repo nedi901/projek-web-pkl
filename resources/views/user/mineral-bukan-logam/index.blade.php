@@ -44,20 +44,20 @@
                     <tr class="hover:bg-gray-50 cursor-pointer"
                         onclick="window.location='{{ route('user.mineral-bukan-logam.show', $row) }}'">
                         <td class="px-3 py-2 font-medium">{{ $row->komoditasBukanLogam->nama_komoditas }}</td>
-<td class="px-3 py-2">{{ $row->komoditasBukanLogam->kelompokKomoditasBukanLogam->nama_kelompok }}</td>
-<td class="px-3 py-2">{{ $row->provinsi->nama_provinsi }}</td>
-<td class="px-3 py-2 text-right">{{ number_format($row->hipotetik, 2) }}</td>
-<td class="px-3 py-2 text-right">{{ number_format($row->tereka, 2) }}</td>
-<td class="px-3 py-2 text-right">{{ number_format($row->terukur, 2) }}</td>
-<td class="px-3 py-2 text-right">{{ number_format($row->terbukti, 2) }}</td>
-<td class="px-3 py-2">...status...</td>
+                        <td class="px-3 py-2">{{ $row->komoditasBukanLogam->kelompokKomoditasBukanLogam->nama_kelompok }}</td>
+                        <td class="px-3 py-2">{{ $row->provinsi->nama_provinsi }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->hipotetik, 2) }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->tereka, 2) }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->terukur, 2) }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->terbukti, 2) }}</td>
+                        <td class="px-3 py-2">
                             <span class="px-2 py-1 rounded-full text-xs {{ $row->statDikBb->label == 'Operasi Produksi' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
                                 {{ $row->statDikBb->label }}
                             </span>
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="7" class="text-center py-6 text-gray-400">Data belum ada</td></tr>
+                    <tr><td colspan="8" class="text-center py-6 text-gray-400">Data belum ada</td></tr>
                     @endforelse
                 </tbody>
             </table>
