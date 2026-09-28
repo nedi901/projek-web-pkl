@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class LoginController extends Controller
 {
@@ -30,31 +31,31 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            return redirect()->intended('/admin/dashboard');
-        }
+        // Hierarki: super_user (1 orang, kendali penuh) > admin (banyak, per domain) > user (read-only)
 
-        if ($user->role === 'super_user') {
-            // Arahin langsung ke halaman Grafik domain masing-masing, bukan ke /dashboard generic.
-            // Kalau domain_akses-nya belum punya route grafik (mis. panas_bumi, gambut - belum
-            // dibikin), fallback ke /dashboard biar gak error "route not defined".
+        if ($user->role === 'admin') {
+            // Admin domain -> langsung ke Grafik domain miliknya sendiri
             $grafikRoute = match ($user->domain_akses) {
                 'batubara' => 'superuser.batubara.grafik.index',
                 'mineral_logam' => 'superuser.mineral-logam.grafik.index',
                 'mineral_bukan_logam' => 'superuser.mineral-bukan-logam.grafik.index',
                 'panas_bumi' => 'superuser.panas-bumi.grafik.index',
+                'gambut' => 'superuser.gambut.grafik.index',
                 default => null,
             };
 
-            if ($grafikRoute && \Illuminate\Support\Facades\Route::has($grafikRoute)) {
-                // Sengaja PAKE redirect() biasa, BUKAN ->intended() - soalnya intended()
-                // bakal ngutamain URL yang ke-simpen di session (halaman yang dicoba diakses
-                // sebelum login), bukan tujuan yang kita paksa di sini. Kalau kepake
-                // intended(), super_user bisa nyasar balik ke halaman Data alih-alih Grafik.
+            // redirect()->to(), BUKAN intended() - biar gak dibajak URL tersimpan di session
+            if ($grafikRoute && Route::has($grafikRoute)) {
                 return redirect()->to(route($grafikRoute));
             }
 
             return redirect()->to('/dashboard');
+        }
+
+        if ($user->role === 'super_user') {
+            // Super user belum punya halaman khusus (manajemen admin & user belum dibuat),
+            // sementara dimasukin ke Grafik Batubara - sidebar-nya nampilin SEMUA domain.
+            return redirect()->to(route('superuser.batubara.grafik.index'));
         }
 
         return redirect()->intended('/dashboard');

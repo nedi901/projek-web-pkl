@@ -41,8 +41,9 @@ class NeracaGambutSeeder extends Seeder
                 'nama_kabupaten' => 'Rekap Provinsi',
             ]);
 
-            NeracaGambut::create([
-                'idgb' => $idgb++,
+            // updateOrCreate (bukan create) supaya seeder AMAN diulang: kalau idgb udah ada,
+            // datanya ditimpa, bukan error UNIQUE constraint.
+            NeracaGambut::updateOrCreate(['idgb' => $idgb++], [
                 'tahun_data' => 2025,
                 'tahun_neraca' => 2026,
                 'nama_objek' => 'Gambut ' . $namaProvinsi,

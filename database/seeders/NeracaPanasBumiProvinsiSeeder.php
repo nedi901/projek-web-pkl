@@ -23,6 +23,10 @@ use Illuminate\Database\Seeder;
  * 18 provinsi sisanya (gak ada lapangan terkenal yang ke-extract) tetap 1 row rekap kayak
  * versi sebelumnya.
  *
+ * CATATAN TAHUN: Tabel 47 berlabel "Tahun 2023" di buku, tapi di-set tahun_data=2024 (keputusan
+ * user, sesuai aturan pembimbing data 2024-2025; edisi buku = data Desember 2024, Tabel 46 sebelahnya
+ * berlabel 2024). Label asli 2023 dicatat di kolom remark tiap baris.
+ *
  * CATATAN JUJUR: Tabel 45 di buku SAMA SEKALI GAK PUNYA KOLOM PROVINSI - provinsi tiap
  * lapangan di bawah ini DIPETAKAN MANUAL dari pengetahuan geografi umum (WKP-WKP yang udah
  * dikenal luas di publikasi energi Indonesia), BUKAN dari buku. Kalau ada yang salah,
@@ -132,7 +136,7 @@ class NeracaPanasBumiProvinsiSeeder extends Seeder
 
             NeracaPanasBumi::create([
                 'idpb' => $idpb++,
-                'tahun_data' => 2023,
+                'tahun_data' => 2024, // label asli di buku: 2023 (lihat catatan di remark)
                 'tahun_neraca' => 2025,
                 'nama_objek' => 'Panas Bumi ' . $namaProvinsi . ' - Lokasi Lainnya',
                 'stat_dik_pb_id' => $statDefault->id,
@@ -147,7 +151,7 @@ class NeracaPanasBumiProvinsiSeeder extends Seeder
                 'kapasitas_terpasang' => $kap,
                 'provinsi_id' => $provinsi->id,
                 'kabupaten_id' => $kabupaten->id,
-                'remark' => 'Selisih dari total resmi provinsi (Tabel 47) dikurangi lapangan-lapangan yang udah dipecah di atas - lokasi WKP lain yang belum teridentifikasi namanya secara spesifik.',
+                'remark' => 'Selisih dari total resmi provinsi (Tabel 47) dikurangi lapangan-lapangan yang udah dipecah di atas - lokasi WKP lain yang belum teridentifikasi namanya secara spesifik. CATATAN TAHUN: tabel sumber berlabel "Tahun 2023" di buku, di-set 2024 agar masuk rentang data 2024-2025 (edisi buku: data termutakhirkan Desember 2024).',
             ]);
         }
 
@@ -187,7 +191,7 @@ class NeracaPanasBumiProvinsiSeeder extends Seeder
 
             NeracaPanasBumi::create([
                 'idpb' => $idpb++,
-                'tahun_data' => 2023,
+                'tahun_data' => 2024, // label asli di buku: 2023 (lihat catatan di remark)
                 'tahun_neraca' => 2025,
                 'nama_objek' => 'Panas Bumi ' . $namaProvinsi . ' (' . $jumlahTitik . ' titik WKP)',
                 'stat_dik_pb_id' => $statDefault->id,
@@ -202,7 +206,7 @@ class NeracaPanasBumiProvinsiSeeder extends Seeder
                 'kapasitas_terpasang' => $kap,
                 'provinsi_id' => $provinsi->id,
                 'kabupaten_id' => $kabupaten->id,
-                'remark' => 'Data agregat resmi per provinsi (Tabel 47, Buku Neraca Minerba 2025) - belum ada breakdown per-lapangan yang teridentifikasi.',
+                'remark' => 'Data agregat resmi per provinsi (Tabel 47, Buku Neraca Minerba 2025) - belum ada breakdown per-lapangan yang teridentifikasi. CATATAN TAHUN: tabel sumber berlabel "Tahun 2023" di buku, di-set 2024 agar masuk rentang data 2024-2025 (edisi buku: data termutakhirkan Desember 2024).',
             ]);
         }
     }
