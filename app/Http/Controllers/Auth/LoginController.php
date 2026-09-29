@@ -36,11 +36,11 @@ class LoginController extends Controller
         if ($user->role === 'admin') {
             // Admin domain -> langsung ke Grafik domain miliknya sendiri
             $grafikRoute = match ($user->domain_akses) {
-                'batubara' => 'superuser.batubara.grafik.index',
-                'mineral_logam' => 'superuser.mineral-logam.grafik.index',
-                'mineral_bukan_logam' => 'superuser.mineral-bukan-logam.grafik.index',
-                'panas_bumi' => 'superuser.panas-bumi.grafik.index',
-                'gambut' => 'superuser.gambut.grafik.index',
+                'batubara' => 'admin.batubara.grafik.index',
+                'mineral_logam' => 'admin.mineral-logam.grafik.index',
+                'mineral_bukan_logam' => 'admin.mineral-bukan-logam.grafik.index',
+                'panas_bumi' => 'admin.panas-bumi.grafik.index',
+                'gambut' => 'admin.gambut.grafik.index',
                 default => null,
             };
 
@@ -55,7 +55,7 @@ class LoginController extends Controller
         if ($user->role === 'super_user') {
             // Super user belum punya halaman khusus (manajemen admin & user belum dibuat),
             // sementara dimasukin ke Grafik Batubara - sidebar-nya nampilin SEMUA domain.
-            return redirect()->to(route('superuser.batubara.grafik.index'));
+            return redirect()->to(route('admin.batubara.grafik.index'));
         }
 
         return redirect()->intended('/dashboard');

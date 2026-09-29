@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ $title ?? 'Admin - Neraca SDM' }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#F5F5F5] text-gray-800">
+    <div class="flex min-h-screen">
+        <div class="w-56 bg-white border-r border-gray-200 flex flex-col shrink-0">
+            <div class="flex flex-col items-center py-6 border-b border-gray-100">
+                <svg width="36" height="36" viewBox="0 0 56 56" class="mb-1">
+                    <circle cx="28" cy="28" r="26" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
+                    <path d="M28 8 L44 20 L44 36 L28 48 L12 36 L12 20 Z" fill="none" stroke="#F2C230" stroke-width="2"/>
+                    <circle cx="28" cy="28" r="9" fill="#F2C230"/>
+                    <circle cx="28" cy="28" r="4" fill="#1a1a1a"/>
+                </svg>
+                <div class="text-[9px] font-semibold tracking-wide text-gray-600">KEMENTERIAN</div>
+                <div class="text-sm font-extrabold tracking-wide text-[#1a1a1a] -mt-0.5">ESDM</div>
+            </div>
+
+            <nav class="flex-1 py-3 px-3 space-y-1 text-sm">
+    @php $domain = auth()->user()->domain_akses; @endphp
+
+    @if($domain === 'batubara' || auth()->user()->role === 'admin')
+        <a href="{{ route('admin.batubara.grafik.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.batubara.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Grafik dan Visualisasi
+        </a>
+        <a href="{{ route('admin.batubara.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.batubara.*') && !request()->routeIs('admin.batubara.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Data Batubara
+        </a>
+    @endif
+
+    @if($domain === 'mineral_logam' || auth()->user()->role === 'admin')
+        <a href="{{ route('admin.mineral-logam.grafik.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.mineral-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Grafik dan Visualisasi
+        </a>
+        <a href="{{ route('admin.mineral-logam.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.mineral-logam.*') && !request()->routeIs('admin.mineral-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Data Mineral Logam
+        </a>
+    @endif
+
+    @if($domain === 'mineral_bukan_logam' || auth()->user()->role === 'admin')
+        <a href="{{ route('admin.mineral-bukan-logam.grafik.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.mineral-bukan-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Grafik dan Visualisasi
+        </a>
+        <a href="{{ route('admin.mineral-bukan-logam.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.mineral-bukan-logam.*') && !request()->routeIs('admin.mineral-bukan-logam.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+            Data Mineral Bukan Logam
+        </a>
+    @endif
+
+    @if($domain === 'panas_bumi' || auth()->user()->role === 'admin')
+    <a href="{{ route('admin.panas-bumi.grafik.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.panas-bumi.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Grafik dan Visualisasi
+    </a>
+    <a href="{{ route('admin.panas-bumi.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.panas-bumi.*') && !request()->routeIs('admin.panas-bumi.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Data Panas Bumi
+    </a>
+@endif
+
+@if($domain === 'gambut' || auth()->user()->role === 'admin')
+    <a href="{{ route('admin.gambut.grafik.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.gambut.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Grafik dan Visualisasi
+    </a>
+    <a href="{{ route('admin.gambut.index') }}"
+       class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-medium {{ request()->routeIs('admin.gambut.*') && !request()->routeIs('admin.gambut.grafik.*') ? 'bg-[#F2C230] text-black' : 'text-gray-600 hover:bg-gray-50' }}">
+        Data Gambut
+    </a>
+@endif
+
+
+</nav>
+
+            <div class="border-t border-gray-100 px-3 py-3">
+                <div class="bg-gray-50 rounded-lg px-3 py-2 text-xs">
+                    <div class="font-medium text-gray-700">{{ auth()->user()->name }}</div>
+                    <div class="text-[10px] text-gray-400 font-mono">{{ auth()->user()->role === 'admin' ? 'ADMIN' : 'SUPER USER · ' . strtoupper(str_replace('_', ' ', auth()->user()->domain_akses)) }}</div>
+                </div>
+                <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                    @csrf
+                    <button class="w-full text-left px-3 py-2 text-sm text-gray-500 hover:bg-gray-50 rounded-lg">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="flex-1 p-8">
+            @if(session('success'))
+            <div class="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-2.5 mb-4">
+                {{ session('success') }}
+            </div>
+            @endif
+
+            {{ $slot }}
+        </div>
+    </div>
+</body>
+</html>

@@ -13,11 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
     $middleware->alias([
-        'superuser.batubara' => \App\Http\Middleware\CheckSuperUserBatubara::class,
-        'superuser.minerallogam' => \App\Http\Middleware\CheckSuperUserMineralLogam::class,
-        'superuser.mineral-bukan-logam' => \App\Http\Middleware\CheckSuperUserMineralBukanLogam::class,
-        'superuser.panas-bumi' => \App\Http\Middleware\CheckSuperUserPanasBumi::class,
-        'superuser.gambut' => \App\Http\Middleware\CheckSuperUserGambut::class,
+        'admin.batubara' => \App\Http\Middleware\CheckAdminBatubara::class,
+        'admin.minerallogam' => \App\Http\Middleware\CheckAdminMineralLogam::class,
+        'admin.mineral-bukan-logam' => \App\Http\Middleware\CheckAdminMineralBukanLogam::class,
+        'admin.panas-bumi' => \App\Http\Middleware\CheckAdminPanasBumi::class,
+        'admin.gambut' => \App\Http\Middleware\CheckAdminGambut::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -28,7 +28,7 @@ class MineralLogamController extends Controller
     }
     public function importForm()
 {
-    return view('superuser.mineral-logam.import');
+    return view('admin.mineral-logam.import');
 }
 
 public function import(Request $request)
@@ -39,6 +39,6 @@ public function import(Request $request)
 
     Excel::import(new MineralLogamImport, $request->file('file'));
 
-    return redirect()->route('superuser.mineral-logam.index')->with('success', 'Data berhasil diimport.');
+    return redirect()->route('admin.mineral-logam.index')->with('success', 'Data berhasil diimport.');
 }
 }

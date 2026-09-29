@@ -8,15 +8,15 @@ use App\Http\Controllers\User\MineralLogamController;
 use App\Http\Controllers\User\MineralBukanLogamController;
 use App\Http\Controllers\User\PanasBumiController;
 use App\Http\Controllers\User\GrafikController;
-use App\Http\Controllers\SuperUser\BatubaraController as SuperUserBatubaraController;
-use App\Http\Controllers\SuperUser\GrafikController as SuperUserGrafikController;
-use App\Http\Controllers\SuperUser\MineralLogamController as SuperUserMineralLogamController;
-use App\Http\Controllers\SuperUser\MineralBukanLogamController as SuperUserMineralBukanLogamController;
-use App\Http\Controllers\SuperUser\MineralBukanLogamGrafikController as SuperUserMineralBukanLogamGrafikController;
-use App\Http\Controllers\SuperUser\PanasBumiController as SuperUserPanasBumiController;
-use App\Http\Controllers\SuperUser\PanasBumiGrafikController as SuperUserPanasBumiGrafikController;
-use App\Http\Controllers\SuperUser\GambutController as SuperUserGambutController;
-use App\Http\Controllers\SuperUser\GambutGrafikController as SuperUserGambutGrafikController;
+use App\Http\Controllers\Admin\BatubaraController as AdminBatubaraController;
+use App\Http\Controllers\Admin\GrafikController as AdminGrafikController;
+use App\Http\Controllers\Admin\MineralLogamController as AdminMineralLogamController;
+use App\Http\Controllers\Admin\MineralBukanLogamController as AdminMineralBukanLogamController;
+use App\Http\Controllers\Admin\MineralBukanLogamGrafikController as AdminMineralBukanLogamGrafikController;
+use App\Http\Controllers\Admin\PanasBumiController as AdminPanasBumiController;
+use App\Http\Controllers\Admin\PanasBumiGrafikController as AdminPanasBumiGrafikController;
+use App\Http\Controllers\Admin\GambutController as AdminGambutController;
+use App\Http\Controllers\Admin\GambutGrafikController as AdminGambutGrafikController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,95 +48,95 @@ Route::prefix('panas-bumi')->name('user.panas-bumi.')->group(function () {
 });
 Route::get('/grafik', [GrafikController::class, 'index'])->name('user.grafik.index');
 
-Route::middleware(['auth', 'superuser.batubara'])->prefix('superuser/batubara')->name('superuser.batubara.')->group(function () {
-    Route::get('/', [SuperUserBatubaraController::class, 'index'])->name('index');
-    Route::get('/create', [SuperUserBatubaraController::class, 'create'])->name('create');
-    Route::post('/', [SuperUserBatubaraController::class, 'store'])->name('store');
-    Route::get('/{batubara}/edit', [SuperUserBatubaraController::class, 'edit'])->name('edit');
-    Route::put('/{batubara}', [SuperUserBatubaraController::class, 'update'])->name('update');
-    Route::delete('/{batubara}', [SuperUserBatubaraController::class, 'destroy'])->name('destroy');
-    Route::get('/import', [SuperUserBatubaraController::class, 'importForm'])->name('import.form');
-    Route::post('/import', [SuperUserBatubaraController::class, 'import'])->name('import');
+Route::middleware(['auth', 'admin.batubara'])->prefix('admin/batubara')->name('admin.batubara.')->group(function () {
+    Route::get('/', [AdminBatubaraController::class, 'index'])->name('index');
+    Route::get('/create', [AdminBatubaraController::class, 'create'])->name('create');
+    Route::post('/', [AdminBatubaraController::class, 'store'])->name('store');
+    Route::get('/{batubara}/edit', [AdminBatubaraController::class, 'edit'])->name('edit');
+    Route::put('/{batubara}', [AdminBatubaraController::class, 'update'])->name('update');
+    Route::delete('/{batubara}', [AdminBatubaraController::class, 'destroy'])->name('destroy');
+    Route::get('/import', [AdminBatubaraController::class, 'importForm'])->name('import.form');
+    Route::post('/import', [AdminBatubaraController::class, 'import'])->name('import');
     Route::get('/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
         return $provinsi->kabupatens;
     })->name('kabupaten');
-    Route::get('/grafik', [SuperUserGrafikController::class, 'index'])->name('grafik.index');  // ← ini harus ada
+    Route::get('/grafik', [AdminGrafikController::class, 'index'])->name('grafik.index');  // ← ini harus ada
 });
 
 
-Route::get('/superuser/batubara/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
+Route::get('/admin/batubara/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
     return $provinsi->kabupatens;
-})->middleware(['auth', 'superuser.batubara']);
+})->middleware(['auth', 'admin.batubara']);
 
-Route::middleware(['auth', 'superuser.minerallogam'])->prefix('superuser/mineral-logam')->name('superuser.mineral-logam.')->group(function () {
-    Route::get('/', [SuperUserMineralLogamController::class, 'index'])->name('index');
-    Route::get('/create', [SuperUserMineralLogamController::class, 'create'])->name('create');
-    Route::post('/', [SuperUserMineralLogamController::class, 'store'])->name('store');
-    Route::get('/{mineralLogam}/edit', [SuperUserMineralLogamController::class, 'edit'])->name('edit');
-    Route::put('/{mineralLogam}', [SuperUserMineralLogamController::class, 'update'])->name('update');
-    Route::delete('/{mineralLogam}', [SuperUserMineralLogamController::class, 'destroy'])->name('destroy');
+Route::middleware(['auth', 'admin.minerallogam'])->prefix('admin/mineral-logam')->name('admin.mineral-logam.')->group(function () {
+    Route::get('/', [AdminMineralLogamController::class, 'index'])->name('index');
+    Route::get('/create', [AdminMineralLogamController::class, 'create'])->name('create');
+    Route::post('/', [AdminMineralLogamController::class, 'store'])->name('store');
+    Route::get('/{mineralLogam}/edit', [AdminMineralLogamController::class, 'edit'])->name('edit');
+    Route::put('/{mineralLogam}', [AdminMineralLogamController::class, 'update'])->name('update');
+    Route::delete('/{mineralLogam}', [AdminMineralLogamController::class, 'destroy'])->name('destroy');
     Route::get('/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
         return $provinsi->kabupatens;
     })->name('kabupaten');
-    Route::get('/grafik', [\App\Http\Controllers\SuperUser\MineralLogamGrafikController::class, 'index'])->name('grafik.index');
-    Route::get('/import', [SuperUserMineralLogamController::class, 'importForm'])->name('import.form');
-Route::post('/import', [SuperUserMineralLogamController::class, 'import'])->name('import');
+    Route::get('/grafik', [\App\Http\Controllers\Admin\MineralLogamGrafikController::class, 'index'])->name('grafik.index');
+    Route::get('/import', [AdminMineralLogamController::class, 'importForm'])->name('import.form');
+Route::post('/import', [AdminMineralLogamController::class, 'import'])->name('import');
 });
 
-Route::middleware(['auth', 'superuser.mineral-bukan-logam'])
-    ->prefix('superuser/mineral-bukan-logam')
-    ->name('superuser.mineral-bukan-logam.')
+Route::middleware(['auth', 'admin.mineral-bukan-logam'])
+    ->prefix('admin/mineral-bukan-logam')
+    ->name('admin.mineral-bukan-logam.')
     ->group(function () {
-        Route::get('/', [SuperUserMineralBukanLogamController::class, 'index'])->name('index');
-        Route::get('/create', [SuperUserMineralBukanLogamController::class, 'create'])->name('create');
-        Route::post('/', [SuperUserMineralBukanLogamController::class, 'store'])->name('store');
-        Route::get('/{mineralBukanLogam}/edit', [SuperUserMineralBukanLogamController::class, 'edit'])->name('edit');
-        Route::put('/{mineralBukanLogam}', [SuperUserMineralBukanLogamController::class, 'update'])->name('update');
-        Route::delete('/{mineralBukanLogam}', [SuperUserMineralBukanLogamController::class, 'destroy'])->name('destroy');
+        Route::get('/', [AdminMineralBukanLogamController::class, 'index'])->name('index');
+        Route::get('/create', [AdminMineralBukanLogamController::class, 'create'])->name('create');
+        Route::post('/', [AdminMineralBukanLogamController::class, 'store'])->name('store');
+        Route::get('/{mineralBukanLogam}/edit', [AdminMineralBukanLogamController::class, 'edit'])->name('edit');
+        Route::put('/{mineralBukanLogam}', [AdminMineralBukanLogamController::class, 'update'])->name('update');
+        Route::delete('/{mineralBukanLogam}', [AdminMineralBukanLogamController::class, 'destroy'])->name('destroy');
 
-        Route::get('/import', [SuperUserMineralBukanLogamController::class, 'importForm'])->name('import.form');
-        Route::post('/import', [SuperUserMineralBukanLogamController::class, 'import'])->name('import');
+        Route::get('/import', [AdminMineralBukanLogamController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [AdminMineralBukanLogamController::class, 'import'])->name('import');
 
-        Route::get('/kabupaten/{provinsiId}', [SuperUserMineralBukanLogamController::class, 'kabupaten'])->name('kabupaten');
+        Route::get('/kabupaten/{provinsiId}', [AdminMineralBukanLogamController::class, 'kabupaten'])->name('kabupaten');
 
-        Route::get('/grafik', [SuperUserMineralBukanLogamGrafikController::class, 'index'])->name('grafik.index');
+        Route::get('/grafik', [AdminMineralBukanLogamGrafikController::class, 'index'])->name('grafik.index');
     });
 
-    Route::middleware(['auth', 'superuser.panas-bumi'])
-    ->prefix('superuser/panas-bumi')
-    ->name('superuser.panas-bumi.')
+    Route::middleware(['auth', 'admin.panas-bumi'])
+    ->prefix('admin/panas-bumi')
+    ->name('admin.panas-bumi.')
     ->group(function () {
-        Route::get('/', [SuperUserPanasBumiController::class, 'index'])->name('index');
-        Route::get('/create', [SuperUserPanasBumiController::class, 'create'])->name('create');
-        Route::post('/', [SuperUserPanasBumiController::class, 'store'])->name('store');
-        Route::get('/{panasBumi}/edit', [SuperUserPanasBumiController::class, 'edit'])->name('edit');
-        Route::put('/{panasBumi}', [SuperUserPanasBumiController::class, 'update'])->name('update');
-        Route::delete('/{panasBumi}', [SuperUserPanasBumiController::class, 'destroy'])->name('destroy');
+        Route::get('/', [AdminPanasBumiController::class, 'index'])->name('index');
+        Route::get('/create', [AdminPanasBumiController::class, 'create'])->name('create');
+        Route::post('/', [AdminPanasBumiController::class, 'store'])->name('store');
+        Route::get('/{panasBumi}/edit', [AdminPanasBumiController::class, 'edit'])->name('edit');
+        Route::put('/{panasBumi}', [AdminPanasBumiController::class, 'update'])->name('update');
+        Route::delete('/{panasBumi}', [AdminPanasBumiController::class, 'destroy'])->name('destroy');
 
-        Route::get('/import', [SuperUserPanasBumiController::class, 'importForm'])->name('import.form');
-        Route::post('/import', [SuperUserPanasBumiController::class, 'import'])->name('import');
+        Route::get('/import', [AdminPanasBumiController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [AdminPanasBumiController::class, 'import'])->name('import');
 
-        Route::get('/kabupaten/{provinsiId}', [SuperUserPanasBumiController::class, 'kabupaten'])->name('kabupaten');
+        Route::get('/kabupaten/{provinsiId}', [AdminPanasBumiController::class, 'kabupaten'])->name('kabupaten');
 
-        Route::get('/grafik', [SuperUserPanasBumiGrafikController::class, 'index'])->name('grafik.index');
+        Route::get('/grafik', [AdminPanasBumiGrafikController::class, 'index'])->name('grafik.index');
     });
 
-    Route::middleware(['auth', 'superuser.gambut'])
-    ->prefix('superuser/gambut')
-    ->name('superuser.gambut.')
+    Route::middleware(['auth', 'admin.gambut'])
+    ->prefix('admin/gambut')
+    ->name('admin.gambut.')
     ->group(function () {
-        Route::get('/', [SuperUserGambutController::class, 'index'])->name('index');
-        Route::get('/create', [SuperUserGambutController::class, 'create'])->name('create');
-        Route::post('/', [SuperUserGambutController::class, 'store'])->name('store');
-        Route::get('/{gambut}/edit', [SuperUserGambutController::class, 'edit'])->name('edit');
-        Route::put('/{gambut}', [SuperUserGambutController::class, 'update'])->name('update');
-        Route::delete('/{gambut}', [SuperUserGambutController::class, 'destroy'])->name('destroy');
+        Route::get('/', [AdminGambutController::class, 'index'])->name('index');
+        Route::get('/create', [AdminGambutController::class, 'create'])->name('create');
+        Route::post('/', [AdminGambutController::class, 'store'])->name('store');
+        Route::get('/{gambut}/edit', [AdminGambutController::class, 'edit'])->name('edit');
+        Route::put('/{gambut}', [AdminGambutController::class, 'update'])->name('update');
+        Route::delete('/{gambut}', [AdminGambutController::class, 'destroy'])->name('destroy');
 
-        Route::get('/import', [SuperUserGambutController::class, 'importForm'])->name('import.form');
-        Route::post('/import', [SuperUserGambutController::class, 'import'])->name('import');
+        Route::get('/import', [AdminGambutController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [AdminGambutController::class, 'import'])->name('import');
 
-        Route::get('/kabupaten/{provinsiId}', [SuperUserGambutController::class, 'kabupaten'])->name('kabupaten');
+        Route::get('/kabupaten/{provinsiId}', [AdminGambutController::class, 'kabupaten'])->name('kabupaten');
 
-        Route::get('/grafik', [SuperUserGambutGrafikController::class, 'index'])->name('grafik.index');
+        Route::get('/grafik', [AdminGambutGrafikController::class, 'index'])->name('grafik.index');
     });
 
