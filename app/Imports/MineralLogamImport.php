@@ -39,7 +39,7 @@ class MineralLogamImport implements ToModel, WithHeadingRow, SkipsEmptyRows
             ? IdInstansi::firstOrCreate(['label' => trim($row['idinstansi'])])
             : null;
 
-        if (NeracaMineralLogam::where('idml', $row['idlgm'])->exists()) {
+        if (NeracaMineralLogam::withTrashed()->where('idml', $row['idlgm'])->exists()) {
             return null;
         }
 

@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksDeletion;
 use Illuminate\Database\Eloquent\Model;
 
 class NeracaMineralBukanLogam extends Model
 {
+    use TracksDeletion;
+
+    protected string $riwayatDomain = 'mineral_bukan_logam';
+
     protected $fillable = [
         'idbl', 'tahun_data', 'tahun_neraca', 'nama_objek',
         'komoditas_bukan_logam_id', 'stat_dik_bb_id', 'id_instansi_id',

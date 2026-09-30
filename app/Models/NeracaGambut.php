@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksDeletion;
 use Illuminate\Database\Eloquent\Model;
 
 class NeracaGambut extends Model
 {
+    use TracksDeletion;
+
+    protected string $riwayatDomain = 'gambut';
+
     protected $fillable = [
         'idgb', 'tahun_data', 'tahun_neraca', 'nama_objek',
         'nilai_kalori_min', 'nilai_kalori_max',

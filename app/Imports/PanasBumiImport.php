@@ -30,7 +30,7 @@ class PanasBumiImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     public function model(array $row): Model|array|null
     {
-        if (NeracaPanasBumi::where('idpb', $row['idpb'])->exists()) {
+        if (NeracaPanasBumi::withTrashed()->where('idpb', $row['idpb'])->exists()) {
             return null;
         }
 

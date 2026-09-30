@@ -28,7 +28,7 @@ class MineralBukanLogamImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     public function model(array $row): Model|array|null
     {
         // skip kalau idbl sudah ada (hindari duplikat)
-        if (NeracaMineralBukanLogam::where('idbl', $row['idbl'])->exists()) {
+        if (NeracaMineralBukanLogam::withTrashed()->where('idbl', $row['idbl'])->exists()) {
             return null;
         }
 

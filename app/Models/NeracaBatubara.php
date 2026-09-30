@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksDeletion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NeracaBatubara extends Model
 {
-    use HasFactory;
+    use HasFactory, TracksDeletion;
+
+    protected string $riwayatDomain = 'batubara';
 
     protected $fillable = [
         'idbb',

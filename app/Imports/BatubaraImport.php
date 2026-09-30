@@ -40,7 +40,7 @@ class BatubaraImport implements ToModel, WithHeadingRow, SkipsEmptyRows
             : null;
 
         // Skip kalo idbb udah ada (hindari duplikat pas import ulang)
-        if (NeracaBatubara::where('idbb', $row['idbb'])->exists()) {
+        if (NeracaBatubara::withTrashed()->where('idbb', $row['idbb'])->exists()) {
             return null;
         }
 

@@ -140,3 +140,38 @@ Route::middleware(['auth', 'admin.mineral-bukan-logam'])
         Route::get('/grafik', [AdminGambutGrafikController::class, 'index'])->name('grafik.index');
     });
 
+
+/*
+|--------------------------------------------------------------------------
+| Sampah (soft delete) & Riwayat - semua domain
+|--------------------------------------------------------------------------
+| Tiap domain dapat 4 route dengan middleware akses domain masing-masing:
+|   admin.<domain>.sampah.index    GET     daftar data terhapus
+|   admin.<domain>.sampah.restore  POST    pulihkan
+|   admin.<domain>.sampah.force    DELETE  hapus permanen (cuma super_user, dicek di controller)
+|   admin.<domain>.sampah.riwayat  GET     log siapa menghapus/memulihkan
+*/
+$sampahDomains = [
+    // slug domain_akses  => [alias middleware, prefix URL/route]
+    'batubara'            => ['admin.batubara',            'batubara'],
+    'mineral_logam'       => ['admin.minerallogam',        'mineral-logam'],
+    'mineral_bukan_logam' => ['admin.mineral-bukan-logam', 'mineral-bukan-logam'],
+    'panas_bumi'          => ['admin.panas-bumi',          'panas-bumi'],
+    'gambut'              => ['admin.gambut',              'gambut'],
+];
+
+foreach ($sampahDomains as $slug => [$middlewareAlias, $prefix]) {
+    Route::middleware(['auth', $middlewareAlias])
+        ->prefix("admin/{$prefix}/sampah")
+        ->name("admin.{$prefix}.sampah.")
+        ->group(function () use ($slug) {
+            Route::get('/', [\App\Http\Controllers\Admin\SampahController::class, 'index'])
+                ->defaults('domain', $slug)->name('index');
+            Route::get('/riwayat', [\App\Http\Controllers\Admin\SampahController::class, 'riwayat'])
+                ->defaults('domain', $slug)->name('riwayat');
+            Route::post('/{id}/pulihkan', [\App\Http\Controllers\Admin\SampahController::class, 'restore'])
+                ->defaults('domain', $slug)->whereNumber('id')->name('restore');
+            Route::delete('/{id}/permanen', [\App\Http\Controllers\Admin\SampahController::class, 'forceDestroy'])
+                ->defaults('domain', $slug)->whereNumber('id')->name('force');
+        });
+}

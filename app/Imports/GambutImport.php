@@ -22,7 +22,7 @@ class GambutImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     public function model(array $row): Model|array|null
     {
-        if (NeracaGambut::where('idgb', $row['idgb'])->exists()) {
+        if (NeracaGambut::withTrashed()->where('idgb', $row['idgb'])->exists()) {
             return null;
         }
 
