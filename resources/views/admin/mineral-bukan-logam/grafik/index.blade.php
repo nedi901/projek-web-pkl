@@ -110,4 +110,5 @@
             @endif
         </div>
     </div>
+    <x-tabel-referensi-domain domain="mineral_bukan_logam" />
 </x-layouts.admin>

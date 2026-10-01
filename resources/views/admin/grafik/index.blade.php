@@ -67,4 +67,5 @@
             @endif
         </div>
     </div>
+    <x-tabel-referensi-domain domain="batubara" />
 </x-layouts.admin>

@@ -135,4 +135,5 @@
             @endif
         </div>
     </div>
+    <x-tabel-referensi-domain domain="panas_bumi" />
 </x-layouts.admin>

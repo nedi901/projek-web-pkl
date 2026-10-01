@@ -59,4 +59,5 @@
             <div class="text-center text-gray-400 text-sm py-10">Belum ada data</div>
         @endif
     </div>
+    <x-tabel-referensi-domain domain="gambut" />
 </x-layouts.admin>

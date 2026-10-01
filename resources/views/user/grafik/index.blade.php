@@ -88,4 +88,5 @@
             @endif
         </div>
     </div>
+    <x-tabel-referensi-domain :domain="str_replace('-', '_', $domain)" />
 </x-layouts.user>

@@ -9,7 +9,9 @@ use App\Models\Kabupaten;
 use App\Models\KomoditasLogam;
 use App\Models\StatDikBb;
 use App\Models\IdInstansi;
+use App\Imports\MineralLogamImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MineralLogamController extends Controller
 {
@@ -122,5 +124,21 @@ class MineralLogamController extends Controller
         $mineralLogam->delete();
 
         return redirect()->route('admin.mineral-logam.index')->with('success', 'Data berhasil dihapus.');
+    }
+
+    public function importForm()
+    {
+        return view('admin.mineral-logam.import');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new MineralLogamImport, $request->file('file'));
+
+        return redirect()->route('admin.mineral-logam.index')->with('success', 'Import selesai.');
     }
 }
