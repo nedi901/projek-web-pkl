@@ -68,7 +68,7 @@ class NeracaMineralBukanLogamTambahanSeeder extends Seeder
                     'nama_kabupaten' => 'Rekap Provinsi',
                 ]);
 
-                // withTrashed: kalau barisnya pernah dihapus ke Sampah, jangan dibuat duplikat (UNIQUE idbl)
+                // withTrashed: kalau barisnya pernah dihapus ke Histori, jangan dibuat duplikat (UNIQUE idbl)
                 NeracaMineralBukanLogam::withTrashed()->updateOrCreate(
                     ['idbl' => $idbl++],
                     [

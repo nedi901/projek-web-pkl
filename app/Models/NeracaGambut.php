@@ -26,6 +26,6 @@ class NeracaGambut extends Model
         if ($this->nilai_kalori_min === null || $this->nilai_kalori_max === null) {
             return '-';
         }
-        return number_format($this->nilai_kalori_min, 0) . ' - ' . number_format($this->nilai_kalori_max, 0) . ' kal/gr';
+        return number_format($this->nilai_kalori_min, 0, ',', '.') . ' - ' . number_format($this->nilai_kalori_max, 0, ',', '.') . ' kal/gr';
     }
 }

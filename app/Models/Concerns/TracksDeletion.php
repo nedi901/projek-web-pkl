@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
  * `protected string $riwayatDomain = 'batubara';` (slug = nilai domain_akses).
  *
  * Yang otomatis terjadi:
- *  - delete()        -> deleted_at + deleted_by terisi, masuk "Sampah", tercatat di riwayat_data
+ *  - delete()        -> deleted_at + deleted_by terisi, masuk "Histori", tercatat di riwayat_data
  *  - restore()       -> deleted_at & deleted_by dikosongkan, tercatat di riwayat_data
  *  - forceDelete()   -> hilang permanen, tercatat di riwayat_data (snapshot terakhir disimpan)
  *
@@ -60,7 +60,7 @@ trait TracksDeletion
         });
     }
 
-    /** Siapa yang menghapus (null kalau data tidak sedang di sampah). */
+    /** Siapa yang menghapus (null kalau data tidak sedang di histori). */
     public function deletedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'deleted_by');

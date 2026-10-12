@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -16,18 +17,32 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
+        $data = $request->validate([
+            'login' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        // bisa login pakai email ATAU username
+        $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $login = Str::lower(trim($data['login']));
+
+        if (! Auth::attempt([$field => $login, 'password' => $data['password']], $request->boolean('remember'))) {
             return back()->withErrors([
-                'email' => 'Email atau password salah.',
-            ])->onlyInput('email');
+                'login' => 'Email/username atau password salah.',
+            ])->onlyInput('login');
+        }
+
+        if (Auth::user()->is_active === false) {
+            Auth::logout();
+
+            return back()->withErrors([
+                'login' => 'Akun kamu dinonaktifkan. Hubungi Super User.',
+            ])->onlyInput('login');
         }
 
         $request->session()->regenerate();
+
+        Auth::user()->forceFill(['last_login_at' => now()])->saveQuietly();
 
         $user = Auth::user();
 
@@ -53,9 +68,8 @@ class LoginController extends Controller
         }
 
         if ($user->role === 'super_user') {
-            // Super user belum punya halaman khusus (manajemen admin & user belum dibuat),
-            // sementara dimasukin ke Grafik Batubara - sidebar-nya nampilin SEMUA domain.
-            return redirect()->to(route('admin.batubara.grafik.index'));
+            // Super User -> Dashboard (ringkasan semua domain, akun, aktivitas terbaru)
+            return redirect()->to(route('superuser.dashboard'));
         }
 
         return redirect()->intended('/dashboard');

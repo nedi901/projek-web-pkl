@@ -41,9 +41,9 @@
                         <td class="px-3 py-2 font-medium">{{ $row->nama_objek }}</td>
                         <td class="px-3 py-2">{{ $row->provinsi->nama_provinsi }}</td>
                         <td class="px-3 py-2">{{ $row->nilai_kalori_label }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->luas_ha, 2) }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->volume_juta_m3, 2) }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->total_sd, 2) }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->luas_ha, 2, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->volume_juta_m3, 2, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->total_sd, 2, ',', '.') }}</td>
                         <td class="px-3 py-2 text-center">
                             <a href="{{ route('admin.gambut.edit', $row) }}" class="text-blue-600 hover:underline mr-3">Edit</a>
                             <form method="POST" action="{{ route('admin.gambut.destroy', $row) }}" class="inline"

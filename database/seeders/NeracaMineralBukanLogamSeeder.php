@@ -143,7 +143,7 @@ class NeracaMineralBukanLogamSeeder extends Seeder
                 ['Nusa Tenggara Timur', 12, 264975000, 22932800, 155625000, 0, 0, 0],
                 ['Sulawesi Barat', 13, 727540000, 0, 0, 0, 0, 0],
                 ['Sulawesi Selatan', 5, 105964000, 6667199, 0, 1500000, 0, 0],
-                ['', 3, 40822000, 0, 215000000, 0, 0, 0],
+                ['Sulawesi Tengah', 3, 40822000, 0, 215000000, 0, 0, 0],   // nama baris ini terpotong pindah halaman di PDF buku (Tabel Felspar, no. 17)
                 ['Sumatera Barat', 8, 1144530000, 0, 0, 0, 0, 0],
                 ['Sumatera Selatan', 19, 36268000, 2216000, 1484800, 1299200, 1484800, 1299200],
                 ['Sumatera Utara', 18, 292337000, 2361450000, 11033783, 0, 10677548, 0],

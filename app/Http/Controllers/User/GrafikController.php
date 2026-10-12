@@ -7,6 +7,7 @@ use App\Models\NeracaBatubara;
 use App\Models\NeracaMineralLogam;
 use App\Models\NeracaMineralBukanLogam;
 use App\Models\NeracaPanasBumi;
+use App\Models\NeracaGambut;
 use App\Models\Provinsi;
 use Illuminate\Http\Request;
 
@@ -29,19 +30,24 @@ class GrafikController extends Controller
         [$model, $fields] = match ($domain) {
             'mineral-logam' => [NeracaMineralLogam::class, [
                 'tereka' => 'tereka_bijih', 'tertunjuk' => 'tertunjuk_bijih',
-                'terukur' => 'terukur_bijih', 'total_sd' => 'total_sd_bijih',
+                'terukur' => 'terukur_bijih', 'total_sd' => 'total_sd_bijih', 'total_cad' => 'total_cad_bijih',
             ]],
             'mineral-bukan-logam' => [NeracaMineralBukanLogam::class, [
                 'tereka' => 'tereka', 'tertunjuk' => 'tertunjuk',
-                'terukur' => 'terukur', 'total_sd' => 'total_sd',
+                'terukur' => 'terukur', 'total_sd' => 'total_sd', 'total_cad' => 'total_cad',
             ]],
             'panas-bumi' => [NeracaPanasBumi::class, [
                 'tereka' => 'spekulatif', 'tertunjuk' => 'hipotetik',
-                'terukur' => null, 'total_sd' => 'total_sd',
+                'terukur' => null, 'total_sd' => 'total_sd', 'total_cad' => 'total_cad',
+            ]],
+            // Gambut: tidak punya klasifikasi tereka/tertunjuk/terukur maupun cadangan, hanya total_sd (juta ton)
+            'gambut' => [NeracaGambut::class, [
+                'tereka' => null, 'tertunjuk' => null,
+                'terukur' => null, 'total_sd' => 'total_sd', 'total_cad' => null,
             ]],
             default => [NeracaBatubara::class, [
                 'tereka' => 'tereka', 'tertunjuk' => 'tertunjuk',
-                'terukur' => 'terukur', 'total_sd' => 'total_sd',
+                'terukur' => 'terukur', 'total_sd' => 'total_sd', 'total_cad' => 'total_cad',
             ]],
         };
 
@@ -58,10 +64,19 @@ class GrafikController extends Controller
             ->take(6)
             ->get();
 
-        $totalTereka = (clone $query)->sum($fields['tereka']);
-        $totalTertunjuk = (clone $query)->sum($fields['tertunjuk']);
+        $totalTereka = $fields['tereka'] ? (clone $query)->sum($fields['tereka']) : 0;
+        $totalTertunjuk = $fields['tertunjuk'] ? (clone $query)->sum($fields['tertunjuk']) : 0;
         $totalTerukur = $fields['terukur'] ? (clone $query)->sum($fields['terukur']) : 0;
         $totalKlasifikasi = max($totalTereka + $totalTertunjuk + $totalTerukur, 1);
+
+        $totalSd = (clone $query)->sum($fields['total_sd']);
+        $totalCad = $fields['total_cad'] ? (clone $query)->sum($fields['total_cad']) : 0;
+        $jumlahData = (clone $query)->count();
+        $satuanGrafik = match ($domain) {
+            'panas-bumi' => 'MWe',
+            'gambut' => 'juta ton',
+            default => 'ton',
+        };
 
         $trendPerTahun = (clone $query)
             ->selectRaw("tahun_data, SUM({$fields['total_sd']}) as total")
@@ -75,7 +90,8 @@ class GrafikController extends Controller
 
         return view('user.grafik.index', compact(
             'perProvinsi', 'totalTereka', 'totalTertunjuk', 'totalTerukur', 'totalKlasifikasi',
-            'trendPerTahun', 'trendMax', 'provinsis', 'domain'
+            'trendPerTahun', 'trendMax', 'provinsis', 'domain',
+            'totalSd', 'totalCad', 'jumlahData', 'satuanGrafik'
         ));
     }
 }

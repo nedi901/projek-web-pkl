@@ -42,9 +42,9 @@
                         <td class="px-3 py-2 font-medium">{{ $row->nama_objek }}</td>
                         <td class="px-3 py-2">{{ $row->provinsi->nama_provinsi }}</td>
                         <td class="px-3 py-2">{{ $row->klasifikasiTemperatur->label ?? '-' }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->spekulatif, 2) }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->hipotetik, 2) }}</td>
-                        <td class="px-3 py-2 text-right">{{ number_format($row->kapasitas_terpasang, 2) }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->spekulatif, 2, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->hipotetik, 2, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right">{{ number_format($row->kapasitas_terpasang, 2, ',', '.') }}</td>
                         <td class="px-3 py-2">
                             <span class="px-2 py-1 rounded-full text-xs {{ $row->statDikPb->label == 'Eksploitasi / Terpasang' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
                                 {{ $row->statDikPb->label }}

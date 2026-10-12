@@ -16,7 +16,7 @@ class ProvinsiSeeder extends Seeder
             ['nama_provinsi' => 'Bengkulu', 'pulau' => 'Sumatera', 'created_at' => $now, 'updated_at' => $now],
             ['nama_provinsi' => 'Kalimantan Selatan', 'pulau' => 'Kalimantan', 'created_at' => $now, 'updated_at' => $now],
             ['nama_provinsi' => 'Kalimantan Timur', 'pulau' => 'Kalimantan', 'created_at' => $now, 'updated_at' => $now],
-            ['nama_provinsi' => 'Sumatra Barat', 'pulau' => 'Sumatera', 'created_at' => $now, 'updated_at' => $now],
+            ['nama_provinsi' => 'Sumatera Barat', 'pulau' => 'Sumatera', 'created_at' => $now, 'updated_at' => $now],
         ]);
     }
 }

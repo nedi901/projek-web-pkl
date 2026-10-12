@@ -23,15 +23,15 @@
     <div class="grid grid-cols-3 gap-4 mb-4">
         <div class="bg-white border border-gray-200 rounded-xl p-5">
             <div class="text-xs uppercase text-gray-400 mb-1">Total Sumber Daya</div>
-            <div class="text-2xl font-bold text-[#1a1a1a]">{{ number_format($totalSd, 2) }} <span class="text-sm font-normal text-gray-400">juta ton</span></div>
+            <div class="text-2xl font-bold text-[#1a1a1a]">{{ number_format($totalSd, 2, ',', '.') }} <span class="text-sm font-normal text-gray-400">juta ton</span></div>
         </div>
         <div class="bg-white border border-gray-200 rounded-xl p-5">
             <div class="text-xs uppercase text-gray-400 mb-1">Total Luas</div>
-            <div class="text-2xl font-bold text-[#1a1a1a]">{{ number_format($totalLuas, 2) }} <span class="text-sm font-normal text-gray-400">ha</span></div>
+            <div class="text-2xl font-bold text-[#1a1a1a]">{{ number_format($totalLuas, 2, ',', '.') }} <span class="text-sm font-normal text-gray-400">ha</span></div>
         </div>
         <div class="bg-white border border-gray-200 rounded-xl p-5">
             <div class="text-xs uppercase text-gray-400 mb-1">Total Volume</div>
-            <div class="text-2xl font-bold text-[#1a1a1a]">{{ number_format($totalVolume, 2) }} <span class="text-sm font-normal text-gray-400">juta m³</span></div>
+            <div class="text-2xl font-bold text-[#1a1a1a]">{{ number_format($totalVolume, 2, ',', '.') }} <span class="text-sm font-normal text-gray-400">juta m³</span></div>
         </div>
     </div>
 
@@ -43,21 +43,10 @@
                 Total Sumber Daya per Provinsi (Juta Ton)
             @endif
         </div>
-        @if($perProvinsi->count())
-            @php $max = $perProvinsi->max('total') ?: 1; @endphp
-            <div class="flex items-end gap-4 h-44">
-                @foreach($perProvinsi as $row)
-                    <div class="flex-1 bg-[#F2C230] rounded-t" style="height: {{ ($row->total / $max) * 100 }}%"></div>
-                @endforeach
-            </div>
-            <div class="flex gap-4 mt-2 text-[10px] text-gray-400">
-                @foreach($perProvinsi as $row)
-                    <div class="flex-1 text-center">{{ $row->provinsi->nama_provinsi ?? '-' }}</div>
-                @endforeach
-            </div>
-        @else
-            <div class="text-center text-gray-400 text-sm py-10">Belum ada data</div>
-        @endif
+        @php
+    $dataBar = $perProvinsi->map(fn ($row) => ['label' => (string) ($row->provinsi->nama_provinsi ?? '-'), 'value' => (float) $row->total])->all();
+@endphp
+<x-grafik-bar :data="$dataBar" :maks-batang="10" satuan="juta ton" />
     </div>
     <x-tabel-referensi-domain domain="gambut" />
 </x-layouts.admin>

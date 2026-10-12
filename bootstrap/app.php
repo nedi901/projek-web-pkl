@@ -12,18 +12,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-    $middleware->alias([
-        'admin.batubara' => \App\Http\Middleware\CheckAdminBatubara::class,
-        'admin.minerallogam' => \App\Http\Middleware\CheckAdminMineralLogam::class,
-        'admin.mineral-bukan-logam' => \App\Http\Middleware\CheckAdminMineralBukanLogam::class,
-        'admin.panas-bumi' => \App\Http\Middleware\CheckAdminPanasBumi::class,
-        'admin.gambut' => \App\Http\Middleware\CheckAdminGambut::class,
-    ]);
+        $middleware->alias([
+            'super.user' => \App\Http\Middleware\EnsureSuperUser::class,
+            'admin.batubara' => \App\Http\Middleware\CheckAdminBatubara::class,
+            'admin.minerallogam' => \App\Http\Middleware\CheckAdminMineralLogam::class,
+            'admin.mineral-bukan-logam' => \App\Http\Middleware\CheckAdminMineralBukanLogam::class,
+            'admin.panas-bumi' => \App\Http\Middleware\CheckAdminPanasBumi::class,
+            'admin.gambut' => \App\Http\Middleware\CheckAdminGambut::class,
+        ]);
+
+        // akun yang dinonaktifkan otomatis dikeluarkan dari sesi yang sedang berjalan
+        $middleware->appendToGroup('web', \App\Http\Middleware\EnsureAccountActive::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
-
-    
