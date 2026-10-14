@@ -11,7 +11,7 @@
     <div class="w-[340px] bg-white rounded-lg p-8 shadow-xl">
 
         <div class="flex flex-col items-center mb-4">
-            <img src="{{ asset('images/logo-esdm.png') }}" alt="Kementerian ESDM" class="h-28 w-auto mb-1">
+            <img src="{{ asset('images/logo-esdm.png') }}" alt="Kementerian ESDM" class="h-32 w-auto mb-1">
         </div>
 
         <p class="text-center text-xs font-medium text-gray-800 leading-snug mb-6">

@@ -1,6 +1,6 @@
 <x-layouts.admin title="Import Data Mineral Logam">
-    <h1 class="text-xl font-bold mb-1">Import Excel — Mineral Logam</h1>
-    <p class="text-xs text-gray-500 mb-4">Upload file Excel sesuai template kolom yang ditentukan</p>
+    <h1 class="text-xl font-bold mb-1">Import Data dari Excel</h1>
+    <p class="text-xs text-gray-500 mb-4">Upload file sesuai format export Katalog KUGI</p>
 
     <div class="max-w-lg bg-white border rounded-xl p-6">
         @if($errors->any())
@@ -13,17 +13,16 @@
         </div>
         @endif
 
-        <form method="POST" action="{{ route('admin.mineral-logam.import') }}" enctype="multipart/form-data" class="space-y-4">
+        <form method="POST" action="{{ route('admin.mineral-logam.import') }}" enctype="multipart/form-data">
             @csrf
-            <div>
-                <label class="text-xs text-gray-500 block mb-1">File Excel (.xlsx / .xls)</label>
-                <input type="file" name="file" accept=".xlsx,.xls" class="w-full border-gray-300 rounded-md text-sm">
+            <label class="text-xs text-gray-500 block mb-1">File Excel (.xlsx / .xls)</label>
+            <input type="file" name="file" accept=".xlsx,.xls" required class="w-full border-gray-300 rounded-md text-sm mb-4">
+
+            <div class="bg-gray-50 text-xs text-gray-500 rounded-md p-3 mb-4">
+                Kolom wajib: TAHUN_DATA, TAHUN_NERACA, IDLGM, NAMOBJ, JNSKOM, KELLGM, STATDIKLGM, BJHHIP, LOGHIP, BJHTRKA, LOGTRKA, BJHTJUK, LOGTJUK, BJHTKUR, LOGTKUR, BJHTKIRA, LOGTKIRA, BJHTBKT, LOGTBKT, PULAU, PROVINSI, KABUPATEN
             </div>
-            <p class="text-xs text-gray-400">
-                Kolom yang dibutuhkan tergantung isi MineralLogamImport.php kamu - cek lagi file itu,
-                soalnya belum pernah dites pakai file Excel asli.
-            </p>
-            <div class="flex justify-end gap-2 pt-4 border-t">
+
+            <div class="flex justify-end gap-2">
                 <a href="{{ route('admin.mineral-logam.index') }}" class="border border-gray-300 text-sm px-4 py-2 rounded-md">Batal</a>
                 <button type="submit" class="bg-[#F2C230] hover:bg-[#e0b526] text-black text-sm font-semibold px-4 py-2 rounded-md">Import</button>
             </div>

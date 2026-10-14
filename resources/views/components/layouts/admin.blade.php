@@ -11,7 +11,7 @@
     <div class="flex min-h-screen">
         <div class="w-56 bg-white border-r border-gray-200 flex flex-col shrink-0">
             <div class="flex flex-col items-center py-6 border-b border-gray-100">
-                <img src="{{ asset('images/logo-esdm.png') }}" alt="Kementerian ESDM" class="h-20 w-auto">
+                <img src="{{ asset('images/logo-esdm.png') }}" alt="Kementerian ESDM" class="h-24 w-auto">
             </div>
 
             <nav class="flex-1 py-3 px-3 space-y-1 text-sm overflow-y-auto">

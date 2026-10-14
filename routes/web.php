@@ -25,8 +25,32 @@ use App\Http\Controllers\Admin\PanasBumiGrafikController as AdminPanasBumiGrafik
 use App\Http\Controllers\Admin\GambutController as AdminGambutController;
 use App\Http\Controllers\Admin\GambutGrafikController as AdminGambutGrafikController;
 
+// Halaman awal: belum login -> halaman login; sudah login -> halaman sesuai role (bukan halaman bawaan Laravel)
 Route::get('/', function () {
-    return view('welcome');
+    $user = auth()->user();
+
+    if (! $user) {
+        return redirect()->route('login');
+    }
+
+    if ($user->role === 'super_user') {
+        return redirect()->route('superuser.dashboard');
+    }
+
+    if ($user->role === 'admin') {
+        $rute = match ($user->domain_akses) {
+            'batubara' => 'admin.batubara.grafik.index',
+            'mineral_logam' => 'admin.mineral-logam.grafik.index',
+            'mineral_bukan_logam' => 'admin.mineral-bukan-logam.grafik.index',
+            'panas_bumi' => 'admin.panas-bumi.grafik.index',
+            'gambut' => 'admin.gambut.grafik.index',
+            default => null,
+        };
+
+        return ($rute && Route::has($rute)) ? redirect()->route($rute) : redirect('/dashboard');
+    }
+
+    return redirect('/dashboard');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
@@ -72,13 +96,10 @@ Route::middleware(['auth', 'admin.batubara'])->prefix('admin/batubara')->name('a
     Route::get('/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
         return $provinsi->kabupatens;
     })->name('kabupaten');
-    Route::get('/grafik', [AdminGrafikController::class, 'index'])->name('grafik.index');  // ← ini harus ada
+    Route::get('/grafik', [AdminGrafikController::class, 'index'])->name('grafik.index');
 });
 
 
-Route::get('/admin/batubara/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
-    return $provinsi->kabupatens;
-})->middleware(['auth', 'admin.batubara']);
 
 Route::middleware(['auth', 'admin.minerallogam'])->prefix('admin/mineral-logam')->name('admin.mineral-logam.')->group(function () {
     Route::get('/', [AdminMineralLogamController::class, 'index'])->name('index');
@@ -92,7 +113,7 @@ Route::middleware(['auth', 'admin.minerallogam'])->prefix('admin/mineral-logam')
     })->name('kabupaten');
     Route::get('/grafik', [\App\Http\Controllers\Admin\MineralLogamGrafikController::class, 'index'])->name('grafik.index');
     Route::get('/import', [AdminMineralLogamController::class, 'importForm'])->name('import.form');
-Route::post('/import', [AdminMineralLogamController::class, 'import'])->name('import');
+    Route::post('/import', [AdminMineralLogamController::class, 'import'])->name('import');
 });
 
 Route::middleware(['auth', 'admin.mineral-bukan-logam'])
