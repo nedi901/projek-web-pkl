@@ -13,6 +13,8 @@ class PanasBumiGrafikController extends Controller
     public function index(Request $request)
     {
         $klasifikasiList = KlasifikasiTemperatur::orderBy('id')->get();
+        // Dropdown klasifikasi hanya berguna kalau ada data yang punya klasifikasi (sumber buku tidak membaginya per suhu)
+        $adaKlasifikasi = NeracaPanasBumi::whereNotNull('klasifikasi_temperatur_id')->exists();
         $klasifikasiId = $request->klasifikasi_id;
         $klasifikasiTerpilih = $klasifikasiId ? KlasifikasiTemperatur::find($klasifikasiId) : null;
 
@@ -58,7 +60,7 @@ class PanasBumiGrafikController extends Controller
         $trendMax = $trendPerTahun->max('total') ?: 1;
 
         return view('admin.panas-bumi.grafik.index', compact(
-            'klasifikasiList', 'klasifikasiId', 'klasifikasiTerpilih',
+            'klasifikasiList', 'klasifikasiId', 'klasifikasiTerpilih', 'adaKlasifikasi',
             'perProvinsi', 'totalSd', 'totalCad', 'totalGabungan',
             'totalSpekulatif', 'totalHipotetik', 'totalSdKategori',
             'totalTerduga', 'totalMungkin', 'totalTerbukti', 'totalCadKategori',

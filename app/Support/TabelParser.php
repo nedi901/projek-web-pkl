@@ -92,6 +92,11 @@ class TabelParser
             foreach ($kolom as $j => $def) {
                 if ($def['t'] === 'num') {
                     $sel_[] = ($row[$j] === '' || $row[$j] === '-') ? 0.0 : self::keAngka($row[$j]);
+                } elseif ($def['t'] === 'int') {
+                    // Kolom jumlah: simpan sebagai ANGKA. Kalau disimpan sebagai teks "1.140", tampilannya
+                    // salah baca jadi 1,14 -> "1" (angka >= 1.000 rusak setiap kali tabel di-Edit lalu Simpan).
+                    $angka = ($row[$j] === '' || $row[$j] === '-') ? null : self::keAngka($row[$j]);
+                    $sel_[] = $angka === null ? $row[$j] : (float) $angka;
                 } else {
                     $sel_[] = $row[$j];
                 }

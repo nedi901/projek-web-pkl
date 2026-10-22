@@ -10,11 +10,16 @@ use App\Models\KomoditasBukanLogam;
 use App\Models\StatDikBb;
 use App\Models\IdInstansi;
 use App\Imports\MineralBukanLogamImport;
+use App\Support\NolkanAngka;
+use App\Support\JalankanImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MineralBukanLogamController extends Controller
 {
+    /** Kolom angka NOT NULL di database: isian kosong dari form dijadikan 0 (lihat NolkanAngka). */
+    private const ANGKA_WAJIB = ['hipotetik', 'tereka', 'tertunjuk', 'terukur', 'terkira', 'terbukti'];
+
     public function index(Request $request)
     {
         $data = NeracaMineralBukanLogam::with(['provinsi', 'kabupaten', 'komoditasBukanLogam.kelompokKomoditasBukanLogam', 'statDikBb'])
@@ -56,6 +61,8 @@ class MineralBukanLogamController extends Controller
             'lintang' => 'nullable|numeric',
             'remark' => 'nullable|string',
         ]);
+
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
 
         $validated['total_sd'] = ($validated['tereka'] ?? 0) + ($validated['tertunjuk'] ?? 0) + ($validated['terukur'] ?? 0);
         $validated['total_cad'] = ($validated['terkira'] ?? 0) + ($validated['terbukti'] ?? 0);
@@ -99,6 +106,8 @@ class MineralBukanLogamController extends Controller
             'remark' => 'nullable|string',
         ]);
 
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
+
         $validated['total_sd'] = ($validated['tereka'] ?? 0) + ($validated['tertunjuk'] ?? 0) + ($validated['terukur'] ?? 0);
         $validated['total_cad'] = ($validated['terkira'] ?? 0) + ($validated['terbukti'] ?? 0);
 
@@ -136,8 +145,12 @@ class MineralBukanLogamController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        Excel::import(new MineralBukanLogamImport, $request->file('file'));
+        $hasil = JalankanImport::jalankan(new MineralBukanLogamImport, $request->file('file'));
 
-        return redirect()->route('admin.mineral-bukan-logam.index')->with('success', 'Import selesai.');
+        if ($hasil['galat']) {
+            return back()->withErrors(['file' => $hasil['galat']]);
+        }
+
+        return redirect()->route('admin.mineral-bukan-logam.index')->with('success', $hasil['ringkasan']);
     }
 }

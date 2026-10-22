@@ -174,16 +174,6 @@ Route::middleware(['auth', 'admin.mineral-bukan-logam'])
     });
 
 
-/*
-|--------------------------------------------------------------------------
-| Histori (soft delete) & Log Aktivitas - semua domain
-|--------------------------------------------------------------------------
-| Tiap domain dapat 4 route dengan middleware akses domain masing-masing:
-|   admin.<domain>.histori.index   GET     daftar data terhapus
-|   admin.<domain>.histori.restore POST    pulihkan
-|   admin.<domain>.histori.force   DELETE  hapus permanen (cuma super_user, dicek di controller)
-|   admin.<domain>.histori.log     GET     log siapa menghapus/memulihkan
-*/
 $historiDomains = [
     // slug domain_akses  => [alias middleware, prefix URL/route]
     'batubara'            => ['admin.batubara',            'batubara'],

@@ -7,11 +7,16 @@ use App\Models\NeracaGambut;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Imports\GambutImport;
+use App\Support\NolkanAngka;
+use App\Support\JalankanImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class GambutController extends Controller
 {
+    /** Kolom angka NOT NULL di database: isian kosong dari form dijadikan 0 (lihat NolkanAngka). */
+    private const ANGKA_WAJIB = ['luas_ha', 'volume_juta_m3', 'total_sd'];
+
     public function index(Request $request)
     {
         $data = NeracaGambut::with(['provinsi', 'kabupaten'])
@@ -47,6 +52,8 @@ class GambutController extends Controller
             'remark' => 'nullable|string',
         ]);
 
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
+
         NeracaGambut::create($validated);
 
         return redirect()->route('admin.gambut.index')->with('success', 'Data berhasil ditambahkan.');
@@ -79,6 +86,8 @@ class GambutController extends Controller
             'remark' => 'nullable|string',
         ]);
 
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
+
         $gambut->update($validated);
 
         return redirect()->route('admin.gambut.index')->with('success', 'Data berhasil diubah.');
@@ -109,8 +118,12 @@ class GambutController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        Excel::import(new GambutImport, $request->file('file'));
+        $hasil = JalankanImport::jalankan(new GambutImport, $request->file('file'));
 
-        return redirect()->route('admin.gambut.index')->with('success', 'Import selesai.');
+        if ($hasil['galat']) {
+            return back()->withErrors(['file' => $hasil['galat']]);
+        }
+
+        return redirect()->route('admin.gambut.index')->with('success', $hasil['ringkasan']);
     }
 }

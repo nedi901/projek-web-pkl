@@ -10,6 +10,8 @@
                 @endif
             </p>
         </div>
+        {{-- Disembunyikan selama belum ada data berklasifikasi; muncul otomatis begitu ada (atau kalau URL sudah memakai filter) --}}
+        @if($adaKlasifikasi || $klasifikasiId)
         <form method="GET">
             <select name="klasifikasi_id" onchange="this.form.submit()" class="border-gray-300 rounded-md text-sm px-3 py-2">
                 <option value="">Semua Klasifikasi Temperatur</option>
@@ -18,6 +20,7 @@
                 @endforeach
             </select>
         </form>
+        @endif
     </div>
 
     @php

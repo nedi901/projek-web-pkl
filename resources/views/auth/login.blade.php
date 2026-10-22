@@ -32,16 +32,18 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login.store') }}">
+        <form method="POST" action="{{ route('login.store') }}" autocomplete="off">
             @csrf
             <div class="mb-3">
                 <label class="block text-xs text-gray-600 mb-1">Email atau Username</label>
-                <input type="text" name="login" value="{{ old('login') }}" placeholder="email atau username" autocomplete="username"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-300" required autofocus>
+                <input type="text" name="login" value="{{ old('login') }}" placeholder="email atau username" autocomplete="off"
+                       readonly onfocus="this.removeAttribute('readonly')"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-300" required>
             </div>
             <div class="mb-5">
                 <label class="block text-xs text-gray-600 mb-1">Password</label>
-                <input type="password" name="password" placeholder="Value"
+                <input type="password" name="password" placeholder="Value" autocomplete="new-password"
+                       readonly onfocus="this.removeAttribute('readonly')"
                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-300" required>
             </div>
             <button type="submit" class="w-full bg-[#F2C230] hover:bg-[#e0b526] text-black text-sm font-semibold py-2.5 rounded-md">

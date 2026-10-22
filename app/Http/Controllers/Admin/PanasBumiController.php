@@ -10,11 +10,16 @@ use App\Models\StatDikPb;
 use App\Models\KlasifikasiTemperatur;
 use App\Models\IdInstansi;
 use App\Imports\PanasBumiImport;
+use App\Support\NolkanAngka;
+use App\Support\JalankanImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PanasBumiController extends Controller
 {
+    /** Kolom angka NOT NULL di database: isian kosong dari form dijadikan 0 (lihat NolkanAngka). */
+    private const ANGKA_WAJIB = ['spekulatif', 'hipotetik', 'terduga', 'mungkin', 'terbukti', 'kapasitas_terpasang'];
+
     public function index(Request $request)
     {
         $data = NeracaPanasBumi::with(['provinsi', 'kabupaten', 'statDikPb', 'klasifikasiTemperatur'])
@@ -57,6 +62,8 @@ class PanasBumiController extends Controller
             'lintang' => 'nullable|numeric',
             'remark' => 'nullable|string',
         ]);
+
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
 
         $validated['total_sd'] = ($validated['spekulatif'] ?? 0) + ($validated['hipotetik'] ?? 0);
         $validated['total_cad'] = ($validated['terduga'] ?? 0) + ($validated['mungkin'] ?? 0) + ($validated['terbukti'] ?? 0);
@@ -101,6 +108,8 @@ class PanasBumiController extends Controller
             'remark' => 'nullable|string',
         ]);
 
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
+
         $validated['total_sd'] = ($validated['spekulatif'] ?? 0) + ($validated['hipotetik'] ?? 0);
         $validated['total_cad'] = ($validated['terduga'] ?? 0) + ($validated['mungkin'] ?? 0) + ($validated['terbukti'] ?? 0);
 
@@ -134,8 +143,12 @@ class PanasBumiController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        Excel::import(new PanasBumiImport, $request->file('file'));
+        $hasil = JalankanImport::jalankan(new PanasBumiImport, $request->file('file'));
 
-        return redirect()->route('admin.panas-bumi.index')->with('success', 'Import selesai.');
+        if ($hasil['galat']) {
+            return back()->withErrors(['file' => $hasil['galat']]);
+        }
+
+        return redirect()->route('admin.panas-bumi.index')->with('success', $hasil['ringkasan']);
     }
 }

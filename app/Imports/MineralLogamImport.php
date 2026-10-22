@@ -1,21 +1,43 @@
 <?php
+
 namespace App\Imports;
 
+use App\Imports\Concerns\MelaporkanHasil;
+use App\Models\IdInstansi;
+use App\Models\Kabupaten;
+use App\Models\KelompokKomoditasLogam;
+use App\Models\KomoditasLogam;
 use App\Models\NeracaMineralLogam;
 use App\Models\Provinsi;
-use App\Models\Kabupaten;
-use App\Models\KomoditasLogam;
-use App\Models\KelompokKomoditasLogam;
 use App\Models\StatDikBb;
-use App\Models\IdInstansi;
+use App\Support\SelAngka;
+use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
+/**
+ * Kolom Excel (baris judul): provinsi, pulau, kabupaten, kellgm, jnskom, statdiklgm, idinstansi, idlgm, tahun_data,
+ * tahun_neraca, namobj, bjhhip, loghip, bjhtrka, logtrka, bjhtjuk, logtjuk, bjhtkur, logtkur, bjhtkira, logtkira,
+ * bjhtbkt, logtbkt, remark, bujur, lintang.
+ * Total sumber daya dan cadangan dihitung otomatis dari kolom-kolom di atas.
+ */
 class MineralLogamImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
-    public function model(array $row): \Illuminate\Database\Eloquent\Model|array|null
+    use MelaporkanHasil;
+
+    public function model(array $row): Model|array|null
     {
+        if (blank($row['idlgm']) || blank($row['namobj']) || blank($row['provinsi']) || blank($row['kabupaten'])
+            || blank($row['kellgm']) || blank($row['jnskom']) || blank($row['statdiklgm'])
+            || blank($row['tahun_data']) || blank($row['tahun_neraca'])) {
+            return $this->lewati('ada baris dengan isian wajib kosong (idlgm, namobj, provinsi, kabupaten, kellgm, jnskom, statdiklgm, tahun)');
+        }
+
+        if (NeracaMineralLogam::withTrashed()->where('idml', $row['idlgm'])->exists()) {
+            return $this->lewati("idlgm {$row['idlgm']} sudah ada");
+        }
+
         $provinsi = Provinsi::firstOrCreate(
             ['nama_provinsi' => trim($row['provinsi'])],
             ['pulau' => trim($row['pulau'] ?? '')]
@@ -35,43 +57,52 @@ class MineralLogamImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 
         $statDikBb = StatDikBb::firstOrCreate(['label' => trim($row['statdiklgm'])]);
 
-        $idInstansi = !empty($row['idinstansi'])
+        $idInstansi = ! blank($row['idinstansi'] ?? null)
             ? IdInstansi::firstOrCreate(['label' => trim($row['idinstansi'])])
             : null;
 
-        if (NeracaMineralLogam::withTrashed()->where('idml', $row['idlgm'])->exists()) {
-            return null;
-        }
+        $hipBijih = SelAngka::ke($row['bjhhip'] ?? null);
+        $hipLogam = SelAngka::ke($row['loghip'] ?? null);
+        $trkaBijih = SelAngka::ke($row['bjhtrka'] ?? null);
+        $trkaLogam = SelAngka::ke($row['logtrka'] ?? null);
+        $tjukBijih = SelAngka::ke($row['bjhtjuk'] ?? null);
+        $tjukLogam = SelAngka::ke($row['logtjuk'] ?? null);
+        $tkurBijih = SelAngka::ke($row['bjhtkur'] ?? null);
+        $tkurLogam = SelAngka::ke($row['logtkur'] ?? null);
+        $kiraBijih = SelAngka::ke($row['bjhtkira'] ?? null);
+        $kiraLogam = SelAngka::ke($row['logtkira'] ?? null);
+        $bktBijih = SelAngka::ke($row['bjhtbkt'] ?? null);
+        $bktLogam = SelAngka::ke($row['logtbkt'] ?? null);
 
-        return new NeracaMineralLogam([
-            'idml' => $row['idlgm'],
+        return $this->terima(new NeracaMineralLogam([
+            'idml' => (int) $row['idlgm'],
             'tahun_data' => $row['tahun_data'],
             'tahun_neraca' => $row['tahun_neraca'],
             'nama_objek' => trim($row['namobj']),
             'komoditas_logam_id' => $komoditas->id,
             'stat_dik_bb_id' => $statDikBb->id,
             'id_instansi_id' => $idInstansi?->id,
-            'hipotetik_bijih' => $row['bjhhip'] ?? 0,
-            'hipotetik_logam' => $row['loghip'] ?? 0,
-            'tereka_bijih' => $row['bjhtrka'] ?? 0,
-            'tereka_logam' => $row['logtrka'] ?? 0,
-            'tertunjuk_bijih' => $row['bjhtjuk'] ?? 0,
-            'tertunjuk_logam' => $row['logtjuk'] ?? 0,
-            'terukur_bijih' => $row['bjhtkur'] ?? 0,
-            'terukur_logam' => $row['logtkur'] ?? 0,
-            'total_sd_bijih' => ($row['bjhtrka'] ?? 0) + ($row['bjhtjuk'] ?? 0) + ($row['bjhtkur'] ?? 0),
-            'total_sd_logam' => ($row['logtrka'] ?? 0) + ($row['logtjuk'] ?? 0) + ($row['logtkur'] ?? 0),
-            'terkira_bijih' => $row['bjhtkira'] ?? 0,
-            'terkira_logam' => $row['logtkira'] ?? 0,
-            'terbukti_bijih' => $row['bjhtbkt'] ?? 0,
-            'terbukti_logam' => $row['logtbkt'] ?? 0,
-            'total_cad_bijih' => ($row['bjhtkira'] ?? 0) + ($row['bjhtbkt'] ?? 0),
-            'total_cad_logam' => ($row['logtkira'] ?? 0) + ($row['logtbkt'] ?? 0),
+            'hipotetik_bijih' => $hipBijih,
+            'hipotetik_logam' => $hipLogam,
+            'tereka_bijih' => $trkaBijih,
+            'tereka_logam' => $trkaLogam,
+            'tertunjuk_bijih' => $tjukBijih,
+            'tertunjuk_logam' => $tjukLogam,
+            'terukur_bijih' => $tkurBijih,
+            'terukur_logam' => $tkurLogam,
+            'total_sd_bijih' => $trkaBijih + $tjukBijih + $tkurBijih,
+            'total_sd_logam' => $trkaLogam + $tjukLogam + $tkurLogam,
+            'terkira_bijih' => $kiraBijih,
+            'terkira_logam' => $kiraLogam,
+            'terbukti_bijih' => $bktBijih,
+            'terbukti_logam' => $bktLogam,
+            'total_cad_bijih' => $kiraBijih + $bktBijih,
+            'total_cad_logam' => $kiraLogam + $bktLogam,
             'remark' => $row['remark'] ?? null,
             'provinsi_id' => $provinsi->id,
             'kabupaten_id' => $kabupaten->id,
-            'bujur' => $row['bujur'] ?? null,
-            'lintang' => $row['lintang'] ?? null,
-        ]);
+            'bujur' => SelAngka::keAtauNull($row['bujur'] ?? null),
+            'lintang' => SelAngka::keAtauNull($row['lintang'] ?? null),
+        ]));
     }
 }

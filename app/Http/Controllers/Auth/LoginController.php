@@ -5,11 +5,19 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
+    /** Pembatasan tebak-tebakan password: maksimal per akun (+IP) dan per IP, dalam satu jeda. */
+    private const MAKS_PER_AKUN = 5;
+
+    private const MAKS_PER_IP = 20;
+
+    private const JEDA_DETIK = 60;
+
     public function create()
     {
         return view('auth.login');
@@ -26,7 +34,23 @@ class LoginController extends Controller
         $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $login = Str::lower(trim($data['login']));
 
+        $kunciAkun = 'login|' . $login . '|' . $request->ip();
+        $kunciIp = 'login-ip|' . $request->ip();
+
+        foreach ([[$kunciAkun, self::MAKS_PER_AKUN], [$kunciIp, self::MAKS_PER_IP]] as [$kunci, $maks]) {
+            if (RateLimiter::tooManyAttempts($kunci, $maks)) {
+                $detik = RateLimiter::availableIn($kunci);
+
+                return back()->withErrors([
+                    'login' => "Terlalu banyak percobaan login. Coba lagi dalam {$detik} detik.",
+                ])->onlyInput('login');
+            }
+        }
+
         if (! Auth::attempt([$field => $login, 'password' => $data['password']], $request->boolean('remember'))) {
+            RateLimiter::hit($kunciAkun, self::JEDA_DETIK);
+            RateLimiter::hit($kunciIp, self::JEDA_DETIK);
+
             return back()->withErrors([
                 'login' => 'Email/username atau password salah.',
             ])->onlyInput('login');
@@ -34,6 +58,8 @@ class LoginController extends Controller
 
         if (Auth::user()->is_active === false) {
             Auth::logout();
+            RateLimiter::hit($kunciAkun, self::JEDA_DETIK);
+            RateLimiter::hit($kunciIp, self::JEDA_DETIK);
 
             return back()->withErrors([
                 'login' => 'Akun kamu dinonaktifkan. Hubungi Super User.',
@@ -41,6 +67,7 @@ class LoginController extends Controller
         }
 
         $request->session()->regenerate();
+        RateLimiter::clear($kunciAkun);
 
         Auth::user()->forceFill(['last_login_at' => now()])->saveQuietly();
 

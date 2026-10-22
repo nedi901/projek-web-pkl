@@ -10,11 +10,16 @@ use App\Models\KomoditasLogam;
 use App\Models\StatDikBb;
 use App\Models\IdInstansi;
 use App\Imports\MineralLogamImport;
+use App\Support\NolkanAngka;
+use App\Support\JalankanImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MineralLogamController extends Controller
 {
+    /** Kolom angka NOT NULL di database: isian kosong dari form dijadikan 0 (lihat NolkanAngka). */
+    private const ANGKA_WAJIB = ['hipotetik_bijih', 'hipotetik_logam', 'tereka_bijih', 'tereka_logam', 'tertunjuk_bijih', 'tertunjuk_logam', 'terukur_bijih', 'terukur_logam', 'terkira_bijih', 'terkira_logam', 'terbukti_bijih', 'terbukti_logam'];
+
     public function index(Request $request)
     {
         $data = NeracaMineralLogam::with(['provinsi', 'kabupaten', 'komoditasLogam.kelompokKomoditasLogam', 'statDikBb'])
@@ -60,6 +65,8 @@ class MineralLogamController extends Controller
             'terbukti_logam' => 'nullable|numeric',
             'remark' => 'nullable|string',
         ]);
+
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
 
         $validated['total_sd_bijih'] = ($validated['tereka_bijih'] ?? 0) + ($validated['tertunjuk_bijih'] ?? 0) + ($validated['terukur_bijih'] ?? 0);
         $validated['total_sd_logam'] = ($validated['tereka_logam'] ?? 0) + ($validated['tertunjuk_logam'] ?? 0) + ($validated['terukur_logam'] ?? 0);
@@ -109,6 +116,8 @@ class MineralLogamController extends Controller
             'remark' => 'nullable|string',
         ]);
 
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
+
         $validated['total_sd_bijih'] = ($validated['tereka_bijih'] ?? 0) + ($validated['tertunjuk_bijih'] ?? 0) + ($validated['terukur_bijih'] ?? 0);
         $validated['total_sd_logam'] = ($validated['tereka_logam'] ?? 0) + ($validated['tertunjuk_logam'] ?? 0) + ($validated['terukur_logam'] ?? 0);
         $validated['total_cad_bijih'] = ($validated['terkira_bijih'] ?? 0) + ($validated['terbukti_bijih'] ?? 0);
@@ -137,8 +146,12 @@ class MineralLogamController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        Excel::import(new MineralLogamImport, $request->file('file'));
+        $hasil = JalankanImport::jalankan(new MineralLogamImport, $request->file('file'));
 
-        return redirect()->route('admin.mineral-logam.index')->with('success', 'Import selesai.');
+        if ($hasil['galat']) {
+            return back()->withErrors(['file' => $hasil['galat']]);
+        }
+
+        return redirect()->route('admin.mineral-logam.index')->with('success', $hasil['ringkasan']);
     }
 }

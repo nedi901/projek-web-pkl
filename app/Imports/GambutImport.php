@@ -2,28 +2,33 @@
 
 namespace App\Imports;
 
+use App\Imports\Concerns\MelaporkanHasil;
+use App\Models\Kabupaten;
 use App\Models\NeracaGambut;
 use App\Models\Provinsi;
-use App\Models\Kabupaten;
+use App\Support\SelAngka;
+use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
-use Illuminate\Database\Eloquent\Model;
 
 /**
- * Kolom Excel yang diharapkan (heading row):
- * idgb | nama_objek | tahun_data | tahun_neraca | provinsi | kabupaten |
- * nilai_kalori_min | nilai_kalori_max | luas_ha | volume_juta_m3 | total_sd |
- * bujur | lintang | remark
- *
- * Belum pernah dites pakai sample Excel asli - sama seperti domain lain.
+ * Kolom Excel (baris judul): idgb, nama_objek, tahun_data, tahun_neraca, provinsi, kabupaten, nilai_kalori_min,
+ * nilai_kalori_max, luas_ha, volume_juta_m3, total_sd, bujur, lintang, remark.
  */
 class GambutImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
+    use MelaporkanHasil;
+
     public function model(array $row): Model|array|null
     {
+        if (blank($row['idgb']) || blank($row['nama_objek']) || blank($row['provinsi']) || blank($row['kabupaten'])
+            || blank($row['tahun_data']) || blank($row['tahun_neraca'])) {
+            return $this->lewati('ada baris dengan isian wajib kosong (idgb, nama_objek, provinsi, kabupaten, tahun)');
+        }
+
         if (NeracaGambut::withTrashed()->where('idgb', $row['idgb'])->exists()) {
-            return null;
+            return $this->lewati("idgb {$row['idgb']} sudah ada");
         }
 
         $provinsi = Provinsi::firstOrCreate(['nama_provinsi' => trim($row['provinsi'])]);
@@ -32,21 +37,21 @@ class GambutImport implements ToModel, WithHeadingRow, SkipsEmptyRows
             'nama_kabupaten' => trim($row['kabupaten']),
         ]);
 
-        return new NeracaGambut([
-            'idgb' => $row['idgb'],
-            'nama_objek' => $row['nama_objek'],
+        return $this->terima(new NeracaGambut([
+            'idgb' => (int) $row['idgb'],
+            'nama_objek' => trim($row['nama_objek']),
             'tahun_data' => $row['tahun_data'],
             'tahun_neraca' => $row['tahun_neraca'],
-            'nilai_kalori_min' => $row['nilai_kalori_min'] ?? null,
-            'nilai_kalori_max' => $row['nilai_kalori_max'] ?? null,
-            'luas_ha' => $row['luas_ha'] ?? 0,
-            'volume_juta_m3' => $row['volume_juta_m3'] ?? 0,
-            'total_sd' => $row['total_sd'] ?? 0,
+            'nilai_kalori_min' => SelAngka::keAtauNull($row['nilai_kalori_min'] ?? null),
+            'nilai_kalori_max' => SelAngka::keAtauNull($row['nilai_kalori_max'] ?? null),
+            'luas_ha' => SelAngka::ke($row['luas_ha'] ?? null),
+            'volume_juta_m3' => SelAngka::ke($row['volume_juta_m3'] ?? null),
+            'total_sd' => SelAngka::ke($row['total_sd'] ?? null),
             'remark' => $row['remark'] ?? null,
             'provinsi_id' => $provinsi->id,
             'kabupaten_id' => $kabupaten->id,
-            'bujur' => $row['bujur'] ?? null,
-            'lintang' => $row['lintang'] ?? null,
-        ]);
+            'bujur' => SelAngka::keAtauNull($row['bujur'] ?? null),
+            'lintang' => SelAngka::keAtauNull($row['lintang'] ?? null),
+        ]));
     }
 }

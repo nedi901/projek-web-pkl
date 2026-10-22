@@ -9,12 +9,17 @@ use App\Models\Kabupaten;
 use App\Models\KelasKalori;
 use App\Models\StatDikBb;
 use App\Models\IdInstansi;
+use App\Support\NolkanAngka;
+use App\Support\JalankanImport;
 use Illuminate\Http\Request;
 use App\Imports\BatubaraImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BatubaraController extends Controller
 {
+    /** Kolom angka NOT NULL di database: isian kosong dari form dijadikan 0 (lihat NolkanAngka). */
+    private const ANGKA_WAJIB = ['tereka', 'tertunjuk', 'terukur', 'terkira', 'terbukti'];
+
     public function index(Request $request)
     {
         $data = NeracaBatubara::with(['provinsi', 'kabupaten', 'kelasKalori', 'statDikBb'])
@@ -53,6 +58,8 @@ class BatubaraController extends Controller
             'terbukti' => 'nullable|numeric',
             'remark' => 'nullable|string',
         ]);
+
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
 
         $validated['total_sd'] = ($validated['tereka'] ?? 0) + ($validated['tertunjuk'] ?? 0) + ($validated['terukur'] ?? 0);
         $validated['total_cad'] = ($validated['terkira'] ?? 0) + ($validated['terbukti'] ?? 0);
@@ -93,6 +100,8 @@ class BatubaraController extends Controller
             'remark' => 'nullable|string',
         ]);
 
+        $validated = NolkanAngka::terapkan($validated, self::ANGKA_WAJIB);
+
         $validated['total_sd'] = ($validated['tereka'] ?? 0) + ($validated['tertunjuk'] ?? 0) + ($validated['terukur'] ?? 0);
         $validated['total_cad'] = ($validated['terkira'] ?? 0) + ($validated['terbukti'] ?? 0);
 
@@ -118,8 +127,12 @@ public function import(Request $request)
         'file' => 'required|mimes:xlsx,xls,csv',
     ]);
 
-    Excel::import(new BatubaraImport, $request->file('file'));
+    $hasil = JalankanImport::jalankan(new BatubaraImport, $request->file('file'));
 
-    return redirect()->route('admin.batubara.index')->with('success', 'Data berhasil diimport.');
+        if ($hasil['galat']) {
+            return back()->withErrors(['file' => $hasil['galat']]);
+        }
+
+        return redirect()->route('admin.batubara.index')->with('success', $hasil['ringkasan']);
 }
 }
