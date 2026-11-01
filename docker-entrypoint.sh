@@ -20,6 +20,17 @@ try {
 echo ">> [4] migrate"
 php artisan migrate --force 2>&1 || echo "MIGRATE GAGAL"
 
+echo ">> [4b] seed kalau database masih kosong"
+SUDAH_ADA=$(php -r '
+try {
+  $p = new PDO("pgsql:host=".getenv("DB_HOST").";port=5432;dbname=".getenv("DB_DATABASE").";sslmode=require", getenv("DB_USERNAME"), getenv("DB_PASSWORD"));
+  echo (int)$p->query("select count(*) from provinsis")->fetchColumn();
+} catch (Throwable $e) { echo "ERR"; }')
+echo "jumlah provinsi: $SUDAH_ADA"
+if [ "$SUDAH_ADA" = "0" ]; then
+  php artisan db:seed --force 2>&1 || echo "SEED GAGAL"
+fi
+
 echo ">> [5] cache"
 php artisan config:cache 2>&1
 php artisan route:cache 2>&1
