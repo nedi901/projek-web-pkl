@@ -8,12 +8,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
+    libpq-dev \
     zip \
     unzip \
     libsqlite3-dev \
     nodejs \
     npm \
-    && docker-php-ext-install zip pdo pdo_sqlite mbstring exif pcntl bcmath gd \
+    && docker-php-ext-install zip pdo pdo_sqlite pdo_pgsql mbstring exif pcntl bcmath gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Aktifkan mod_rewrite Apache
