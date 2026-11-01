@@ -2,7 +2,8 @@
 
 /*
 |--------------------------------------------------------------------------
-| Keamanan & kerapian: pembatasan percobaan login dan halaman error.
+| Keamanan & kerapian: halaman error.
+| (Pembatasan percobaan login dihapus: login password sudah dimatikan, login hanya lewat Google.)
 |--------------------------------------------------------------------------
 | Jalankan:  php artisan test --filter=AksiKeamanan
 | Berdiri sendiri.
@@ -16,89 +17,6 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->seed();
-});
-
-function kemLogin($test, string $login, string $password)
-{
-    return $test->post(route('login.store'), ['login' => $login, 'password' => $password]);
-}
-
-/** Pesan error login dari session. Tahan terhadap bentuk datanya (objek MessageBag atau array hasil serialisasi). */
-function kemPesanLogin(): string
-{
-    $galat = session('errors');
-
-    return is_object($galat)
-        ? (string) $galat->first('login')
-        : (string) json_encode($galat, JSON_UNESCAPED_UNICODE);
-}
-
-/* ------------------------------------------------------------------ */
-/* PEMBATASAN PERCOBAAN LOGIN */
-/* ------------------------------------------------------------------ */
-
-it('login dibatasi: setelah 5 kali salah, percobaan berikutnya ditolak walau password benar', function () {
-    for ($i = 0; $i < 5; $i++) {
-        kemLogin($this, 'user@test.com', 'salah')->assertSessionHasErrors('login');
-    }
-
-    kemLogin($this, 'user@test.com', 'password')->assertSessionHasErrors('login');
-
-    expect(kemPesanLogin())->toContain('Terlalu banyak percobaan');
-    $this->assertGuest();
-});
-
-it('pembatasan berlaku per akun: akun lain tidak ikut terblokir', function () {
-    for ($i = 0; $i < 5; $i++) {
-        kemLogin($this, 'user@test.com', 'salah');
-    }
-
-    kemLogin($this, 'admin@test.com', 'password');
-
-    $this->assertAuthenticated();
-});
-
-it('login berhasil mengulang hitungan percobaan gagal', function () {
-    for ($i = 0; $i < 3; $i++) {
-        kemLogin($this, 'user@test.com', 'salah');
-    }
-
-    kemLogin($this, 'user@test.com', 'password');
-    $this->assertAuthenticated();
-
-    $this->post(route('logout'));
-    $this->assertGuest();
-
-    // tanpa reset, 3 + 3 = 6 percobaan gagal akan memblokir login berikutnya
-    for ($i = 0; $i < 3; $i++) {
-        kemLogin($this, 'user@test.com', 'salah');
-    }
-
-    kemLogin($this, 'user@test.com', 'password');
-    $this->assertAuthenticated();
-});
-
-it('login dibatasi per alamat IP: 20 tebakan ke akun berbeda memblokir percobaan berikutnya', function () {
-    for ($i = 0; $i < 20; $i++) {
-        kemLogin($this, "hantu{$i}", 'salah');
-    }
-
-    kemLogin($this, 'admin@test.com', 'password')->assertSessionHasErrors('login');
-
-    expect(kemPesanLogin())->toContain('Terlalu banyak percobaan');
-    $this->assertGuest();
-});
-
-it('percobaan ke akun nonaktif juga dihitung', function () {
-    User::where('email', 'user@test.com')->update(['is_active' => false]);
-
-    for ($i = 0; $i < 5; $i++) {
-        kemLogin($this, 'user@test.com', 'password');
-    }
-
-    kemLogin($this, 'user@test.com', 'password');
-
-    expect(kemPesanLogin())->toContain('Terlalu banyak percobaan');
 });
 
 /* ------------------------------------------------------------------ */

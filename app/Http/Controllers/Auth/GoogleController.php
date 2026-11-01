@@ -66,14 +66,27 @@ class GoogleController extends Controller
         if (! $user) {
             $user = User::where('email', $email)->first();
 
-                        if ($user) {
-                // Tautkan akun Google ke user yang sudah ada
+            if ($user) {
+                // Tautkan akun Google ke user yang sudah didaftarkan Super User
                 $user->forceFill([
                     'google_id' => $googleId,
                     'avatar' => $avatar,
                 ])->save();
+            } elseif ($this->emailSuperUserAwal($email)) {
+                // Super User awal (dari env SUPER_USER_EMAIL): dibuat otomatis supaya tidak terkunci
+                $user = User::create([
+                    'name' => $name,
+                    'username' => $this->generateUniqueUsername($email),
+                    'email' => $email,
+                    'google_id' => $googleId,
+                    'avatar' => $avatar,
+                    'password' => null,
+                    'role' => 'super_user',
+                    'domain_akses' => null,
+                    'is_active' => true,
+                ]);
             } else {
-                // Tidak ada akun terdaftar dengan email ini -> tolak (tidak buat otomatis)
+                // Email belum didaftarkan Super User -> tolak (akun TIDAK dibuat otomatis)
                 return redirect()->route('login')->withErrors([
                     'login' => 'Email ini belum terdaftar. Hubungi Super User untuk didaftarkan.',
                 ]);
@@ -98,6 +111,16 @@ class GoogleController extends Controller
         $user->forceFill(['last_login_at' => now()])->saveQuietly();
 
         return redirect()->to($user->getRedirectUrlAfterLogin());
+    }
+
+    /**
+     * Apakah email ini Super User awal yang diatur lewat env SUPER_USER_EMAIL?
+     */
+    private function emailSuperUserAwal(string $email): bool
+    {
+        $awal = Str::lower(trim((string) config('services.super_user_email')));
+
+        return $awal !== '' && $awal === $email;
     }
 
     /**

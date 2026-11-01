@@ -205,7 +205,8 @@ foreach ($historiDomains as $slug => [$middlewareAlias, $prefix]) {
 | Akun
 |--------------------------------------------------------------------------
 | Kelola Akun : hanya super_user (middleware super.user)
-| Akun Saya   : semua yang sudah login (ubah profil & ganti password sendiri)
+| Akun Saya   : semua yang sudah login (ubah nama & username sendiri)
+| Login       : HANYA lewat Google (tidak ada login password); akun harus didaftarkan Super User
 */
 Route::middleware(['auth', 'super.user'])->prefix('superuser/akun')->name('superuser.akun.')->group(function () {
     Route::get('/', [AkunController::class, 'index'])->name('index');
@@ -213,7 +214,6 @@ Route::middleware(['auth', 'super.user'])->prefix('superuser/akun')->name('super
     Route::post('/', [AkunController::class, 'store'])->name('store');
     Route::get('/{akun}/edit', [AkunController::class, 'edit'])->name('edit');
     Route::put('/{akun}', [AkunController::class, 'update'])->name('update');
-    Route::put('/{akun}/password', [AkunController::class, 'resetPassword'])->name('password');
     Route::patch('/{akun}/status', [AkunController::class, 'toggleStatus'])->name('status');
     Route::delete('/{akun}', [AkunController::class, 'destroy'])->name('destroy');
 });
@@ -221,7 +221,6 @@ Route::middleware(['auth', 'super.user'])->prefix('superuser/akun')->name('super
 Route::middleware('auth')->prefix('akun-saya')->name('akun-saya.')->group(function () {
     Route::get('/', [ProfilController::class, 'edit'])->name('edit');
     Route::put('/', [ProfilController::class, 'update'])->name('update');
-    Route::put('/password', [ProfilController::class, 'password'])->name('password');
 });
 
 /*

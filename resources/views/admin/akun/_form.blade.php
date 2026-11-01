@@ -24,12 +24,13 @@
         <label class="block text-xs text-gray-600 mb-1">Username</label>
         <input type="text" name="username" value="{{ old('username', $edit ? $akun->username : '') }}" required minlength="3" maxlength="30"
                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm font-mono" autocomplete="off">
-        <p class="text-[10px] text-gray-400 mt-1">Huruf kecil, angka, - dan _ (3–30 karakter). Dipakai untuk login.</p>
+        <p class="text-[10px] text-gray-400 mt-1">Huruf kecil, angka, - dan _ (3–30 karakter). Dipakai sebagai nama pengenal.</p>
     </div>
     <div class="sm:col-span-2">
         <label class="block text-xs text-gray-600 mb-1">Email</label>
         <input type="email" name="email" value="{{ old('email', $edit ? $akun->email : '') }}" required maxlength="150"
                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+        <p class="text-[10px] text-gray-400 mt-1">Harus email akun Google orang tersebut. Login hanya bisa lewat Google.</p>
     </div>
 
     <div>
@@ -57,30 +58,13 @@
     </div>
 
 
-    @unless($edit)
-        <div>
-            <label class="block text-xs text-gray-600 mb-1">Password</label>
-            <div class="flex gap-2">
-                <input type="password" name="password" id="password" required minlength="8" autocomplete="new-password"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
-                <button type="button" onclick="togglePw()" class="text-xs border border-gray-300 rounded-md px-3">Lihat</button>
-            </div>
-            <p class="text-[10px] text-gray-400 mt-1">Minimal 8 karakter.</p>
-        </div>
-        <div>
-            <label class="block text-xs text-gray-600 mb-1">Ulangi Password</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" required autocomplete="new-password"
-                   class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
-        </div>
-    @endunless
-
     <div class="sm:col-span-2">
         @if($saya)
             <input type="hidden" name="is_active" value="1">
         @else
             <label class="inline-flex items-center gap-2 text-sm">
                 <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $edit ? $akun->is_active : true)) class="rounded border-gray-300">
-                Akun aktif (bisa login)
+                Akun aktif (boleh masuk)
             </label>
         @endif
     </div>
@@ -100,10 +84,4 @@
         role.addEventListener('change', sinkron);
         sinkron();
     })();
-    function togglePw() {
-        ['password', 'password_confirmation'].forEach(function (id) {
-            var el = document.getElementById(id);
-            if (el) { el.type = el.type === 'password' ? 'text' : 'password'; }
-        });
-    }
 </script>

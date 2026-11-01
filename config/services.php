@@ -41,4 +41,8 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
     ],
 
+    // Email Google Super User awal. Boleh login walau belum terdaftar (supaya tidak terkunci
+    // kalau database kosong/di-reset). Email lain HARUS didaftarkan Super User dulu.
+    'super_user_email' => env('SUPER_USER_EMAIL'),
+
 ];

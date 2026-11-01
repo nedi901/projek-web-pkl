@@ -28,30 +28,56 @@ test('google redirect route redirects to google oauth provider when configured',
     expect($response->headers->get('Location'))->toContain('accounts.google.com');
 });
 
-test('google callback creates a new user when email does not exist', function () {
+function googleMockUser(string $id, string $email, string $name = 'Pengguna Google'): void
+{
     $socialiteUser = Mockery::mock(SocialiteUser::class);
-    $socialiteUser->shouldReceive('getId')->andReturn('google-uid-001');
-    $socialiteUser->shouldReceive('getEmail')->andReturn('baru@example.com');
-    $socialiteUser->shouldReceive('getName')->andReturn('Pengguna Baru');
-    $socialiteUser->shouldReceive('getNickname')->andReturn('penggunabaru');
-    $socialiteUser->shouldReceive('getAvatar')->andReturn('https://avatar.google.com/photo.jpg');
+    $socialiteUser->shouldReceive('getId')->andReturn($id);
+    $socialiteUser->shouldReceive('getEmail')->andReturn($email);
+    $socialiteUser->shouldReceive('getName')->andReturn($name);
+    $socialiteUser->shouldReceive('getNickname')->andReturn('nick');
+    $socialiteUser->shouldReceive('getAvatar')->andReturn(null);
 
     $provider = Mockery::mock(GoogleProvider::class);
     $provider->shouldReceive('user')->andReturn($socialiteUser);
 
     Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
+}
+
+test('google callback rejects an email that is not registered by a super user', function () {
+    googleMockUser('google-uid-001', 'baru@example.com', 'Pengguna Baru');
 
     $response = $this->get(route('auth.google.callback'));
 
-    $response->assertRedirect(route('user.dashboard'));
+    $response->assertRedirect(route('login'));
+    $response->assertSessionHasErrors(['login']);
+    $this->assertGuest();
+    expect(User::where('email', 'baru@example.com')->exists())->toBeFalse();
+});
+
+test('google callback creates the initial super user from SUPER_USER_EMAIL', function () {
+    config()->set('services.super_user_email', 'Owner@Example.com');
+    googleMockUser('google-uid-009', 'owner@example.com', 'Pemilik');
+
+    $response = $this->get(route('auth.google.callback'));
+
+    $response->assertRedirect(route('superuser.dashboard'));
     $this->assertAuthenticated();
 
-    $user = User::where('email', 'baru@example.com')->first();
+    $user = User::where('email', 'owner@example.com')->first();
     expect($user)->not->toBeNull();
-    expect($user->google_id)->toBe('google-uid-001');
-    expect($user->role)->toBe('user');
-    expect($user->avatar)->toBe('https://avatar.google.com/photo.jpg');
-    expect($user->is_active)->toBeTrue();
+    expect($user->role)->toBe('super_user');
+    expect($user->google_id)->toBe('google-uid-009');
+    expect($user->password)->toBeNull();
+});
+
+test('google callback does not auto-create other emails even when SUPER_USER_EMAIL is set', function () {
+    config()->set('services.super_user_email', 'owner@example.com');
+    googleMockUser('google-uid-010', 'orang-lain@example.com');
+
+    $this->get(route('auth.google.callback'))->assertRedirect(route('login'));
+
+    $this->assertGuest();
+    expect(User::where('email', 'orang-lain@example.com')->exists())->toBeFalse();
 });
 
 test('google callback links google_id to existing user account with the same email', function () {

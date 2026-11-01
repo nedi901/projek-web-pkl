@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-/** Akun Saya: semua pengguna yang login bisa ubah nama, username & password sendiri.
+/** Akun Saya: semua pengguna yang login bisa ubah nama & username sendiri.
  * Email, role, dan domain TIDAK bisa diubah di sini (satu email = satu akun; perubahan hanya lewat Super User). */
 class ProfilController extends Controller
 {
@@ -36,22 +36,5 @@ class ProfilController extends Controller
         $akun->update($data);
 
         return redirect()->route('akun-saya.edit')->with('success', 'Profil berhasil diperbarui.');
-    }
-
-    public function password(Request $request)
-    {
-        $request->validateWithBag('password', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
-        ], [
-            'current_password.current_password' => 'Password saat ini salah.',
-            'password.min' => 'Password baru minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password baru tidak sama.',
-            'password.different' => 'Password baru harus berbeda dari password saat ini.',
-        ]);
-
-        $request->user()->update(['password' => $request->password]);
-
-        return redirect()->route('akun-saya.edit')->with('success', 'Password berhasil diganti.');
     }
 }

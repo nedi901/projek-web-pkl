@@ -70,8 +70,6 @@ function aksiPayloadAkun(array $ubah = []): array
         'email' => 'baru@test.com',
         'role' => 'admin',
         'domain_akses' => 'gambut',
-        'password' => 'rahasia123',
-        'password_confirmation' => 'rahasia123',
         'is_active' => '1',
     ], $ubah);
 }
@@ -162,49 +160,15 @@ function aksiTampil($v, array $kol): string
 /* LOGIN & LOGOUT */
 /* ------------------------------------------------------------------ */
 
-it('login berhasil dan diarahkan sesuai role', function (string $login, ?string $rute) {
-    $this->post(route('login.store'), ['login' => $login, 'password' => 'password'])
-        ->assertRedirect($rute ? route($rute) : url('/dashboard'));
-
-    $this->assertAuthenticated();
-})->with([
-    'super user (email)' => ['admin@test.com', 'superuser.dashboard'],
-    'admin batubara (email)' => ['superbatubara@test.com', 'admin.batubara.grafik.index'],
-    'admin gambut (email)' => ['supergambut@test.com', 'admin.gambut.grafik.index'],
-    'admin panas bumi (username)' => ['admin_panasbumi', 'admin.panas-bumi.grafik.index'],
-    'user biasa (email)' => ['user@test.com', null],
-]);
-
-it('login tidak peduli huruf besar/kecil', function (string $login) {
-    $this->post(route('login.store'), ['login' => $login, 'password' => 'password']);
-
-    $this->assertAuthenticated();
-})->with(['EMAIL HURUF BESAR' => 'SUPERBATUBARA@TEST.COM', 'USERNAME HURUF BESAR' => 'Admin_Batubara']);
-
-it('login gagal kalau password salah atau akun tidak ada', function (string $login, string $password) {
-    $this->post(route('login.store'), ['login' => $login, 'password' => $password])
-        ->assertSessionHasErrors('login');
+it('login lewat email/username + password sudah dimatikan (hanya Google)', function () {
+    $this->post('/login', ['login' => 'admin@test.com', 'password' => 'password'])
+        ->assertStatus(405);
 
     $this->assertGuest();
-})->with([
-    'password salah' => ['admin@test.com', 'salah-total'],
-    'email tidak terdaftar' => ['hantu@test.com', 'password'],
-    'username tidak terdaftar' => ['hantu', 'password'],
-]);
 
-it('login gagal kalau form kosong', function () {
-    $this->post(route('login.store'), [])->assertSessionHasErrors(['login', 'password']);
-
-    $this->assertGuest();
-});
-
-it('akun yang dinonaktifkan tidak bisa login', function () {
-    aksiAkun('user@test.com')->update(['is_active' => false]);
-
-    $this->post(route('login.store'), ['login' => 'user@test.com', 'password' => 'password'])
-        ->assertSessionHasErrors('login');
-
-    $this->assertGuest();
+    expect(\Illuminate\Support\Facades\Route::has('login.store'))->toBeFalse();
+    expect(\Illuminate\Support\Facades\Route::has('akun-saya.password'))->toBeFalse();
+    expect(\Illuminate\Support\Facades\Route::has('superuser.akun.password'))->toBeFalse();
 });
 
 it('akun yang dinonaktifkan saat sedang login langsung dikeluarkan', function () {
@@ -242,7 +206,7 @@ it('Super User bisa membuat akun admin domain (username & email otomatis huruf k
     expect($akun->role)->toBe('admin');
     expect($akun->domain_akses)->toBe('gambut');
     expect($akun->is_active)->toBeTrue();
-    expect(Hash::check('rahasia123', $akun->password))->toBeTrue();
+    expect($akun->password)->toBeNull(); // login hanya lewat Google, akun tidak punya password
 });
 
 it('akun role user dan super user tidak menyimpan domain_akses', function (string $role) {
@@ -271,8 +235,6 @@ it('pembuatan akun ditolak kalau isian tidak valid', function (array $ubah, stri
     'username sudah dipakai' => [['username' => 'superuser'], 'username'],
     'username ada spasi' => [['username' => 'a b c'], 'username'],
     'username terlalu pendek' => [['username' => 'ab'], 'username'],
-    'password terlalu pendek' => [['password' => '1234567', 'password_confirmation' => '1234567'], 'password'],
-    'konfirmasi password beda' => [['password_confirmation' => 'lain12345'], 'password'],
     'nama kosong' => [['name' => ''], 'name'],
 ]);
 
@@ -348,32 +310,6 @@ it('Super User bisa menonaktifkan lalu mengaktifkan lagi akun lain', function ()
     expect($target->fresh()->is_active)->toBeTrue();
 });
 
-it('Super User bisa mereset password akun lain', function () {
-    $target = aksiAkun('user@test.com');
-
-    $this->actingAs(aksiSuper())
-        ->put(route('superuser.akun.password', $target), ['password' => 'passwordbaru1', 'password_confirmation' => 'passwordbaru1'])
-        ->assertSessionHasNoErrors()
-        ->assertRedirect(route('superuser.akun.edit', $target));
-
-    $target->refresh();
-    expect(Hash::check('passwordbaru1', $target->password))->toBeTrue();
-    expect(Hash::check('password', $target->password))->toBeFalse();
-});
-
-it('reset password ditolak kalau terlalu pendek atau konfirmasi beda', function (array $data) {
-    $target = aksiAkun('user@test.com');
-
-    $this->actingAs(aksiSuper())
-        ->put(route('superuser.akun.password', $target), $data)
-        ->assertSessionHasErrors('password', null, 'reset');
-
-    expect(Hash::check('password', $target->fresh()->password))->toBeTrue();
-})->with([
-    'terlalu pendek' => [['password' => '123', 'password_confirmation' => '123']],
-    'konfirmasi beda' => [['password' => 'passwordbaru1', 'password_confirmation' => 'passwordlain1']],
-]);
-
 it('Super User bisa menghapus akun lain', function () {
     $akun = User::create([
         'name' => 'Akun Sementara',
@@ -417,41 +353,6 @@ it('Akun Saya: username yang dipakai orang lain ditolak', function () {
         ->assertSessionHasErrors('username');
 
     expect($user->fresh()->username)->toBe('user');
-});
-
-it('Akun Saya: ganti password dengan password lama yang benar', function () {
-    $user = aksiAkun('user@test.com');
-
-    $this->actingAs($user)
-        ->put(route('akun-saya.password'), ['current_password' => 'password', 'password' => 'baru12345', 'password_confirmation' => 'baru12345'])
-        ->assertSessionHasNoErrors()
-        ->assertRedirect(route('akun-saya.edit'));
-
-    expect(Hash::check('baru12345', $user->fresh()->password))->toBeTrue();
-});
-
-it('Akun Saya: ganti password ditolak', function (array $data) {
-    $user = aksiAkun('user@test.com');
-
-    $this->actingAs($user)
-        ->put(route('akun-saya.password'), $data)
-        ->assertSessionHasErrors('password', null, 'password');
-
-    expect(Hash::check('password', $user->fresh()->password))->toBeTrue();
-})->with([
-    'password baru terlalu pendek' => [['current_password' => 'password', 'password' => '123', 'password_confirmation' => '123']],
-    'konfirmasi beda' => [['current_password' => 'password', 'password' => 'baru12345', 'password_confirmation' => 'lain12345']],
-    'sama dengan password lama' => [['current_password' => 'password', 'password' => 'password', 'password_confirmation' => 'password']],
-]);
-
-it('Akun Saya: password lama salah ditolak', function () {
-    $user = aksiAkun('user@test.com');
-
-    $this->actingAs($user)
-        ->put(route('akun-saya.password'), ['current_password' => 'ngawur', 'password' => 'baru12345', 'password_confirmation' => 'baru12345'])
-        ->assertSessionHasErrors('current_password', null, 'password');
-
-    expect(Hash::check('password', $user->fresh()->password))->toBeTrue();
 });
 
 it('Akun Saya tidak bisa dipakai tamu', function () {

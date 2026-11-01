@@ -11,7 +11,9 @@ use Illuminate\Validation\Rule;
 
 /**
  * Kelola Akun - hanya Super User (middleware super.user).
- * Akun TIDAK bisa dibuat sendiri oleh pengguna: semua akun dibuat, diatur, dan dikelola Super User.
+ * Akun TIDAK bisa dibuat sendiri oleh pengguna: semua akun didaftarkan, diatur, dan dikelola Super User.
+ * Login HANYA lewat Google, jadi akun tidak punya password: Super User cukup mendaftarkan email Google
+ * orangnya, lalu orang itu login lewat tombol "Masuk dengan Google".
  * Pengaman: tidak bisa mengubah role/status/menghapus akun sendiri, dan tidak bisa
  * menurunkan / menonaktifkan / menghapus Super User aktif TERAKHIR (supaya tidak ada yang terkunci).
  */
@@ -54,9 +56,7 @@ class AkunController extends Controller
     {
         $this->normalisasi($request);
 
-        $data = $request->validate($this->rules() + [
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ], $this->pesan());
+        $data = $request->validate($this->rules(), $this->pesan());
 
         $data['domain_akses'] = $data['role'] === 'admin' ? $data['domain_akses'] : null;
         $data['is_active'] = $request->boolean('is_active');
@@ -98,18 +98,6 @@ class AkunController extends Controller
 
         return redirect()->route('superuser.akun.index')
             ->with('success', "Akun \"{$akun->username}\" berhasil diperbarui.");
-    }
-
-    public function resetPassword(Request $request, User $akun)
-    {
-        $request->validateWithBag('reset', [
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ], $this->pesan());
-
-        $akun->update(['password' => $request->password]);
-
-        return redirect()->route('superuser.akun.edit', $akun)
-            ->with('success', "Password akun \"{$akun->username}\" berhasil direset.");
     }
 
     public function toggleStatus(User $akun)
@@ -162,8 +150,6 @@ class AkunController extends Controller
             'username.unique' => 'Username ini sudah dipakai.',
             'email.unique' => 'Email ini sudah dipakai.',
             'domain_akses.required_if' => 'Admin wajib dipilihkan domain yang dikelola.',
-            'password.min' => 'Password minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak sama.',
         ];
     }
 

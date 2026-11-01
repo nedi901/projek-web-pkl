@@ -1,7 +1,7 @@
 <x-layouts.admin title="Tambah Akun">
     <div class="max-w-2xl">
         <h1 class="text-xl font-bold mb-1">Tambah Akun</h1>
-        <p class="text-xs text-gray-500 mb-4">Akun baru bisa login dengan email atau username.</p>
+        <p class="text-xs text-gray-500 mb-4">Daftarkan email Google orangnya. Setelah itu dia bisa masuk lewat tombol &ldquo;Masuk dengan Google&rdquo;.</p>
 
         <form method="POST" action="{{ route('superuser.akun.store') }}" class="bg-white border rounded-xl p-6">
             @csrf

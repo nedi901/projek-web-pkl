@@ -42,6 +42,8 @@
             <span>Masuk dengan Google</span>
         </a>
 
+        <div class="text-center text-xs text-gray-400 my-3">Atau</div>
+
         <a href="{{ route('user.dashboard') }}" class="block text-center bg-[#F2C230] hover:bg-[#e0b526] text-black text-sm font-semibold py-2.5 rounded-md">
             Lanjutkan Sebagai Tamu
         </a>
