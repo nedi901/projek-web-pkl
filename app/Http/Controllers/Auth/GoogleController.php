@@ -66,26 +66,16 @@ class GoogleController extends Controller
         if (! $user) {
             $user = User::where('email', $email)->first();
 
-            if ($user) {
+                        if ($user) {
                 // Tautkan akun Google ke user yang sudah ada
                 $user->forceFill([
                     'google_id' => $googleId,
                     'avatar' => $avatar,
                 ])->save();
             } else {
-                // Buat akun baru otomatis jika belum ada (role default: user read-only)
-                $username = $this->generateUniqueUsername($email);
-
-                $user = User::create([
-                    'name' => $name,
-                    'username' => $username,
-                    'email' => $email,
-                    'google_id' => $googleId,
-                    'avatar' => $avatar,
-                    'password' => null,
-                    'role' => 'user',
-                    'domain_akses' => null,
-                    'is_active' => true,
+                // Tidak ada akun terdaftar dengan email ini -> tolak (tidak buat otomatis)
+                return redirect()->route('login')->withErrors([
+                    'login' => 'Email ini belum terdaftar. Hubungi Super User untuk didaftarkan.',
                 ]);
             }
         } else {

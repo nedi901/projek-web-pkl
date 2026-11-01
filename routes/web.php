@@ -59,7 +59,6 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 Route::get('/login', [LoginController::class, 'create'])->name('login');
-Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
