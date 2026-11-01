@@ -8,5 +8,8 @@ class KelompokKomoditasBukanLogam extends Model
 {
     protected $fillable = ['nama_kelompok'];
 
-    public function komoditasBukanLogams() { return $this->hasMany(KomoditasBukanLogam::class); }
+    public function komoditasBukanLogams()
+    {
+        return $this->hasMany(KomoditasBukanLogam::class);
+    }
 }

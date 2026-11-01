@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\NeracaMineralLogam;
-use App\Models\Provinsi;
+use App\Imports\MineralLogamImport;
+use App\Models\IdInstansi;
 use App\Models\Kabupaten;
 use App\Models\KomoditasLogam;
+use App\Models\NeracaMineralLogam;
+use App\Models\Provinsi;
 use App\Models\StatDikBb;
-use App\Models\IdInstansi;
-use App\Imports\MineralLogamImport;
-use App\Support\NolkanAngka;
 use App\Support\JalankanImport;
+use App\Support\NolkanAngka;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 
 class MineralLogamController extends Controller
 {
@@ -23,7 +22,7 @@ class MineralLogamController extends Controller
     public function index(Request $request)
     {
         $data = NeracaMineralLogam::with(['provinsi', 'kabupaten', 'komoditasLogam.kelompokKomoditasLogam', 'statDikBb'])
-            ->when($request->search, fn($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
+            ->when($request->search, fn ($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
             ->paginate(15);
 
         return view('admin.mineral-logam.index', compact('data'));
@@ -92,7 +91,7 @@ class MineralLogamController extends Controller
     public function update(Request $request, NeracaMineralLogam $mineralLogam)
     {
         $validated = $request->validate([
-            'idml' => 'required|integer|unique:neraca_mineral_logams,idml,' . $mineralLogam->id,
+            'idml' => 'required|integer|unique:neraca_mineral_logams,idml,'.$mineralLogam->id,
             'nama_objek' => 'required|string',
             'tahun_data' => 'required|integer',
             'tahun_neraca' => 'required|integer',

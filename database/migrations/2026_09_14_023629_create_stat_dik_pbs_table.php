@@ -10,16 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('stat_dik_pbs', function (Blueprint $table) {
-    $table->id();
-    $table->string('label');
-    $table->timestamps();
-});
-}
+    {
+        Schema::create('stat_dik_pbs', function (Blueprint $table) {
+            $table->id();
+            $table->string('label');
+            $table->timestamps();
+        });
+    }
 
-public function down(): void
-{
-    Schema::dropIfExists('stat_dik_pbs');
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('stat_dik_pbs');
+    }
 };

@@ -6,10 +6,22 @@
     <title>{{ $title ?? 'Admin - Neraca SDM' }}</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    @include('partials.gaya-tampilan')
 </head>
 <body class="bg-[#F5F5F5] text-gray-800">
+    {{-- Bilah atas + tombol menu: hanya tampil di layar kecil (HP/tablet kecil) --}}
+    <header class="md:hidden sticky top-0 z-30 flex items-center gap-3 bg-white border-b border-gray-200 px-4 py-2.5">
+        <button type="button" id="sidebar-buka" aria-label="Buka menu" aria-controls="sidebar"
+                class="p-2 -ml-2 rounded-md text-gray-700 hover:bg-gray-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <img src="{{ asset('images/favicon.png') }}" alt="" class="h-7 w-7">
+        <span class="text-sm font-semibold text-gray-800">Neraca SDM</span>
+    </header>
+    <div id="sidebar-overlay" class="hidden md:hidden fixed inset-0 z-30 bg-black/40"></div>
+
     <div class="flex min-h-screen">
-        <div class="w-56 bg-white border-r border-gray-200 flex flex-col shrink-0">
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-40 -translate-x-full transition-transform duration-200 overflow-y-auto md:static md:z-auto md:translate-x-0 md:overflow-visible w-56 bg-white border-r border-gray-200 flex flex-col shrink-0">
             <div class="flex flex-col items-center py-6 border-b border-gray-100">
                 <img src="{{ asset('images/logo-esdm.png') }}" alt="Kementerian ESDM" class="h-24 w-auto">
             </div>
@@ -129,7 +141,12 @@
 
             <div class="border-t border-gray-100 px-3 py-3">
                 <div class="bg-gray-50 rounded-lg px-3 py-2 text-xs">
-                    <div class="font-medium text-gray-700">{{ auth()->user()->name }}</div>
+                    <div class="font-medium text-gray-700 flex items-center gap-2">
+                        @if(auth()->user()->avatar)
+                            <img src="{{ auth()->user()->avatar }}" alt="{{ auth()->user()->name }}" class="w-6 h-6 rounded-full object-cover shrink-0">
+                        @endif
+                        <span class="truncate">{{ auth()->user()->name }}</span>
+                    </div>
                     <div class="text-[10px] text-gray-400 font-mono">{{ auth()->user()->role === 'super_user' ? 'SUPER USER' : 'ADMIN · ' . strtoupper(str_replace('_', ' ', auth()->user()->domain_akses ?? '-')) }}</div>
                 </div>
                 <a href="{{ route('akun-saya.edit') }}" class="block mt-2 px-3 py-2 text-sm rounded-lg {{ request()->routeIs('akun-saya.*') ? 'bg-[#F2C230] text-black font-medium' : 'text-gray-500 hover:bg-gray-50' }}">Akun Saya</a>
@@ -140,7 +157,7 @@
             </div>
         </div>
 
-        <div class="flex-1 min-w-0 p-8">
+        <div class="flex-1 min-w-0 p-4 sm:p-6 md:p-8">
             @if(session('success'))
             <div class="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-2.5 mb-4">
                 {{ session('success') }}
@@ -150,5 +167,20 @@
             {{ $slot }}
         </div>
     </div>
+    <script>
+        // Menu samping di layar kecil: buka lewat tombol, tutup lewat latar gelap, tombol Esc, atau memilih menu
+        (function () {
+            var sb = document.getElementById('sidebar');
+            var ov = document.getElementById('sidebar-overlay');
+            var buka = document.getElementById('sidebar-buka');
+            if (!sb || !ov || !buka) return;
+            function bukaMenu() { sb.classList.remove('-translate-x-full'); ov.classList.remove('hidden'); }
+            function tutupMenu() { sb.classList.add('-translate-x-full'); ov.classList.add('hidden'); }
+            buka.addEventListener('click', bukaMenu);
+            ov.addEventListener('click', tutupMenu);
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') tutupMenu(); });
+            sb.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', tutupMenu); });
+        })();
+    </script>
 </body>
 </html>

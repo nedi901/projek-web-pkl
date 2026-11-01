@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\NeracaPanasBumi;
 use App\Models\KlasifikasiTemperatur;
+use App\Models\NeracaPanasBumi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +19,7 @@ class PanasBumiGrafikController extends Controller
         $klasifikasiTerpilih = $klasifikasiId ? KlasifikasiTemperatur::find($klasifikasiId) : null;
 
         $base = NeracaPanasBumi::query()
-            ->when($klasifikasiId, fn($q) => $q->where('klasifikasi_temperatur_id', $klasifikasiId));
+            ->when($klasifikasiId, fn ($q) => $q->where('klasifikasi_temperatur_id', $klasifikasiId));
 
         // Bar per provinsi
         $perProvinsi = (clone $base)

@@ -42,7 +42,7 @@ beforeEach(function () {
 });
 
 /* ------------------------------------------------------------------ */
-/* Peta tiap domain                                                    */
+/* Peta tiap domain */
 /* ------------------------------------------------------------------ */
 
 /**
@@ -151,7 +151,7 @@ function impId(string $d, int $urut = 0): int
 /** Tulis baris-baris (list of [judul => isi]) menjadi file .xlsx sementara. */
 function impXlsx(array $baris): string
 {
-    $buku = new Spreadsheet();
+    $buku = new Spreadsheet;
     $data = [array_keys($baris[0])];
     foreach ($baris as $b) {
         $data[] = array_values($b);
@@ -161,7 +161,7 @@ function impXlsx(array $baris): string
     $buku->getActiveSheet()->fromArray($data, null, 'A1', true);
 
     $sementara = tempnam(sys_get_temp_dir(), 'impor');
-    $path = $sementara . '.xlsx';
+    $path = $sementara.'.xlsx';
     rename($sementara, $path);
     (new Xlsx($buku))->save($path);
 
@@ -189,7 +189,7 @@ function impKirim($test, string $d, array $baris)
 $semuaDomain = array_keys(impCfg());
 
 /* ------------------------------------------------------------------ */
-/* JALUR NORMAL                                                        */
+/* JALUR NORMAL */
 /* ------------------------------------------------------------------ */
 
 it('import: baris masuk, referensi dibuat, total benar, dan hasilnya dilaporkan', function (string $d) {
@@ -251,7 +251,7 @@ it('import: beberapa baris sekaligus masuk semua', function (string $d) {
 })->with($semuaDomain);
 
 /* ------------------------------------------------------------------ */
-/* ISI SEL ANGKA                                                       */
+/* ISI SEL ANGKA */
 /* ------------------------------------------------------------------ */
 
 it('sel angka kosong atau berisi "-" dibaca 0 (tidak error)', function (string $d, mixed $isi) {
@@ -270,7 +270,7 @@ it('sel angka kosong atau berisi "-" dibaca 0 (tidak error)', function (string $
     $row = $c['model']::where($c['id'], $id)->firstOrFail();
 
     foreach (array_keys($c['cek']) as $kolom) {
-        expect(is_numeric($row->{$kolom}))->toBeTrue("Kolom {$kolom} berisi bukan angka: " . var_export($row->{$kolom}, true));
+        expect(is_numeric($row->{$kolom}))->toBeTrue("Kolom {$kolom} berisi bukan angka: ".var_export($row->{$kolom}, true));
         expect((float) $row->{$kolom})->toEqualWithDelta(0.0, 0.0001);
     }
 })->with(function () {
@@ -330,7 +330,7 @@ it('judul kolom hilang (template salah): pesan menyebut kolomnya, tidak ada data
 })->with($semuaDomain);
 
 /* ------------------------------------------------------------------ */
-/* BARIS YANG DILEWATI: dilaporkan, baris lain tetap masuk              */
+/* BARIS YANG DILEWATI: dilaporkan, baris lain tetap masuk */
 /* ------------------------------------------------------------------ */
 
 it('baris tanpa ID dilewati, baris lain tetap masuk, dan dilaporkan', function (string $d) {
@@ -369,7 +369,7 @@ it('referensi yang tidak dikenal: baris dilewati dan dilaporkan, bukan error ser
 ]);
 
 /* ------------------------------------------------------------------ */
-/* HAK AKSES                                                           */
+/* HAK AKSES */
 /* ------------------------------------------------------------------ */
 
 it('import hanya boleh Super User dan admin domain yang bersangkutan', function (string $d) {

@@ -18,7 +18,7 @@
             @method('PUT')
 
             <div class="text-xs uppercase text-orange-700 font-mono">Info Umum</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">ID Gambut</label>
                     <input type="number" name="idgb" value="{{ old('idgb', $gambut->idgb) }}" class="w-full border-gray-300 rounded-md text-sm">
@@ -62,7 +62,7 @@
             </div>
 
             <div class="text-xs uppercase text-orange-700 font-mono pt-2">Data Gambut</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">Nilai Kalori Min (kal/gr)</label>
                     <input type="number" step="0.01" name="nilai_kalori_min" value="{{ old('nilai_kalori_min', $gambut->nilai_kalori_min) }}" class="w-full border-gray-300 rounded-md text-sm">

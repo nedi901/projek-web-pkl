@@ -4,10 +4,10 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\NeracaBatubara;
-use App\Models\NeracaMineralLogam;
-use App\Models\NeracaMineralBukanLogam;
-use App\Models\NeracaPanasBumi;
 use App\Models\NeracaGambut;
+use App\Models\NeracaMineralBukanLogam;
+use App\Models\NeracaMineralLogam;
+use App\Models\NeracaPanasBumi;
 use App\Models\Provinsi;
 use Illuminate\Http\Request;
 

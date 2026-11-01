@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Route;
 
-#[Fillable(['name', 'username', 'email', 'password', 'role', 'domain_akses', 'is_active', 'last_login_at'])]
+#[Fillable(['name', 'username', 'email', 'google_id', 'avatar', 'password', 'role', 'domain_akses', 'is_active', 'last_login_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -56,5 +57,29 @@ class User extends Authenticatable
     public function domainLabel(): string
     {
         return $this->domain_akses ? (self::DOMAINS[$this->domain_akses] ?? $this->domain_akses) : '-';
+    }
+
+    public function getRedirectUrlAfterLogin(): string
+    {
+        if ($this->role === 'super_user') {
+            return route('superuser.dashboard');
+        }
+
+        if ($this->role === 'admin') {
+            $grafikRoute = match ($this->domain_akses) {
+                'batubara' => 'admin.batubara.grafik.index',
+                'mineral_logam' => 'admin.mineral-logam.grafik.index',
+                'mineral_bukan_logam' => 'admin.mineral-bukan-logam.grafik.index',
+                'panas_bumi' => 'admin.panas-bumi.grafik.index',
+                'gambut' => 'admin.gambut.grafik.index',
+                default => null,
+            };
+
+            if ($grafikRoute && Route::has($grafikRoute)) {
+                return route($grafikRoute);
+            }
+        }
+
+        return route('user.dashboard');
     }
 }

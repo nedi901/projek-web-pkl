@@ -71,14 +71,14 @@ trait TracksDeletion
         $user = auth()->user();
 
         RiwayatData::create([
-            'domain'    => property_exists($this, 'riwayatDomain') ? $this->riwayatDomain : 'lainnya',
-            'aksi'      => $aksi,
-            'data_id'   => $this->getKey(),
-            'nama_data' => (string) ($this->nama_objek ?? ('#' . $this->getKey())),
-            'user_id'   => $user?->id,
+            'domain' => property_exists($this, 'riwayatDomain') ? $this->riwayatDomain : 'lainnya',
+            'aksi' => $aksi,
+            'data_id' => $this->getKey(),
+            'nama_data' => (string) ($this->nama_objek ?? ('#'.$this->getKey())),
+            'user_id' => $user?->id,
             'user_nama' => $user?->name,
             'user_role' => $user?->role,
-            'snapshot'  => json_encode($this->getAttributes(), JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR),
+            'snapshot' => json_encode($this->getAttributes(), JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR),
         ]);
     }
 }

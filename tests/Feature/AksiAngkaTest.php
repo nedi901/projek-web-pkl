@@ -123,7 +123,7 @@ $semuaDomain = array_keys(angCfg());
 $semuaTahun = ['semua tahun' => [null], 'tahun 2024' => ['2024'], 'tahun 2025' => ['2025']];
 
 /* ------------------------------------------------------------------ */
-/* DASHBOARD                                                           */
+/* DASHBOARD */
 /* ------------------------------------------------------------------ */
 
 it('Dashboard Super User: total tiap domain sama dengan jumlah di database', function (?string $tahun) {
@@ -155,7 +155,7 @@ it('Dashboard Super User: total tiap domain sama dengan jumlah di database', fun
         }
     }
 
-    expect($salah)->toBe([], "Angka Dashboard tidak cocok dengan database:\n" . implode("\n", $salah));
+    expect($salah)->toBe([], "Angka Dashboard tidak cocok dengan database:\n".implode("\n", $salah));
 })->with($semuaTahun);
 
 it('Dashboard User dan Dashboard Super User menampilkan total yang sama', function (?string $tahun) {
@@ -172,7 +172,7 @@ it('Dashboard User dan Dashboard Super User menampilkan total yang sama', functi
         }
     }
 
-    expect($salah)->toBe([], "Dashboard Super User dan User beda angka:\n" . implode("\n", $salah));
+    expect($salah)->toBe([], "Dashboard Super User dan User beda angka:\n".implode("\n", $salah));
 })->with($semuaTahun);
 
 it('Dashboard Super User: angka benar-benar tertulis di halaman (format koma desimal)', function () {
@@ -237,7 +237,7 @@ it('Dashboard: data di luar tahun 2024-2025 tidak ikut dihitung (aturan pembimbi
 })->with($semuaDomain);
 
 /* ------------------------------------------------------------------ */
-/* GRAFIK ADMIN                                                        */
+/* GRAFIK ADMIN */
 /* ------------------------------------------------------------------ */
 
 it('Grafik admin: total, klasifikasi, dan chart batang sama dengan database', function (string $nama) {
@@ -258,7 +258,7 @@ it('Grafik admin: total, klasifikasi, dan chart batang sama dengan database', fu
     if ($c['jumlah']) {
         $harapan = angTabel($c['tabel'])->count();
         if ((int) $respon->viewData($c['jumlah']) !== $harapan) {
-            $salah[] = "{$c['jumlah']}: halaman " . $respon->viewData($c['jumlah']) . ", database {$harapan}";
+            $salah[] = "{$c['jumlah']}: halaman ".$respon->viewData($c['jumlah']).", database {$harapan}";
         }
     }
 
@@ -275,18 +275,18 @@ it('Grafik admin: total, klasifikasi, dan chart batang sama dengan database', fu
     $harapanBar = $baris->pluck('total')->map(fn ($v) => round((float) $v, 2))->all();
     $nyataBar = $respon->viewData('perProvinsi')->pluck('total')->map(fn ($v) => round((float) $v, 2))->all();
     if ($harapanBar !== $nyataBar) {
-        $salah[] = 'chart batang: halaman [' . implode(', ', $nyataBar) . '], database [' . implode(', ', $harapanBar) . ']';
+        $salah[] = 'chart batang: halaman ['.implode(', ', $nyataBar).'], database ['.implode(', ', $harapanBar).']';
     }
 
     // label batang pertama harus milik provinsi/komoditas yang benar (kalau nilai tertinggi tidak kembar)
     if ($baris->count() > 0 && ($baris->count() < 2 || (float) $baris[0]->total !== (float) $baris[1]->total)) {
         $teratas = $respon->viewData('perProvinsi')->first();
         if ((int) $teratas->{$c['grup']} !== (int) $baris[0]->g) {
-            $salah[] = "batang tertinggi milik {$c['grup']} " . $teratas->{$c['grup']} . ", seharusnya " . $baris[0]->g;
+            $salah[] = "batang tertinggi milik {$c['grup']} ".$teratas->{$c['grup']}.', seharusnya '.$baris[0]->g;
         }
     }
 
-    expect($salah)->toBe([], "Angka Grafik {$nama} tidak cocok dengan database:\n" . implode("\n", $salah));
+    expect($salah)->toBe([], "Angka Grafik {$nama} tidak cocok dengan database:\n".implode("\n", $salah));
 })->with($semuaDomain);
 
 it('Grafik admin: tren per tahun sama dengan jumlah per tahun di database', function (string $nama) {
@@ -327,7 +327,7 @@ it('Grafik admin: filter komoditas / klasifikasi mengubah total sesuai database'
         }
     }
 
-    expect($salah)->toBe([], "Filter Grafik {$nama} tidak cocok dengan database:\n" . implode("\n", $salah));
+    expect($salah)->toBe([], "Filter Grafik {$nama} tidak cocok dengan database:\n".implode("\n", $salah));
 })->with([
     'mineral logam: komoditas' => ['mineral logam', 'komoditas_id', 'komoditas_logam_id'],
     'mineral bukan logam: komoditas' => ['mineral bukan logam', 'komoditas_id', 'komoditas_bukan_logam_id'],
@@ -354,7 +354,7 @@ it('Grafik Gambut: filter pulau mengubah total sesuai database', function () {
 });
 
 /* ------------------------------------------------------------------ */
-/* GRAFIK USER (semua domain dalam satu halaman, filter provinsi)       */
+/* GRAFIK USER (semua domain dalam satu halaman, filter provinsi) */
 /* ------------------------------------------------------------------ */
 
 $kasusUser = [];
@@ -379,20 +379,20 @@ it('Grafik user: total dan jumlah data sama dengan database', function (string $
 
     $harapanSd = (float) $dasar()->sum($c['sd']);
     if (! angSama((float) $respon->viewData('totalSd'), $harapanSd)) {
-        $salah[] = 'Sumber Daya halaman ' . $respon->viewData('totalSd') . ", database {$harapanSd}";
+        $salah[] = 'Sumber Daya halaman '.$respon->viewData('totalSd').", database {$harapanSd}";
     }
 
     $harapanCad = $c['cad'] ? (float) $dasar()->sum($c['cad']) : 0.0;
     if (! angSama((float) $respon->viewData('totalCad'), $harapanCad)) {
-        $salah[] = 'Cadangan halaman ' . $respon->viewData('totalCad') . ", database {$harapanCad}";
+        $salah[] = 'Cadangan halaman '.$respon->viewData('totalCad').", database {$harapanCad}";
     }
 
     $harapanJumlah = $dasar()->count();
     if ((int) $respon->viewData('jumlahData') !== $harapanJumlah) {
-        $salah[] = 'jumlah data halaman ' . $respon->viewData('jumlahData') . ", database {$harapanJumlah}";
+        $salah[] = 'jumlah data halaman '.$respon->viewData('jumlahData').", database {$harapanJumlah}";
     }
 
-    expect($salah)->toBe([], "Grafik user {$nama} tidak cocok dengan database:\n" . implode("\n", $salah));
+    expect($salah)->toBe([], "Grafik user {$nama} tidak cocok dengan database:\n".implode("\n", $salah));
 })->with($kasusUser);
 
 /* ------------------------------------------------------------------ */
@@ -481,5 +481,5 @@ it('tambah data lewat form: angka di Dashboard dan Grafik naik persis sebesar ya
         }
     }
 
-    expect($salah)->toBe([], "Angka tidak ikut berubah dengan benar setelah tambah data {$nama}:\n" . implode("\n", $salah));
+    expect($salah)->toBe([], "Angka tidak ikut berubah dengan benar setelah tambah data {$nama}:\n".implode("\n", $salah));
 })->with(['batubara', 'panas bumi', 'gambut']);

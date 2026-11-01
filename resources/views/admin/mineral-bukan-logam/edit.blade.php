@@ -18,7 +18,7 @@
             @method('PUT')
 
             <div class="text-xs uppercase text-orange-700 font-mono">Info Umum</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">ID Mineral Bukan Logam</label>
                     <input type="number" name="idbl" value="{{ old('idbl', $mineralBukanLogam->idbl) }}" class="w-full border-gray-300 rounded-md text-sm">
@@ -87,7 +87,7 @@
             </div>
 
             <div class="text-xs uppercase text-orange-700 font-mono pt-2">Sumber Daya (Ton)</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">Hipotetik</label>
                     <input type="number" step="0.001" name="hipotetik" value="{{ old('hipotetik', $mineralBukanLogam->hipotetik) }}" class="w-full border-gray-300 rounded-md text-sm">
@@ -107,7 +107,7 @@
             </div>
 
             <div class="text-xs uppercase text-orange-700 font-mono pt-2">Cadangan (Ton)</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">Terkira</label>
                     <input type="number" step="0.001" name="terkira" value="{{ old('terkira', $mineralBukanLogam->terkira) }}" class="w-full border-gray-300 rounded-md text-sm">

@@ -20,7 +20,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
  * tahun_neraca, namobj, hipbb, tereka, tertunjuk, terukur, total_sd, terkira, terbukti, total_cad, remark, bujur, lintang.
  * Referensi (provinsi, kabupaten, kelas kalori, status, instansi) dicari berdasarkan NAMA dan dibuat kalau belum ada.
  */
-class BatubaraImport implements ToModel, WithHeadingRow, SkipsEmptyRows
+class BatubaraImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
     use MelaporkanHasil;
 

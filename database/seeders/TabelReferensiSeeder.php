@@ -32,6 +32,6 @@ class TabelReferensiSeeder extends Seeder
             );
         }
 
-        $this->command?->info(count($tabels) . ' tabel referensi dimuat.');
+        $this->command?->info(count($tabels).' tabel referensi dimuat.');
     }
 }

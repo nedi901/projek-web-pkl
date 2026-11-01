@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
  * bjhtbkt, logtbkt, remark, bujur, lintang.
  * Total sumber daya dan cadangan dihitung otomatis dari kolom-kolom di atas.
  */
-class MineralLogamImport implements ToModel, WithHeadingRow, SkipsEmptyRows
+class MineralLogamImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
     use MelaporkanHasil;
 

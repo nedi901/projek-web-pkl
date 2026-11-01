@@ -37,7 +37,7 @@ beforeEach(function () {
 });
 
 /* ------------------------------------------------------------------ */
-/* Pembantu                                                            */
+/* Pembantu */
 /* ------------------------------------------------------------------ */
 
 function aksiAkun(string $email): User
@@ -159,7 +159,7 @@ function aksiTampil($v, array $kol): string
 }
 
 /* ------------------------------------------------------------------ */
-/* LOGIN & LOGOUT                                                      */
+/* LOGIN & LOGOUT */
 /* ------------------------------------------------------------------ */
 
 it('login berhasil dan diarahkan sesuai role', function (string $login, ?string $rute) {
@@ -226,7 +226,7 @@ it('logout mengakhiri sesi', function () {
 });
 
 /* ------------------------------------------------------------------ */
-/* KELOLA AKUN (Super User)                                            */
+/* KELOLA AKUN (Super User) */
 /* ------------------------------------------------------------------ */
 
 it('Super User bisa membuat akun admin domain (username & email otomatis huruf kecil)', function () {
@@ -392,7 +392,7 @@ it('Super User bisa menghapus akun lain', function () {
 });
 
 /* ------------------------------------------------------------------ */
-/* AKUN SAYA                                                           */
+/* AKUN SAYA */
 /* ------------------------------------------------------------------ */
 
 it('Akun Saya: nama dan username bisa diubah, email TIDAK', function () {
@@ -459,7 +459,7 @@ it('Akun Saya tidak bisa dipakai tamu', function () {
 });
 
 /* ------------------------------------------------------------------ */
-/* HAPUS -> HISTORI -> PULIHKAN (semua domain)                         */
+/* HAPUS -> HISTORI -> PULIHKAN (semua domain) */
 /* ------------------------------------------------------------------ */
 
 it('hapus data masuk Histori, tercatat di Log, lalu bisa dipulihkan', function (string $slug, string $model, string $email, string $rute) {
@@ -530,7 +530,7 @@ it('user biasa dan tamu tidak boleh menghapus data', function (?string $email, i
 ]);
 
 /* ------------------------------------------------------------------ */
-/* CRUD BATUBARA                                                       */
+/* CRUD BATUBARA */
 /* ------------------------------------------------------------------ */
 
 it('Batubara: tambah data, total dihitung otomatis', function () {
@@ -604,7 +604,7 @@ it('Batubara: admin domain lain, user biasa, dan tamu tidak boleh menambah data'
 ]);
 
 /* ------------------------------------------------------------------ */
-/* KELOLA REFERENSI                                                    */
+/* KELOLA REFERENSI */
 /* ------------------------------------------------------------------ */
 
 $semuaJenis = [
@@ -731,7 +731,7 @@ it('Kelola Referensi hanya untuk Super User', function (?string $email, int $sta
 ]);
 
 /* ------------------------------------------------------------------ */
-/* KELOLA TABEL BUKU                                                   */
+/* KELOLA TABEL BUKU */
 /* ------------------------------------------------------------------ */
 
 it('Tabel Buku: simpan dari teks Excel, tipe kolom & angka terbaca benar', function () {
@@ -866,7 +866,8 @@ it('Tabel Buku: Edit lalu Simpan TANPA mengubah apa pun tidak boleh mengubah tam
 
         if ($respon->headers->get('Location') !== route('superuser.tabel-buku.index')) {
             $galat = app('session.store')->get('errors');
-            $masalah[] = "{$tabel->kode}: simpan ditolak" . ($galat ? ' (' . implode('; ', $galat->all()) . ')' : '');
+            $masalah[] = "{$tabel->kode}: simpan ditolak".($galat ? ' ('.implode('; ', $galat->all()).')' : '');
+
             continue;
         }
 
@@ -875,12 +876,13 @@ it('Tabel Buku: Edit lalu Simpan TANPA mengubah apa pun tidak boleh mengubah tam
 
         if (count($baru->kolom) !== count($tabel->kolom) || count($baru->baris) !== count($tabel->baris)) {
             $masalah[] = "{$tabel->kode}: jumlah kolom/baris berubah";
+
             continue;
         }
 
         foreach ($tabel->kolom as $j => $kol) {
             if (($baru->kolom[$j]['l'] ?? null) !== $kol['l'] || ($baru->kolom[$j]['t'] ?? null) !== ($kol['t'] ?? 'text')) {
-                $masalah[] = "{$tabel->kode}: kolom \"{$kol['l']}\" berubah tipe dari " . ($kol['t'] ?? 'text') . ' menjadi ' . ($baru->kolom[$j]['t'] ?? '?');
+                $masalah[] = "{$tabel->kode}: kolom \"{$kol['l']}\" berubah tipe dari ".($kol['t'] ?? 'text').' menjadi '.($baru->kolom[$j]['t'] ?? '?');
             }
         }
 
@@ -891,15 +893,15 @@ it('Tabel Buku: Edit lalu Simpan TANPA mengubah apa pun tidak boleh mengubah tam
 
                 if ($asli !== $kini && $beda < 3) {
                     $beda++;
-                    $masalah[] = "{$tabel->kode}: baris " . ($i + 1) . ", kolom \"{$kol['l']}\" tampil \"{$asli}\" tapi setelah Simpan jadi \"{$kini}\"";
+                    $masalah[] = "{$tabel->kode}: baris ".($i + 1).", kolom \"{$kol['l']}\" tampil \"{$asli}\" tapi setelah Simpan jadi \"{$kini}\"";
                 }
             }
 
             if (in_array($row['s'] ?? '', ['sub', 'child'], true) && ($baru->baris[$i]['s'] ?? '') !== $row['s']) {
-                $masalah[] = "{$tabel->kode}: gaya baris " . ($i + 1) . ' (' . $row['s'] . ') hilang';
+                $masalah[] = "{$tabel->kode}: gaya baris ".($i + 1).' ('.$row['s'].') hilang';
             }
         }
     }
 
-    expect($masalah)->toBe([], "Tabel yang berubah setelah Edit -> Simpan:\n" . implode("\n", $masalah));
+    expect($masalah)->toBe([], "Tabel yang berubah setelah Edit -> Simpan:\n".implode("\n", $masalah));
 });

@@ -1,7 +1,7 @@
 <x-layouts.admin :title="$cfg['label']">
     @php $slug = $cfg['slug']; @endphp
 
-    <div class="flex justify-between items-end mb-4">
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-4">
         <div>
             <a href="{{ route('superuser.referensi.index') }}" class="text-xs text-gray-400 hover:underline">← Kelola Referensi</a>
             <h1 class="text-xl font-bold">{{ $cfg['label'] }}</h1>

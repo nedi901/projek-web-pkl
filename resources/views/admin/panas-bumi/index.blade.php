@@ -1,5 +1,5 @@
 <x-layouts.admin title="Data Panas Bumi">
-    <div class="flex justify-between items-end mb-4">
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-4">
         <div>
             <h1 class="text-xl font-bold">Data Panas Bumi</h1>
             <p class="text-xs text-gray-500">Kelola data neraca — Admin</p>

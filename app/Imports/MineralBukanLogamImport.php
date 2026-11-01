@@ -21,7 +21,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
  * "komoditas" dan "stat_dik" HARUS sudah ada di Kelola Referensi (nama persis sama); baris yang tidak dikenal
  * dilewati dan dilaporkan setelah import selesai.
  */
-class MineralBukanLogamImport implements ToModel, WithHeadingRow, SkipsEmptyRows
+class MineralBukanLogamImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
     use MelaporkanHasil;
 
@@ -38,12 +38,12 @@ class MineralBukanLogamImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 
         $komoditas = KomoditasBukanLogam::where('nama_komoditas', trim($row['komoditas']))->first();
         if (! $komoditas) {
-            return $this->lewati('komoditas "' . trim($row['komoditas']) . '" tidak dikenal');
+            return $this->lewati('komoditas "'.trim($row['komoditas']).'" tidak dikenal');
         }
 
         $statDik = StatDikBb::where('label', trim($row['stat_dik']))->first();
         if (! $statDik) {
-            return $this->lewati('stat_dik "' . trim($row['stat_dik']) . '" tidak dikenal');
+            return $this->lewati('stat_dik "'.trim($row['stat_dik']).'" tidak dikenal');
         }
 
         $instansi = ! blank($row['instansi'] ?? null)

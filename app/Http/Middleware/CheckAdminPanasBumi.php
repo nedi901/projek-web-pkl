@@ -20,7 +20,7 @@ class CheckAdminPanasBumi
         }
 
         if ($user->role === 'admin' && $user->domain_akses !== 'panas_bumi') {
-            abort(403, 'Kamu cuma bisa kelola domain: ' . $user->domain_akses);
+            abort(403, 'Kamu cuma bisa kelola domain: '.$user->domain_akses);
         }
 
         return $next($request);

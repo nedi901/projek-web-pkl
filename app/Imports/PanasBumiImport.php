@@ -23,7 +23,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
  * PENTING: stat_dik HARUS label dari Status Penyelidikan Panas Bumi (tabel stat_dik_pbs), BUKAN stat_dik_bbs yang
  * dipakai Batubara/Mineral. Baris dengan stat_dik tidak dikenal dilewati dan dilaporkan setelah import selesai.
  */
-class PanasBumiImport implements ToModel, WithHeadingRow, SkipsEmptyRows
+class PanasBumiImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
     use MelaporkanHasil;
 
@@ -40,7 +40,7 @@ class PanasBumiImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 
         $statDik = StatDikPb::where('label', trim($row['stat_dik']))->first();
         if (! $statDik) {
-            return $this->lewati('stat_dik "' . trim($row['stat_dik']) . '" tidak dikenal');
+            return $this->lewati('stat_dik "'.trim($row['stat_dik']).'" tidak dikenal');
         }
 
         $instansi = ! blank($row['instansi'] ?? null)

@@ -10,8 +10,8 @@ class Angka
 {
     /**
      * @return array{0: string, 1: string} [angka berformat, satuan lengkap]
-     *  - satuan 'ton'  -> diringkas, mis. ['98,00', 'Miliar ton']
-     *  - satuan lain   -> angka penuh, mis. ['9.144,50', 'MWe']
+     *                                     - satuan 'ton'  -> diringkas, mis. ['98,00', 'Miliar ton']
+     *                                     - satuan lain   -> angka penuh, mis. ['9.144,50', 'MWe']
      */
     public static function format(float $n, string $satuan = 'ton'): array
     {
@@ -22,7 +22,7 @@ class Angka
         $abs = abs($n);
         foreach ([[1e12, 'Triliun'], [1e9, 'Miliar'], [1e6, 'Juta'], [1e3, 'Ribu']] as [$batas, $nama]) {
             if ($abs >= $batas) {
-                return [number_format($n / $batas, 2, ',', '.'), $nama . ' ton'];
+                return [number_format($n / $batas, 2, ',', '.'), $nama.' ton'];
             }
         }
 
@@ -49,7 +49,7 @@ class Angka
                 $v = $n / $batas;
                 $teks = floor($v) == $v ? number_format($v, 0, ',', '.') : rtrim(rtrim(number_format($v, 2, ',', '.'), '0'), ',');
 
-                return $teks . ' ' . $nama;
+                return $teks.' '.$nama;
             }
         }
 

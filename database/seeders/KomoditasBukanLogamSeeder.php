@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\KomoditasBukanLogam;
 use App\Models\KelompokKomoditasBukanLogam;
+use App\Models\KomoditasBukanLogam;
 use Illuminate\Database\Seeder;
 
 /**

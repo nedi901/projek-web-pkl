@@ -20,7 +20,7 @@ class CheckAdminGambut
         }
 
         if ($user->role === 'admin' && $user->domain_akses !== 'gambut') {
-            abort(403, 'Kamu cuma bisa kelola domain: ' . $user->domain_akses);
+            abort(403, 'Kamu cuma bisa kelola domain: '.$user->domain_akses);
         }
 
         return $next($request);

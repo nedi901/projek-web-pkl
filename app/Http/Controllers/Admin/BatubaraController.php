@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\NeracaBatubara;
-use App\Models\Provinsi;
+use App\Imports\BatubaraImport;
+use App\Models\IdInstansi;
 use App\Models\Kabupaten;
 use App\Models\KelasKalori;
+use App\Models\NeracaBatubara;
+use App\Models\Provinsi;
 use App\Models\StatDikBb;
-use App\Models\IdInstansi;
-use App\Support\NolkanAngka;
 use App\Support\JalankanImport;
+use App\Support\NolkanAngka;
 use Illuminate\Http\Request;
-use App\Imports\BatubaraImport;
-use Maatwebsite\Excel\Facades\Excel;
 
 class BatubaraController extends Controller
 {
@@ -23,7 +22,7 @@ class BatubaraController extends Controller
     public function index(Request $request)
     {
         $data = NeracaBatubara::with(['provinsi', 'kabupaten', 'kelasKalori', 'statDikBb'])
-            ->when($request->search, fn($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
+            ->when($request->search, fn ($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
             ->paginate(15);
 
         return view('admin.batubara.index', compact('data'));
@@ -83,7 +82,7 @@ class BatubaraController extends Controller
     public function update(Request $request, NeracaBatubara $batubara)
     {
         $validated = $request->validate([
-            'idbb' => 'required|integer|unique:neraca_batubaras,idbb,' . $batubara->id,
+            'idbb' => 'required|integer|unique:neraca_batubaras,idbb,'.$batubara->id,
             'nama_objek' => 'required|string',
             'tahun_data' => 'required|integer',
             'tahun_neraca' => 'required|integer',
@@ -116,23 +115,24 @@ class BatubaraController extends Controller
 
         return redirect()->route('admin.batubara.index')->with('success', 'Data berhasil dihapus.');
     }
+
     public function importForm()
-{
-    return view('admin.batubara.import');
-}
+    {
+        return view('admin.batubara.import');
+    }
 
-public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,xls,csv',
-    ]);
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
 
-    $hasil = JalankanImport::jalankan(new BatubaraImport, $request->file('file'));
+        $hasil = JalankanImport::jalankan(new BatubaraImport, $request->file('file'));
 
         if ($hasil['galat']) {
             return back()->withErrors(['file' => $hasil['galat']]);
         }
 
         return redirect()->route('admin.batubara.index')->with('success', $hasil['ringkasan']);
-}
+    }
 }

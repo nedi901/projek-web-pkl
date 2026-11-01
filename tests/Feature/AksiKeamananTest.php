@@ -34,7 +34,7 @@ function kemPesanLogin(): string
 }
 
 /* ------------------------------------------------------------------ */
-/* PEMBATASAN PERCOBAAN LOGIN                                          */
+/* PEMBATASAN PERCOBAAN LOGIN */
 /* ------------------------------------------------------------------ */
 
 it('login dibatasi: setelah 5 kali salah, percobaan berikutnya ditolak walau password benar', function () {
@@ -102,7 +102,7 @@ it('percobaan ke akun nonaktif juga dihitung', function () {
 });
 
 /* ------------------------------------------------------------------ */
-/* HALAMAN ERROR                                                       */
+/* HALAMAN ERROR */
 /* ------------------------------------------------------------------ */
 
 it('setiap kode error punya halaman yang rapi', function (int $status, string $judul) {

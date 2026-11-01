@@ -16,7 +16,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
  * Kolom Excel (baris judul): idgb, nama_objek, tahun_data, tahun_neraca, provinsi, kabupaten, nilai_kalori_min,
  * nilai_kalori_max, luas_ha, volume_juta_m3, total_sd, bujur, lintang, remark.
  */
-class GambutImport implements ToModel, WithHeadingRow, SkipsEmptyRows
+class GambutImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
     use MelaporkanHasil;
 

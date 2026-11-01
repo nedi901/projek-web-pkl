@@ -10,9 +10,9 @@
 @endphp
 
 <x-layouts.user title="Beranda">
-    <div class="flex justify-between items-start mb-6">
+    <div class="flex flex-wrap justify-between items-start gap-3 mb-6">
         <div>
-            <h1 class="text-xl font-bold">Beranda</h1>
+            <h1 class="text-2xl">Beranda</h1>
             <p class="text-xs text-gray-500 mt-0.5">Informasi Neraca Sumber Daya Mineral, Batubara, Panas Bumi, dan Gambut Indonesia</p>
         </div>
         <form method="GET">
@@ -26,31 +26,41 @@
     </div>
 
     {{-- Kartu ringkasan: tiap domain pakai satuannya sendiri --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-3 mb-4">
         @foreach($domains as $d)
             @php
                 [$angka, $satuan] = \App\Support\Angka::format($d['total_sd'], $d['satuan']);
-                $kartu = 'bg-white border border-gray-200 rounded-xl p-4 block';
+                $kartu = 'bg-white border border-gray-200 rounded-md p-4 block';
             @endphp
             @if($d['route'])
-                <a href="{{ route($d['route']) }}" class="{{ $kartu }} hover:border-[#F2C230]">
+                <a href="{{ route($d['route']) }}" class="{{ $kartu }} hover:border-gray-400">
             @else
                 <div class="{{ $kartu }}">
             @endif
-                <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-2">
+                @php
+                    $gab = $d['total_sd'] + ($d['total_cad'] ?? 0);
+                    $pSdKartu = $gab > 0 ? round($d['total_sd'] / $gab * 100) : 0;
+                @endphp
+                <div class="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 mb-2">
                     <span class="w-2 h-2 rounded-sm" style="background: {{ $warna[$d['key']] }}"></span>
-                    Sumber Daya<br>{{ $d['label'] }}
+                    {{ $d['label'] }}
                 </div>
-                <div class="text-lg font-bold leading-tight break-all">{{ \App\Support\Angka::lengkap($d['total_sd']) }}</div>
-                <div class="text-xs font-medium text-gray-600">{{ $d['satuan'] }}@if($d['satuan'] === 'ton') · ≈ {{ $angka }} {{ $satuan }}@endif</div>
-                <div class="text-[11px] text-gray-500 mt-2 break-all">
+                <div class="text-xl font-semibold leading-tight break-all tabular-nums">{{ \App\Support\Angka::lengkap($d['total_sd']) }}</div>
+                <div class="text-xs text-gray-500">{{ $d['satuan'] }} · sumber daya @if($d['satuan'] === 'ton') · ≈ {{ $angka }} {{ $satuan }}@endif</div>
+                @if($gab > 0)
+                    <div class="flex h-1.5 rounded-full overflow-hidden bg-gray-200 mt-3">
+                        <div class="bg-[#F2C230]" style="width: {{ $pSdKartu }}%"></div>
+                        <div class="bg-[#4A6FE3]" style="width: {{ 100 - $pSdKartu }}%"></div>
+                    </div>
+                @endif
+                <div class="text-[11px] text-gray-500 mt-2 break-all tabular-nums">
                     @if($d['total_cad'] !== null)
                         Cadangan: {{ \App\Support\Angka::lengkap($d['total_cad']) }} {{ $d['satuan'] }}
                     @else
                         Belum ada data cadangan
                     @endif
                 </div>
-                <div class="text-[10px] text-gray-400">{{ number_format($d['jumlah'], 0, ',', '.') }} data · {{ $labelTahun }}</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">{{ number_format($d['jumlah'], 0, ',', '.') }} data · {{ $labelTahun }}</div>
             @if($d['route'])
                 </a>
             @else

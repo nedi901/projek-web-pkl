@@ -18,7 +18,7 @@
             @method('PUT')
 
             <div class="text-xs uppercase text-orange-700 font-mono">Info Umum</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">ID Mineral Logam</label>
                     <input type="number" name="idml" value="{{ old('idml', $mineralLogam->idml) }}" class="w-full border-gray-300 rounded-md text-sm">
@@ -79,7 +79,7 @@
             </div>
 
             <div class="text-xs uppercase text-orange-700 font-mono pt-2">Sumber Daya — Bijih / Logam (Ton)</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">Hipotetik (bijih)</label>
                     <input type="number" step="0.001" name="hipotetik_bijih" value="{{ old('hipotetik_bijih', $mineralLogam->hipotetik_bijih) }}" class="w-full border-gray-300 rounded-md text-sm">
@@ -115,7 +115,7 @@
             </div>
 
             <div class="text-xs uppercase text-orange-700 font-mono pt-2">Cadangan — Bijih / Logam (Ton)</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">Terkira (bijih)</label>
                     <input type="number" step="0.001" name="terkira_bijih" value="{{ old('terkira_bijih', $mineralLogam->terkira_bijih) }}" class="w-full border-gray-300 rounded-md text-sm">

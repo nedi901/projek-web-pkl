@@ -20,7 +20,7 @@ class CheckAdminBatubara
         }
 
         if ($user->role === 'admin' && $user->domain_akses !== 'batubara') {
-            abort(403, 'Kamu cuma bisa kelola domain: ' . $user->domain_akses);
+            abort(403, 'Kamu cuma bisa kelola domain: '.$user->domain_akses);
         }
 
         return $next($request);

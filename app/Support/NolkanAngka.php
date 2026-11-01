@@ -10,8 +10,8 @@ namespace App\Support;
 class NolkanAngka
 {
     /**
-     * @param  array<string, mixed>  $data   hasil $request->validate()
-     * @param  array<int, string>    $kolom  kolom angka yang NOT NULL
+     * @param  array<string, mixed>  $data  hasil $request->validate()
+     * @param  array<int, string>  $kolom  kolom angka yang NOT NULL
      */
     public static function terapkan(array $data, array $kolom): array
     {

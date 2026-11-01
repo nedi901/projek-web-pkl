@@ -17,7 +17,7 @@
             @csrf
 
             <div class="text-xs uppercase text-orange-700 font-mono">Info Umum</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">ID Panas Bumi</label>
                     <input type="number" name="idpb" value="{{ old('idpb') }}" class="w-full border-gray-300 rounded-md text-sm">
@@ -91,7 +91,7 @@
             </div>
 
             <div class="text-xs uppercase text-orange-700 font-mono pt-2">Sumber Daya (MWe)</div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">Spekulatif</label>
                     <input type="number" step="0.001" name="spekulatif" value="{{ old('spekulatif', 0) }}" class="w-full border-gray-300 rounded-md text-sm">
@@ -103,7 +103,7 @@
             </div>
 
             <div class="text-xs uppercase text-orange-700 font-mono pt-2">Cadangan (MWe)</div>
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">Terduga</label>
                     <input type="number" step="0.001" name="terduga" value="{{ old('terduga', 0) }}" class="w-full border-gray-300 rounded-md text-sm">

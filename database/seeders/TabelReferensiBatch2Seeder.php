@@ -33,6 +33,6 @@ class TabelReferensiBatch2Seeder extends Seeder
             );
         }
 
-        $this->command?->info(count($tabels) . ' tabel referensi batch 2 dimuat.');
+        $this->command?->info(count($tabels).' tabel referensi batch 2 dimuat.');
     }
 }

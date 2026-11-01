@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\GambutImport;
+use App\Models\Kabupaten;
 use App\Models\NeracaGambut;
 use App\Models\Provinsi;
-use App\Models\Kabupaten;
-use App\Imports\GambutImport;
-use App\Support\NolkanAngka;
 use App\Support\JalankanImport;
+use App\Support\NolkanAngka;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 
 class GambutController extends Controller
 {
@@ -20,7 +19,7 @@ class GambutController extends Controller
     public function index(Request $request)
     {
         $data = NeracaGambut::with(['provinsi', 'kabupaten'])
-            ->when($request->search, fn($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
+            ->when($request->search, fn ($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
             ->paginate(15);
 
         return view('admin.gambut.index', compact('data'));
@@ -70,7 +69,7 @@ class GambutController extends Controller
     public function update(Request $request, NeracaGambut $gambut)
     {
         $validated = $request->validate([
-            'idgb' => 'required|integer|unique:neraca_gambuts,idgb,' . $gambut->id,
+            'idgb' => 'required|integer|unique:neraca_gambuts,idgb,'.$gambut->id,
             'nama_objek' => 'required|string',
             'tahun_data' => 'required|integer',
             'tahun_neraca' => 'required|integer',

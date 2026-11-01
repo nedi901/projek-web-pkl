@@ -28,8 +28,8 @@ class JalankanImport
 
         if ($import->alasan) {
             $unik = array_values(array_unique($import->alasan));
-            $ringkasan .= ' Dilewati karena: ' . implode('; ', array_slice($unik, 0, 5))
-                . (count($unik) > 5 ? '; dan lainnya' : '') . '.';
+            $ringkasan .= ' Dilewati karena: '.implode('; ', array_slice($unik, 0, 5))
+                .(count($unik) > 5 ? '; dan lainnya' : '').'.';
         }
 
         return ['galat' => null, 'ringkasan' => $ringkasan];
@@ -40,13 +40,13 @@ class JalankanImport
         $awal = 'Import dibatalkan, tidak ada data yang tersimpan. ';
 
         if ($e instanceof InvalidArgumentException) {
-            return $awal . $e->getMessage() . '.';
+            return $awal.$e->getMessage().'.';
         }
 
         if (preg_match('/Undefined array key "([^"]+)"/', $e->getMessage(), $m)) {
-            return $awal . "Kolom \"{$m[1]}\" tidak ditemukan di baris judul Excel. Cek nama kolom sesuai template.";
+            return $awal."Kolom \"{$m[1]}\" tidak ditemukan di baris judul Excel. Cek nama kolom sesuai template.";
         }
 
-        return $awal . 'Pastikan file sesuai template dan isinya benar (rincian teknis dicatat di log).';
+        return $awal.'Pastikan file sesuai template dan isinya benar (rincian teknis dicatat di log).';
     }
 }

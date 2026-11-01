@@ -1,5 +1,5 @@
 <x-layouts.admin title="Kelola Tabel Buku">
-    <div class="flex justify-between items-end mb-4">
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-4">
         <div>
             <h1 class="text-xl font-bold">Kelola Tabel Buku</h1>
             <p class="text-xs text-gray-500">Tabel rekapitulasi yang tampil di bagian "Tabel Data" pada halaman Grafik dan Visualisasi tiap domain.</p>

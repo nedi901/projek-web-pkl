@@ -1,5 +1,5 @@
 <x-layouts.admin title="Grafik dan Visualisasi">
-    <div class="flex justify-between items-end mb-4">
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-4">
         <div>
             <h1 class="text-xl font-bold">Grafik dan Visualisasi</h1>
             <p class="text-xs text-gray-500">
@@ -20,7 +20,7 @@
         </form>
     </div>
 
-    <div class="grid grid-cols-3 gap-4 mb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <div class="bg-white border border-gray-200 rounded-xl p-5">
             <div class="text-xs uppercase text-gray-400 mb-1">Total Sumber Daya</div>
             <div class="text-2xl font-bold text-[#1a1a1a]">{{ number_format($totalSd, 2, ',', '.') }} <span class="text-sm font-normal text-gray-400">juta ton</span></div>

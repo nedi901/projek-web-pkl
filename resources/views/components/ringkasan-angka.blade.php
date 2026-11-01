@@ -9,12 +9,12 @@
             $satuan = $it['satuan'] ?? '';
             [$ringkas, $satuanRingkas] = \App\Support\Angka::format((float) ($it['nilai'] ?? 0), $satuan);
         @endphp
-        <div class="bg-white border border-gray-200 rounded-xl p-5">
-            <div class="text-xs uppercase text-gray-400 mb-1">{{ $it['label'] }}</div>
-            <div class="text-xl font-bold text-[#1a1a1a] break-all leading-tight">{{ \App\Support\Angka::lengkap($it['nilai'] ?? 0, $it['desimal'] ?? 2) }}</div>
-            <div class="text-xs text-gray-500 mt-0.5">{{ $satuan }}@if($satuan === 'ton') &nbsp;·&nbsp; ≈ {{ $ringkas }} {{ $satuanRingkas }}@endif</div>
+        <div class="bg-white border border-gray-200 rounded-md p-4">
+            <div class="text-[11px] font-medium uppercase tracking-wide text-gray-500 mb-1.5">{{ $it['label'] }}</div>
+            <div class="text-2xl font-semibold text-[#1B1F24] break-all leading-tight tabular-nums">{{ \App\Support\Angka::lengkap($it['nilai'] ?? 0, $it['desimal'] ?? 2) }}</div>
+            <div class="text-xs text-gray-500 mt-1">{{ $satuan }}@if($satuan === 'ton') &nbsp;·&nbsp; ≈ {{ $ringkas }} {{ $satuanRingkas }}@endif</div>
             @if(!empty($it['catatan']))
-                <div class="text-[10px] text-gray-400 mt-1">{{ $it['catatan'] }}</div>
+                <div class="text-[11px] text-gray-400 mt-1">{{ $it['catatan'] }}</div>
             @endif
         </div>
     @endforeach

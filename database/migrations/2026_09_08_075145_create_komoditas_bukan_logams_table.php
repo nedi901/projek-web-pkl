@@ -7,17 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     public function up(): void
-{
-    Schema::create('komoditas_bukan_logams', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('kelompok_komoditas_bukan_logam_id')->constrained('kelompok_komoditas_bukan_logams');
-        $table->string('nama_komoditas');
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('komoditas_bukan_logams', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kelompok_komoditas_bukan_logam_id')->constrained('kelompok_komoditas_bukan_logams');
+            $table->string('nama_komoditas');
+            $table->timestamps();
+        });
+    }
 
-public function down(): void
-{
-    Schema::dropIfExists('komoditas_bukan_logams');
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('komoditas_bukan_logams');
+    }
 };

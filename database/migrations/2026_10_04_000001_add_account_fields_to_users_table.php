@@ -27,6 +27,7 @@ return new class extends Migration
         foreach (DB::table('users')->orderBy('id')->get(['id', 'email', 'username']) as $u) {
             if ($u->username) {
                 $dipakai[] = $u->username;
+
                 continue;
             }
 
@@ -34,7 +35,7 @@ return new class extends Migration
             $nama = $dasar;
             $i = 2;
             while (in_array($nama, $dipakai, true)) {
-                $nama = $dasar . $i++;
+                $nama = $dasar.$i++;
             }
 
             $dipakai[] = $nama;

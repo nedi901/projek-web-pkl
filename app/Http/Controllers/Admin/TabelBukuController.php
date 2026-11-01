@@ -128,13 +128,13 @@ class TabelBukuController extends Controller
 
     private function kodeUnik(?string $kode, string $judul, $tahun): string
     {
-        $dasar = Str::lower($kode ?: Str::slug(Str::limit($judul, 50, ''), '-') . ($tahun ? "-{$tahun}" : ''));
+        $dasar = Str::lower($kode ?: Str::slug(Str::limit($judul, 50, ''), '-').($tahun ? "-{$tahun}" : ''));
         $dasar = $dasar !== '' ? $dasar : 'tabel';
         $kode = $dasar;
         $i = 2;
 
         while (TabelReferensi::where('kode', $kode)->exists()) {
-            $kode = $dasar . '-' . $i++;
+            $kode = $dasar.'-'.$i++;
         }
 
         return $kode;

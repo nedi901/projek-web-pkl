@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\NeracaBatubara;
-use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\KelasKalori;
+use App\Models\NeracaBatubara;
+use App\Models\Provinsi;
 use App\Models\StatDikBb;
 use Illuminate\Database\Seeder;
 
@@ -77,7 +77,7 @@ class NeracaBatubaraProvinsiSeeder extends Seeder
                 'idbb' => $idbb++,
                 'tahun_data' => 2024,
                 'tahun_neraca' => 2025,
-                'nama_objek' => 'Batubara ' . $namaProvinsi,
+                'nama_objek' => 'Batubara '.$namaProvinsi,
                 'kelas_kalori_id' => $kelasKalori->id,
                 'stat_dik_bb_id' => $statOperasi->id,
                 'hipbb' => 0,

@@ -7,6 +7,7 @@
 | (dropdown) kalau pengguna menyimpan password di browser; itu pengaturan browser, bukan aplikasi.
 */
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -14,7 +15,7 @@ uses(RefreshDatabase::class);
 it('form login mencegah isian otomatis browser (email dan password harus diketik ulang)', function () {
     $this->get(route('login'))
         ->assertOk()
-        ->assertSee('<form method="POST" action="' . route('login.store') . '" autocomplete="off">', false)
+        ->assertSee('<form method="POST" action="'.route('login.store').'" autocomplete="off">', false)
         ->assertSee('autocomplete="new-password"', false)
         ->assertDontSee('autocomplete="username"', false)
         ->assertSee("onfocus=\"this.removeAttribute('readonly')\"", false);
@@ -22,7 +23,7 @@ it('form login mencegah isian otomatis browser (email dan password harus diketik
 
 it('halaman login kosong saat dibuka lagi setelah logout', function () {
     $this->seed();
-    $user = \App\Models\User::where('email', 'user@test.com')->firstOrFail();
+    $user = User::where('email', 'user@test.com')->firstOrFail();
 
     $this->actingAs($user)->post(route('logout'));
 

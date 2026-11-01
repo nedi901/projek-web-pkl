@@ -1,29 +1,33 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\DashboardController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\User\BatubaraController;
-use App\Http\Controllers\User\MineralLogamController;
-use App\Http\Controllers\User\MineralBukanLogamController;
-use App\Http\Controllers\User\PanasBumiController;
-use App\Http\Controllers\User\GambutController;
 use App\Http\Controllers\Admin\AkunController;
-use App\Http\Controllers\Auth\ProfilController;
-use App\Http\Controllers\Admin\SuperDashboardController;
-use App\Http\Controllers\Admin\ReferensiController;
-use App\Http\Controllers\Admin\TabelBukuController;
-use App\Http\Controllers\Admin\HistoriSemuaController;
-use App\Http\Controllers\User\GrafikController;
 use App\Http\Controllers\Admin\BatubaraController as AdminBatubaraController;
-use App\Http\Controllers\Admin\GrafikController as AdminGrafikController;
-use App\Http\Controllers\Admin\MineralLogamController as AdminMineralLogamController;
-use App\Http\Controllers\Admin\MineralBukanLogamController as AdminMineralBukanLogamController;
-use App\Http\Controllers\Admin\MineralBukanLogamGrafikController as AdminMineralBukanLogamGrafikController;
-use App\Http\Controllers\Admin\PanasBumiController as AdminPanasBumiController;
-use App\Http\Controllers\Admin\PanasBumiGrafikController as AdminPanasBumiGrafikController;
 use App\Http\Controllers\Admin\GambutController as AdminGambutController;
 use App\Http\Controllers\Admin\GambutGrafikController as AdminGambutGrafikController;
+use App\Http\Controllers\Admin\GrafikController as AdminGrafikController;
+use App\Http\Controllers\Admin\HistoriController;
+use App\Http\Controllers\Admin\HistoriSemuaController;
+use App\Http\Controllers\Admin\MineralBukanLogamController as AdminMineralBukanLogamController;
+use App\Http\Controllers\Admin\MineralBukanLogamGrafikController as AdminMineralBukanLogamGrafikController;
+use App\Http\Controllers\Admin\MineralLogamController as AdminMineralLogamController;
+use App\Http\Controllers\Admin\MineralLogamGrafikController;
+use App\Http\Controllers\Admin\PanasBumiController as AdminPanasBumiController;
+use App\Http\Controllers\Admin\PanasBumiGrafikController as AdminPanasBumiGrafikController;
+use App\Http\Controllers\Admin\ReferensiController;
+use App\Http\Controllers\Admin\SuperDashboardController;
+use App\Http\Controllers\Admin\TabelBukuController;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ProfilController;
+use App\Http\Controllers\User\BatubaraController;
+use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\GambutController;
+use App\Http\Controllers\User\GrafikController;
+use App\Http\Controllers\User\MineralBukanLogamController;
+use App\Http\Controllers\User\MineralLogamController;
+use App\Http\Controllers\User\PanasBumiController;
+use App\Models\Provinsi;
+use Illuminate\Support\Facades\Route;
 
 // Halaman awal: belum login -> halaman login; sudah login -> halaman sesuai role (bukan halaman bawaan Laravel)
 Route::get('/', function () {
@@ -58,7 +62,8 @@ Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
-
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 Route::prefix('batubara')->name('user.batubara.')->group(function () {
     Route::get('/', [BatubaraController::class, 'index'])->name('index');
@@ -93,13 +98,11 @@ Route::middleware(['auth', 'admin.batubara'])->prefix('admin/batubara')->name('a
     Route::delete('/{batubara}', [AdminBatubaraController::class, 'destroy'])->name('destroy');
     Route::get('/import', [AdminBatubaraController::class, 'importForm'])->name('import.form');
     Route::post('/import', [AdminBatubaraController::class, 'import'])->name('import');
-    Route::get('/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
+    Route::get('/kabupaten/{provinsi}', function (Provinsi $provinsi) {
         return $provinsi->kabupatens;
     })->name('kabupaten');
     Route::get('/grafik', [AdminGrafikController::class, 'index'])->name('grafik.index');
 });
-
-
 
 Route::middleware(['auth', 'admin.minerallogam'])->prefix('admin/mineral-logam')->name('admin.mineral-logam.')->group(function () {
     Route::get('/', [AdminMineralLogamController::class, 'index'])->name('index');
@@ -108,10 +111,10 @@ Route::middleware(['auth', 'admin.minerallogam'])->prefix('admin/mineral-logam')
     Route::get('/{mineralLogam}/edit', [AdminMineralLogamController::class, 'edit'])->name('edit');
     Route::put('/{mineralLogam}', [AdminMineralLogamController::class, 'update'])->name('update');
     Route::delete('/{mineralLogam}', [AdminMineralLogamController::class, 'destroy'])->name('destroy');
-    Route::get('/kabupaten/{provinsi}', function (\App\Models\Provinsi $provinsi) {
+    Route::get('/kabupaten/{provinsi}', function (Provinsi $provinsi) {
         return $provinsi->kabupatens;
     })->name('kabupaten');
-    Route::get('/grafik', [\App\Http\Controllers\Admin\MineralLogamGrafikController::class, 'index'])->name('grafik.index');
+    Route::get('/grafik', [MineralLogamGrafikController::class, 'index'])->name('grafik.index');
     Route::get('/import', [AdminMineralLogamController::class, 'importForm'])->name('import.form');
     Route::post('/import', [AdminMineralLogamController::class, 'import'])->name('import');
 });
@@ -135,7 +138,7 @@ Route::middleware(['auth', 'admin.mineral-bukan-logam'])
         Route::get('/grafik', [AdminMineralBukanLogamGrafikController::class, 'index'])->name('grafik.index');
     });
 
-    Route::middleware(['auth', 'admin.panas-bumi'])
+Route::middleware(['auth', 'admin.panas-bumi'])
     ->prefix('admin/panas-bumi')
     ->name('admin.panas-bumi.')
     ->group(function () {
@@ -154,7 +157,7 @@ Route::middleware(['auth', 'admin.mineral-bukan-logam'])
         Route::get('/grafik', [AdminPanasBumiGrafikController::class, 'index'])->name('grafik.index');
     });
 
-    Route::middleware(['auth', 'admin.gambut'])
+Route::middleware(['auth', 'admin.gambut'])
     ->prefix('admin/gambut')
     ->name('admin.gambut.')
     ->group(function () {
@@ -173,14 +176,13 @@ Route::middleware(['auth', 'admin.mineral-bukan-logam'])
         Route::get('/grafik', [AdminGambutGrafikController::class, 'index'])->name('grafik.index');
     });
 
-
 $historiDomains = [
     // slug domain_akses  => [alias middleware, prefix URL/route]
-    'batubara'            => ['admin.batubara',            'batubara'],
-    'mineral_logam'       => ['admin.minerallogam',        'mineral-logam'],
+    'batubara' => ['admin.batubara',            'batubara'],
+    'mineral_logam' => ['admin.minerallogam',        'mineral-logam'],
     'mineral_bukan_logam' => ['admin.mineral-bukan-logam', 'mineral-bukan-logam'],
-    'panas_bumi'          => ['admin.panas-bumi',          'panas-bumi'],
-    'gambut'              => ['admin.gambut',              'gambut'],
+    'panas_bumi' => ['admin.panas-bumi',          'panas-bumi'],
+    'gambut' => ['admin.gambut',              'gambut'],
 ];
 
 foreach ($historiDomains as $slug => [$middlewareAlias, $prefix]) {
@@ -188,13 +190,13 @@ foreach ($historiDomains as $slug => [$middlewareAlias, $prefix]) {
         ->prefix("admin/{$prefix}/histori")
         ->name("admin.{$prefix}.histori.")
         ->group(function () use ($slug) {
-            Route::get('/', [\App\Http\Controllers\Admin\HistoriController::class, 'index'])
+            Route::get('/', [HistoriController::class, 'index'])
                 ->defaults('domain', $slug)->name('index');
-            Route::get('/log', [\App\Http\Controllers\Admin\HistoriController::class, 'log'])
+            Route::get('/log', [HistoriController::class, 'log'])
                 ->defaults('domain', $slug)->name('log');
-            Route::post('/{id}/pulihkan', [\App\Http\Controllers\Admin\HistoriController::class, 'restore'])
+            Route::post('/{id}/pulihkan', [HistoriController::class, 'restore'])
                 ->defaults('domain', $slug)->whereNumber('id')->name('restore');
-            Route::delete('/{id}/permanen', [\App\Http\Controllers\Admin\HistoriController::class, 'forceDestroy'])
+            Route::delete('/{id}/permanen', [HistoriController::class, 'forceDestroy'])
                 ->defaults('domain', $slug)->whereNumber('id')->name('force');
         });
 }

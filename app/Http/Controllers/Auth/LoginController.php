@@ -34,8 +34,8 @@ class LoginController extends Controller
         $field = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $login = Str::lower(trim($data['login']));
 
-        $kunciAkun = 'login|' . $login . '|' . $request->ip();
-        $kunciIp = 'login-ip|' . $request->ip();
+        $kunciAkun = 'login|'.$login.'|'.$request->ip();
+        $kunciIp = 'login-ip|'.$request->ip();
 
         foreach ([[$kunciAkun, self::MAKS_PER_AKUN], [$kunciIp, self::MAKS_PER_IP]] as [$kunci, $maks]) {
             if (RateLimiter::tooManyAttempts($kunci, $maks)) {

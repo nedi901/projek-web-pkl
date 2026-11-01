@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Middleware\CheckAdminBatubara;
+use App\Http\Middleware\CheckAdminGambut;
+use App\Http\Middleware\CheckAdminMineralBukanLogam;
+use App\Http\Middleware\CheckAdminMineralLogam;
+use App\Http\Middleware\CheckAdminPanasBumi;
+use App\Http\Middleware\EnsureAccountActive;
+use App\Http\Middleware\EnsureSuperUser;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,16 +20,16 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'super.user' => \App\Http\Middleware\EnsureSuperUser::class,
-            'admin.batubara' => \App\Http\Middleware\CheckAdminBatubara::class,
-            'admin.minerallogam' => \App\Http\Middleware\CheckAdminMineralLogam::class,
-            'admin.mineral-bukan-logam' => \App\Http\Middleware\CheckAdminMineralBukanLogam::class,
-            'admin.panas-bumi' => \App\Http\Middleware\CheckAdminPanasBumi::class,
-            'admin.gambut' => \App\Http\Middleware\CheckAdminGambut::class,
+            'super.user' => EnsureSuperUser::class,
+            'admin.batubara' => CheckAdminBatubara::class,
+            'admin.minerallogam' => CheckAdminMineralLogam::class,
+            'admin.mineral-bukan-logam' => CheckAdminMineralBukanLogam::class,
+            'admin.panas-bumi' => CheckAdminPanasBumi::class,
+            'admin.gambut' => CheckAdminGambut::class,
         ]);
 
         // akun yang dinonaktifkan otomatis dikeluarkan dari sesi yang sedang berjalan
-        $middleware->appendToGroup('web', \App\Http\Middleware\EnsureAccountActive::class);
+        $middleware->appendToGroup('web', EnsureAccountActive::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

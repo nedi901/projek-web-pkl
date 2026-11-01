@@ -18,14 +18,22 @@ class NeracaGambut extends Model
         'remark', 'provinsi_id', 'kabupaten_id', 'bujur', 'lintang',
     ];
 
-    public function provinsi() { return $this->belongsTo(Provinsi::class); }
-    public function kabupaten() { return $this->belongsTo(Kabupaten::class); }
+    public function provinsi()
+    {
+        return $this->belongsTo(Provinsi::class);
+    }
+
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class);
+    }
 
     public function getNilaiKaloriLabelAttribute(): string
     {
         if ($this->nilai_kalori_min === null || $this->nilai_kalori_max === null) {
             return '-';
         }
-        return number_format($this->nilai_kalori_min, 0, ',', '.') . ' - ' . number_format($this->nilai_kalori_max, 0, ',', '.') . ' kal/gr';
+
+        return number_format($this->nilai_kalori_min, 0, ',', '.').' - '.number_format($this->nilai_kalori_max, 0, ',', '.').' kal/gr';
     }
 }

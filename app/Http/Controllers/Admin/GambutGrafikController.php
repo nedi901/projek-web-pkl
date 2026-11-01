@@ -19,7 +19,7 @@ class GambutGrafikController extends Controller
         $pulau = $request->pulau;
 
         $base = NeracaGambut::query()
-            ->when($pulau, fn($q) => $q->whereHas('provinsi', fn($qq) => $qq->where('pulau', $pulau)));
+            ->when($pulau, fn ($q) => $q->whereHas('provinsi', fn ($qq) => $qq->where('pulau', $pulau)));
 
         $perProvinsi = (clone $base)
             ->select('provinsi_id', DB::raw('SUM(total_sd) as total'))

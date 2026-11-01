@@ -7,7 +7,7 @@
         ];
     @endphp
 
-    <div class="flex justify-between items-end mb-4">
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-4">
         <div>
             <h1 class="text-xl font-bold">Kelola Akun</h1>
             <p class="text-xs text-gray-500">Buat, ubah, nonaktifkan, dan hapus akun pengguna. Hanya Super User yang dapat membuat dan mengelola akun.</p>

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\KomoditasBukanLogam;
 use App\Models\NeracaMineralBukanLogam;
 use App\Models\NeracaTrenNasional;
-use App\Models\KomoditasBukanLogam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +18,7 @@ class MineralBukanLogamGrafikController extends Controller
         $komoditasTerpilih = $komoditasId ? KomoditasBukanLogam::find($komoditasId) : null;
 
         $base = NeracaMineralBukanLogam::query()
-            ->when($komoditasId, fn($q) => $q->where('komoditas_bukan_logam_id', $komoditasId));
+            ->when($komoditasId, fn ($q) => $q->where('komoditas_bukan_logam_id', $komoditasId));
 
         // Grafik utama: per provinsi kalau komoditas dipilih, per komoditas kalau belum
         if ($komoditasTerpilih) {

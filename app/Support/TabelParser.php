@@ -16,6 +16,7 @@ use InvalidArgumentException;
 class TabelParser
 {
     public const MAKS_KOLOM = 40;
+
     public const MAKS_BARIS = 500;
 
     /** @return array{kolom: array<int, array>, baris: array<int, array>} */
@@ -28,7 +29,7 @@ class TabelParser
             throw new InvalidArgumentException('Isi minimal 1 baris judul kolom dan 1 baris data.');
         }
         if (count($garis) - 1 > self::MAKS_BARIS) {
-            throw new InvalidArgumentException('Maksimal ' . self::MAKS_BARIS . ' baris data.');
+            throw new InvalidArgumentException('Maksimal '.self::MAKS_BARIS.' baris data.');
         }
 
         $sel = array_map(fn ($l) => array_map('trim', explode("\t", $l)), $garis);
@@ -39,12 +40,12 @@ class TabelParser
             throw new InvalidArgumentException('Data harus punya minimal 2 kolom dan dipisahkan TAB (tempel langsung dari Excel).');
         }
         if ($n > self::MAKS_KOLOM) {
-            throw new InvalidArgumentException('Maksimal ' . self::MAKS_KOLOM . ' kolom.');
+            throw new InvalidArgumentException('Maksimal '.self::MAKS_KOLOM.' kolom.');
         }
 
         foreach ($sel as $i => $baris) {
             if (count($baris) > $n) {
-                throw new InvalidArgumentException('Baris data ke-' . ($i + 1) . ' punya ' . count($baris) . " kolom, lebih banyak dari judul kolom ($n).");
+                throw new InvalidArgumentException('Baris data ke-'.($i + 1).' punya '.count($baris)." kolom, lebih banyak dari judul kolom ($n).");
             }
             $sel[$i] = array_pad($baris, $n, '');
         }
@@ -52,8 +53,8 @@ class TabelParser
         // tentukan tipe tiap kolom
         $kolom = [];
         for ($j = 0; $j < $n; $j++) {
-            $label = $judul[$j] !== '' ? $judul[$j] : 'Kolom ' . ($j + 1);
-            $def = ['k' => 'c' . ($j + 1), 'l' => $label, 't' => 'text'];
+            $label = $judul[$j] !== '' ? $judul[$j] : 'Kolom '.($j + 1);
+            $def = ['k' => 'c'.($j + 1), 'l' => $label, 't' => 'text'];
 
             if ($j > 0) {
                 $adaAngka = false;

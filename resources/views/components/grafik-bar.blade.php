@@ -45,6 +45,10 @@
 @if($rows->isEmpty())
     <div class="text-center text-gray-400 text-sm py-10">Belum ada data</div>
 @else
+    {{-- Di layar kecil (< lg) grafik punya lebar minimum per batang dan bisa digeser ke samping DI DALAM kartu, supaya label
+         sumbu X tidak keluar kartu / melenceng dari batangnya. Di layar lebar tidak ada lebar minimum (tampilan lama). --}}
+    <div class="overflow-x-auto pt-4">
+    <div class="min-w-[var(--mw)] lg:min-w-0" style="--mw: {{ 112 + 72 * $n }}px;">
     <div class="flex">
         {{-- judul sumbu Y (vertikal) --}}
         <div class="flex items-center justify-center w-5 shrink-0">
@@ -92,9 +96,11 @@
         <div class="w-20 shrink-0"></div>
         <div class="flex-1 flex gap-3 px-3 mt-1.5">
             @foreach($rows as $row)
-                <div class="flex-1 min-w-0 text-center text-[10px] text-gray-500 leading-tight break-normal">{{ $row['label'] }}</div>
+                <div class="flex-1 min-w-0 text-center text-[10px] text-gray-500 leading-tight [overflow-wrap:anywhere]">{{ $row['label'] }}</div>
             @endforeach
         </div>
+    </div>
+    </div>
     </div>
 
     @if($dipangkas)

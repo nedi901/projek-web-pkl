@@ -8,5 +8,8 @@ class KomoditasLogam extends Model
 {
     protected $fillable = ['kelompok_komoditas_logam_id', 'nama_komoditas'];
 
-    public function kelompokKomoditasLogam() { return $this->belongsTo(KelompokKomoditasLogam::class); }
+    public function kelompokKomoditasLogam()
+    {
+        return $this->belongsTo(KelompokKomoditasLogam::class);
+    }
 }

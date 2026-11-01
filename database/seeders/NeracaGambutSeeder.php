@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Kabupaten;
 use App\Models\NeracaGambut;
 use App\Models\Provinsi;
-use App\Models\Kabupaten;
 use Illuminate\Database\Seeder;
 
 /**
@@ -46,7 +46,7 @@ class NeracaGambutSeeder extends Seeder
             NeracaGambut::updateOrCreate(['idgb' => $idgb++], [
                 'tahun_data' => 2025,
                 'tahun_neraca' => 2026,
-                'nama_objek' => 'Gambut ' . $namaProvinsi,
+                'nama_objek' => 'Gambut '.$namaProvinsi,
                 'nilai_kalori_min' => $kaloriMin,
                 'nilai_kalori_max' => $kaloriMax,
                 'luas_ha' => $luas,

@@ -149,7 +149,7 @@ class ReferensiController extends Controller
 
         $rows = $model::query()
             ->when($jenis === 'kabupaten', fn ($q) => $q->with('provinsi'))
-            ->when($request->search && $kolomTeks, fn ($q) => $q->where($kolomTeks, 'like', '%' . $request->search . '%'))
+            ->when($request->search && $kolomTeks, fn ($q) => $q->where($kolomTeks, 'like', '%'.$request->search.'%'))
             ->when($jenis === 'kabupaten' && $request->provinsi_id, fn ($q) => $q->where('provinsi_id', $request->provinsi_id))
             ->orderBy($cfg['urut'])
             ->paginate(15)
@@ -178,7 +178,7 @@ class ReferensiController extends Controller
         $cfg['model']::create($data);
 
         return redirect()->route('superuser.referensi.daftar', $jenis)
-            ->with('success', $cfg['label'] . ' berhasil ditambahkan.');
+            ->with('success', $cfg['label'].' berhasil ditambahkan.');
     }
 
     public function edit(string $jenis, int $id)
@@ -198,7 +198,7 @@ class ReferensiController extends Controller
         $row->update($data);
 
         return redirect()->route('superuser.referensi.daftar', $jenis)
-            ->with('success', $cfg['label'] . ' berhasil diperbarui.');
+            ->with('success', $cfg['label'].' berhasil diperbarui.');
     }
 
     public function destroy(string $jenis, int $id)
@@ -210,18 +210,18 @@ class ReferensiController extends Controller
         foreach ($cfg['dipakai'] as [$tabel, $kolom, $label]) {
             $n = DB::table($tabel)->where($kolom, $row->id)->count();
             if ($n > 0) {
-                $dipakai[] = number_format($n, 0, ',', '.') . " baris di {$label}";
+                $dipakai[] = number_format($n, 0, ',', '.')." baris di {$label}";
             }
         }
 
         if ($dipakai) {
-            return back()->with('error', 'Tidak bisa dihapus, masih dipakai oleh: ' . implode(', ', $dipakai) . '.');
+            return back()->with('error', 'Tidak bisa dihapus, masih dipakai oleh: '.implode(', ', $dipakai).'.');
         }
 
         $row->delete();
 
         return redirect()->route('superuser.referensi.daftar', $jenis)
-            ->with('success', $cfg['label'] . ' berhasil dihapus.');
+            ->with('success', $cfg['label'].' berhasil dihapus.');
     }
 
     /** opsi dropdown untuk kolom bertipe relasi: [kolom => koleksi model] */
@@ -250,7 +250,7 @@ class ReferensiController extends Controller
             } elseif ($k['tipe'] === 'pilihan') {
                 $r = ['nullable', Rule::in($k['pilihan'])];
             } else {
-                $r = [($k['wajib'] ?? true) ? 'required' : 'nullable', 'string', 'max:' . ($k['max'] ?? 150)];
+                $r = [($k['wajib'] ?? true) ? 'required' : 'nullable', 'string', 'max:'.($k['max'] ?? 150)];
 
                 if (! empty($k['unik'])) {
                     $r[] = Rule::unique($tabel, $k['k'])->ignore($abaikanId);

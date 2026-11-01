@@ -1,4 +1,4 @@
-git remote add origin https://github.com/username/projek-web-pkl.git*.log
+*.log
 .DS_Store
 .env
 .env.backup

@@ -19,9 +19,28 @@ class NeracaMineralBukanLogam extends Model
         'provinsi_id', 'kabupaten_id', 'bujur', 'lintang',
     ];
 
-    public function komoditasBukanLogam() { return $this->belongsTo(KomoditasBukanLogam::class); }
-    public function statDikBb() { return $this->belongsTo(StatDikBb::class); }
-    public function idInstansi() { return $this->belongsTo(IdInstansi::class); }
-    public function provinsi() { return $this->belongsTo(Provinsi::class); }
-    public function kabupaten() { return $this->belongsTo(Kabupaten::class); }
+    public function komoditasBukanLogam()
+    {
+        return $this->belongsTo(KomoditasBukanLogam::class);
+    }
+
+    public function statDikBb()
+    {
+        return $this->belongsTo(StatDikBb::class);
+    }
+
+    public function idInstansi()
+    {
+        return $this->belongsTo(IdInstansi::class);
+    }
+
+    public function provinsi()
+    {
+        return $this->belongsTo(Provinsi::class);
+    }
+
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class);
+    }
 }

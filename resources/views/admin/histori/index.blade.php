@@ -1,5 +1,5 @@
 <x-layouts.admin title="Histori">
-    <div class="flex justify-between items-end mb-4">
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-4">
         <div>
             <h1 class="text-xl font-bold">Histori</h1>
             <p class="text-xs text-gray-500">Data yang dihapus disimpan di sini dan masih bisa dipulihkan.</p>

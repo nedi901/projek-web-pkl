@@ -193,7 +193,7 @@ foreach ($semuaDomain as $d) {
 }
 
 /* ------------------------------------------------------------------ */
-/* TAMBAH & UBAH                                                       */
+/* TAMBAH & UBAH */
 /* ------------------------------------------------------------------ */
 
 it('tambah data: tersimpan, total dihitung otomatis, dan tampil di daftar', function (string $d) {
@@ -228,7 +228,7 @@ it('ubah data: perubahan tersimpan dan total dihitung ulang', function (string $
     $this->actingAs($admin)->post(route("{$c['rute']}.store"), $payload)->assertSessionHasNoErrors();
     $row = $c['model']::where('nama_objek', $payload['nama_objek'])->firstOrFail();
 
-    $ubah = array_merge($payload, $c['ubah'], ['nama_objek' => $payload['nama_objek'] . ' Diubah']);
+    $ubah = array_merge($payload, $c['ubah'], ['nama_objek' => $payload['nama_objek'].' Diubah']);
 
     $this->actingAs($admin)
         ->put(route("{$c['rute']}.update", $row), $ubah)
@@ -236,7 +236,7 @@ it('ubah data: perubahan tersimpan dan total dihitung ulang', function (string $
         ->assertRedirect(route("{$c['rute']}.index"));
 
     $row->refresh();
-    expect($row->nama_objek)->toBe($payload['nama_objek'] . ' Diubah');
+    expect($row->nama_objek)->toBe($payload['nama_objek'].' Diubah');
 
     foreach ($c['total_ubah'] as $kolom => $harapan) {
         expect((float) $row->{$kolom})->toEqualWithDelta($harapan, 0.001);
@@ -272,7 +272,7 @@ it('ubah data dengan ID yang sama dengan miliknya sendiri tidak dianggap dobel',
 })->with($semuaDomain);
 
 /* ------------------------------------------------------------------ */
-/* KOLOM ANGKA DIKOSONGKAN (form asli bisa mengirim teks kosong)       */
+/* KOLOM ANGKA DIKOSONGKAN (form asli bisa mengirim teks kosong) */
 /* ------------------------------------------------------------------ */
 
 it('tambah data dengan kolom angka dikosongkan tidak boleh error server', function (string $d) {
@@ -316,7 +316,7 @@ it('ubah data dengan kolom angka dikosongkan tidak boleh error server', function
 })->with($semuaDomain);
 
 /* ------------------------------------------------------------------ */
-/* HAK AKSES & DROPDOWN                                                */
+/* HAK AKSES & DROPDOWN */
 /* ------------------------------------------------------------------ */
 
 it('menambah data hanya boleh Super User dan admin domain yang bersangkutan', function (string $d) {

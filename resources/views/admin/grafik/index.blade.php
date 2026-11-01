@@ -19,7 +19,7 @@
 <x-grafik-bar :data="$dataBar" :maks-batang="10" satuan="ton" />
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-white border border-gray-200 rounded-xl p-5">
             <div class="text-sm font-semibold mb-4">Proporsi Klasifikasi SNI</div>
             @php

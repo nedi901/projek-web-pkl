@@ -10,16 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('klasifikasi_temperaturs', function (Blueprint $table) {
-    $table->id();
-    $table->string('label');
-    $table->timestamps();
-});
-}
+    {
+        Schema::create('klasifikasi_temperaturs', function (Blueprint $table) {
+            $table->id();
+            $table->string('label');
+            $table->timestamps();
+        });
+    }
 
-public function down(): void
-{
-    Schema::dropIfExists('klasifikasi_temperaturs');
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('klasifikasi_temperaturs');
+    }
 };

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\NeracaMineralLogam;
-use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\KomoditasLogam;
+use App\Models\NeracaMineralLogam;
+use App\Models\Provinsi;
 use App\Models\StatDikBb;
 use Illuminate\Database\Seeder;
 
@@ -199,7 +199,7 @@ class NeracaMineralLogamKomoditasLainSeeder extends Seeder
                     'idml' => $idml++,
                     'tahun_data' => 2025,
                     'tahun_neraca' => 2026,
-                    'nama_objek' => 'Rekap ' . $namaKomoditas . ' ' . $namaProvinsi . ' (' . $jumlahLokasi . ' lokasi)',
+                    'nama_objek' => 'Rekap '.$namaKomoditas.' '.$namaProvinsi.' ('.$jumlahLokasi.' lokasi)',
                     'komoditas_logam_id' => $komoditas->id,
                     'stat_dik_bb_id' => $statOperasi->id,
                     'hipotetik_bijih' => 0,
@@ -259,7 +259,7 @@ class NeracaMineralLogamKomoditasLainSeeder extends Seeder
                 'idml' => $idml++,
                 'tahun_data' => 2025,
                 'tahun_neraca' => 2026,
-                'nama_objek' => 'Rekap Logam Tanah Jarang ' . $namaProvinsi,
+                'nama_objek' => 'Rekap Logam Tanah Jarang '.$namaProvinsi,
                 'komoditas_logam_id' => $komoditas->id,
                 'stat_dik_bb_id' => $statOperasi->id,
                 'hipotetik_bijih' => 0,

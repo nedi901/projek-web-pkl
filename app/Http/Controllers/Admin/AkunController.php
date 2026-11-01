@@ -124,7 +124,7 @@ class AkunController extends Controller
 
         $akun->update(['is_active' => ! $akun->is_active]);
 
-        return back()->with('success', "Akun \"{$akun->username}\" sekarang " . ($akun->is_active ? 'aktif' : 'nonaktif') . '.');
+        return back()->with('success', "Akun \"{$akun->username}\" sekarang ".($akun->is_active ? 'aktif' : 'nonaktif').'.');
     }
 
     public function destroy(User $akun)

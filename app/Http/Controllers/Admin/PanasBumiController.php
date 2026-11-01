@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\PanasBumiImport;
+use App\Models\IdInstansi;
+use App\Models\Kabupaten;
+use App\Models\KlasifikasiTemperatur;
 use App\Models\NeracaPanasBumi;
 use App\Models\Provinsi;
-use App\Models\Kabupaten;
 use App\Models\StatDikPb;
-use App\Models\KlasifikasiTemperatur;
-use App\Models\IdInstansi;
-use App\Imports\PanasBumiImport;
-use App\Support\NolkanAngka;
 use App\Support\JalankanImport;
+use App\Support\NolkanAngka;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 
 class PanasBumiController extends Controller
 {
@@ -23,7 +22,7 @@ class PanasBumiController extends Controller
     public function index(Request $request)
     {
         $data = NeracaPanasBumi::with(['provinsi', 'kabupaten', 'statDikPb', 'klasifikasiTemperatur'])
-            ->when($request->search, fn($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
+            ->when($request->search, fn ($q) => $q->where('nama_objek', 'like', "%{$request->search}%"))
             ->paginate(15);
 
         return view('admin.panas-bumi.index', compact('data'));
@@ -87,7 +86,7 @@ class PanasBumiController extends Controller
     public function update(Request $request, NeracaPanasBumi $panasBumi)
     {
         $validated = $request->validate([
-            'idpb' => 'required|integer|unique:neraca_panas_bumis,idpb,' . $panasBumi->id,
+            'idpb' => 'required|integer|unique:neraca_panas_bumis,idpb,'.$panasBumi->id,
             'nama_objek' => 'required|string',
             'tahun_data' => 'required|integer',
             'tahun_neraca' => 'required|integer',

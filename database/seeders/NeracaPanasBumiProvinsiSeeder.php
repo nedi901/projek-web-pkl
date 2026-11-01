@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Kabupaten;
 use App\Models\NeracaPanasBumi;
 use App\Models\Provinsi;
-use App\Models\Kabupaten;
 use App\Models\StatDikPb;
 use Illuminate\Database\Seeder;
 
@@ -138,7 +138,7 @@ class NeracaPanasBumiProvinsiSeeder extends Seeder
                 'idpb' => $idpb++,
                 'tahun_data' => 2024, // label asli di buku: 2023 (lihat catatan di remark)
                 'tahun_neraca' => 2025,
-                'nama_objek' => 'Panas Bumi ' . $namaProvinsi . ' - Lokasi Lainnya',
+                'nama_objek' => 'Panas Bumi '.$namaProvinsi.' - Lokasi Lainnya',
                 'stat_dik_pb_id' => $statDefault->id,
                 'klasifikasi_temperatur_id' => null,
                 'spekulatif' => $spek,
@@ -193,7 +193,7 @@ class NeracaPanasBumiProvinsiSeeder extends Seeder
                 'idpb' => $idpb++,
                 'tahun_data' => 2024, // label asli di buku: 2023 (lihat catatan di remark)
                 'tahun_neraca' => 2025,
-                'nama_objek' => 'Panas Bumi ' . $namaProvinsi . ' (' . $jumlahTitik . ' titik WKP)',
+                'nama_objek' => 'Panas Bumi '.$namaProvinsi.' ('.$jumlahTitik.' titik WKP)',
                 'stat_dik_pb_id' => $statDefault->id,
                 'klasifikasi_temperatur_id' => null,
                 'spekulatif' => $spek,
