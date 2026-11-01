@@ -31,6 +31,15 @@ if [ "$SUDAH_ADA" = "0" ]; then
   php artisan db:seed --force 2>&1 || echo "SEED GAGAL"
 fi
 
+echo ">> [4c] pastikan super user"
+if [ -n "$SUPER_USER_EMAIL" ]; then
+  php artisan tinker --execute="
+    \$u = App\Models\User::where('email', strtolower(getenv('SUPER_USER_EMAIL')))->first();
+    if (\$u) { \$u->forceFill(['role'=>'super_user','domain_akses'=>null,'is_active'=>true])->save(); echo 'super user OK'; }
+    else { echo 'super user belum login, dilewati'; }
+  " 2>&1 || true
+fi
+
 echo ">> [5] cache"
 php artisan config:cache 2>&1
 php artisan route:cache 2>&1
