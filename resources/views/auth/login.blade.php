@@ -42,32 +42,6 @@
             <span>Masuk dengan Google</span>
         </a>
 
-        <div class="relative flex items-center justify-center my-4">
-            <div class="border-t border-gray-200 w-full"></div>
-            <span class="bg-white px-3 text-[11px] uppercase tracking-wider text-gray-400 absolute">atau</span>
-        </div>
-
-        <form method="POST" action="{{ route('login.store') }}" autocomplete="off">
-            @csrf
-            <div class="mb-3">
-                <label class="block text-xs text-gray-600 mb-1">Email atau Username</label>
-                <input type="text" name="login" value="{{ old('login') }}" placeholder="email atau username" autocomplete="off"
-                       readonly onfocus="this.removeAttribute('readonly')"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-300" required>
-            </div>
-            <div class="mb-5">
-                <label class="block text-xs text-gray-600 mb-1">Password</label>
-                <input type="password" name="password" placeholder="masukkan password" autocomplete="new-password"
-                       readonly onfocus="this.removeAttribute('readonly')"
-                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-300" required>
-            </div>
-            <button type="submit" class="w-full bg-[#F2C230] hover:bg-[#e0b526] text-black text-sm font-semibold py-2.5 rounded-md">
-                Masuk
-            </button>
-        </form>
-
-        <div class="text-center text-xs text-gray-400 my-3">Atau</div>
-
         <a href="{{ route('user.dashboard') }}" class="block text-center bg-[#F2C230] hover:bg-[#e0b526] text-black text-sm font-semibold py-2.5 rounded-md">
             Lanjutkan Sebagai Tamu
         </a>
