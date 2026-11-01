@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libsqlite3-dev \
     nodejs \
     npm \
-    && docker-php-ext-install pdo pdo_sqlite mbstring exif pcntl bcmath gd \
+    && docker-php-ext-install zip pdo pdo_sqlite mbstring exif pcntl bcmath gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Aktifkan mod_rewrite Apache
