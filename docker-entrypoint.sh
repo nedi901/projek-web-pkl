@@ -1,51 +1,25 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-echo ">> [1] atur port"
-PORT="${PORT:-10000}"
-sed -ri "s/^Listen .*/Listen ${PORT}/" /etc/apache2/ports.conf
-sed -ri "s#<VirtualHost \*:[0-9]+>#<VirtualHost *:${PORT}>#g" /etc/apache2/sites-available/*.conf
-
-echo ">> [2] cek driver pgsql"
-php -m | grep -i pgsql || echo "pdo_pgsql TIDAK ADA"
-
-echo ">> [3] tes koneksi database"
-php -r '
-try {
-  new PDO("pgsql:host=".getenv("DB_HOST").";port=5432;dbname=".getenv("DB_DATABASE").";sslmode=require", getenv("DB_USERNAME"), getenv("DB_PASSWORD"));
-  echo "DB OK\n";
-} catch (Throwable $e) {
-  echo "DB GAGAL: ".$e->getMessage()."\n";
-}'
-
-echo ">> [4] migrate"
-php artisan migrate --force 2>&1 || echo "MIGRATE GAGAL"
-
-echo ">> [4b] seed kalau database masih kosong"
-SUDAH_ADA=$(php -r '
-try {
-  $p = new PDO("pgsql:host=".getenv("DB_HOST").";port=5432;dbname=".getenv("DB_DATABASE").";sslmode=require", getenv("DB_USERNAME"), getenv("DB_PASSWORD"));
-  echo (int)$p->query("select count(*) from provinsis")->fetchColumn();
-} catch (Throwable $e) { echo "ERR"; }')
-echo "jumlah provinsi: $SUDAH_ADA"
-if [ "$SUDAH_ADA" = "0" ]; then
-  php artisan db:seed --force 2>&1 || echo "SEED GAGAL"
+# Fallback default APP_KEY jika belum diset di Render Dashboard
+if [ -z "$APP_KEY" ]; then
+    export APP_KEY="base64:YNOHi8cYLDob3z1xoZHEWrrxuDOtjHer3fAdiGwm/Uw="
 fi
 
-echo ">> [4c] pastikan super user"
-if [ -n "$SUPER_USER_EMAIL" ]; then
-  php artisan tinker --execute="
-    \$u = App\Models\User::where('email', strtolower(getenv('SUPER_USER_EMAIL')))->first();
-    if (\$u) { \$u->forceFill(['role'=>'super_user','domain_akses'=>null,'is_active'=>true])->save(); echo 'super user OK'; }
-    else { echo 'super user belum login, dilewati'; }
-  " 2>&1 || true
+# Pastikan file SQLite ada dan dapat ditulis jika memakai sqlite
+if [ -f /var/www/html/database/database.sqlite ]; then
+    chown www-data:www-data /var/www/html/database/database.sqlite || true
+    chmod 664 /var/www/html/database/database.sqlite || true
 fi
 
-echo ">> [5] cache"
-php artisan config:cache 2>&1
-php artisan route:cache 2>&1
-php artisan view:cache 2>&1
+# Jalankan migrasi database
+php artisan migrate --force || true
 
-chown -R www-data:www-data storage bootstrap/cache
+# Optimasi performa untuk server produksi
+php artisan config:clear || true
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
 
-echo ">> [6] start apache"
+# Jalankan server web Apache di foreground
 exec apache2-foreground
