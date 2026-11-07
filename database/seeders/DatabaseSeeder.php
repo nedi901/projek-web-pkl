@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 
             // --- data neraca per domain ---
             NeracaBatubaraProvinsiSeeder::class,
+            DummyBatubaraTrenSeeder::class,
             NeracaMineralLogamNikelSeeder::class,
             NeracaMineralLogamKomoditasLainSeeder::class,
             NeracaMineralBukanLogamSeeder::class,
