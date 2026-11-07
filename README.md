@@ -4,6 +4,31 @@ Aplikasi web (Laravel) untuk mengelola dan menampilkan **neraca sumber daya dan 
 **Batubara, Mineral Logam, Mineral Bukan Logam, Panas Bumi, dan Gambut**, lengkap dengan Dashboard, Grafik, tabel
 rekap "buku", riwayat penghapusan, dan import Excel.
 
+> **🌐 Live Demo (Aplikasi Online):**  
+> Dapat langsung diakses tanpa instalasi di: **[https://neraca-minerba.onrender.com](https://neraca-minerba.onrender.com)**  
+> 
+> **🗄️ Database:**  
+> - File ekspor database SQL siap pakai: `database/neraca_minerba.sql` (bisa diimpor ke MySQL / phpMyAdmin).
+> - File database bawaan SQLite lengkap dengan data: `database/database.sqlite`.
+
+---
+
+## Akun Login Penguji / Guru
+
+Aplikasi mendukung **Login Akun Manual** dan **Sign in with Google**.
+
+| Akun / Peran | Email | Username | Password |
+|---|---|---|---|
+| **Super User (Admin Utama)** | `enukomala@gmail.com` | `Hadi` | `password` |
+| **Admin Batubara** | `superbatubara@test.com` | `admin_batubara` | `password` |
+| **Admin Mineral Logam** | `superminerallogam@test.com` | `admin_logam` | `password` |
+| **Admin Mineral Bukan Logam** | `superminerallogambukan@test.com` | `admin_bukanlogam` | `password` |
+| **Admin Panas Bumi** | `superpanasbumi@test.com` | `admin_panasbumi` | `password` |
+| **Admin Gambut** | `supergambut@test.com` | `admin_gambut` | `password` |
+| **User Biasa** | `user@test.com` | `user` | `password` |
+
+---
+
 ## Fitur utama
 
 - **Dashboard** ringkasan semua domain (Super User dan User), memakai data tahun **2024–2025**.
