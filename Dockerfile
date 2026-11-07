@@ -1,6 +1,6 @@
 FROM php:8.3-apache
 
-# Install dependencies sistem & ekstensi PHP
+# Install dependencies sistem & ekstensi PHP (termasuk libzip-dev & libpq-dev)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
@@ -9,10 +9,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     zip \
     unzip \
+    libzip-dev \
+    libpq-dev \
     libsqlite3-dev \
     nodejs \
     npm \
-    && docker-php-ext-install pdo pdo_sqlite mbstring exif pcntl bcmath gd \
+    && docker-php-ext-install pdo pdo_sqlite pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Aktifkan mod_rewrite Apache
