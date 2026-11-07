@@ -6,6 +6,12 @@ if [ -z "$APP_KEY" ]; then
     export APP_KEY="base64:YNOHi8cYLDob3z1xoZHEWrrxuDOtjHer3fAdiGwm/Uw="
 fi
 
+# Atur port Apache sesuai variabel $PORT dari Render (default: 10000)
+PORT_HTTP="${PORT:-10000}"
+echo "Mengatur Apache untuk mendengarkan port: ${PORT_HTTP}"
+echo "Listen ${PORT_HTTP}" > /etc/apache2/ports.conf
+sed -ri "s/<VirtualHost \*:[0-9]+>/<VirtualHost \*:${PORT_HTTP}>/g" /etc/apache2/sites-available/000-default.conf
+
 # Pastikan file SQLite ada dan dapat ditulis jika memakai sqlite
 if [ -f /var/www/html/database/database.sqlite ]; then
     chown www-data:www-data /var/www/html/database/database.sqlite || true

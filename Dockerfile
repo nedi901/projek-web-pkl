@@ -23,9 +23,7 @@ RUN a2enmod rewrite
 # Konfigurasi Apache DocumentRoot dan Permission untuk Laravel
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-RUN sed -ri -e 's!Listen 80!Listen ${PORT:-10000}!g' /etc/apache2/ports.conf
-
-RUN printf '<VirtualHost *:${PORT:-10000}>\n\
+RUN printf '<VirtualHost *:10000>\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
         Options -Indexes +FollowSymLinks\n\
